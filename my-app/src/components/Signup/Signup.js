@@ -48,7 +48,13 @@ function Signup() {
         setConfirmPassword(inputValue)
     }
 
-    const handleSubmit = () => alert(`Email: ${email}\nName: ${name}\nPassword: ${password}\nConfirm Password: ${confirmPassword}`)
+    const handleSubmit = () => {
+        if (password != confirmPassword) {
+            alert('passwords don\'t match')
+        } else {
+            alert(`Email: ${email}\nName: ${name}\nPassword: ${password}\nConfirm Password: ${confirmPassword}`)
+        }
+    }
 
     return (
       <div className="Signup">
@@ -78,6 +84,7 @@ function Signup() {
                     </InputRightElement>
                 </InputGroup>
             </FormControl>
+
             <FormControl id="confirmPassword" isRequired>
                 <FormLabel>Confirm Password</FormLabel>
                 <InputGroup>
@@ -89,16 +96,17 @@ function Signup() {
                     </InputRightElement>
                 </InputGroup>
             </FormControl>
+
             <Button colorScheme="teal" variant="ghost" onClick={handleSubmit}>
                 Signup
             </Button>
+
             <Link
                 as={ReachLink}
                 to="/login"
             >
                 Already have an account?
             </Link>
-
           </VStack>
       </div>
     )
