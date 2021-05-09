@@ -3,14 +3,15 @@ import {
   ChakraProvider,
   Box,
   Text,
-  Link,
   VStack,
   Code,
   Grid,
   theme,
 } from '@chakra-ui/react';
 import Login from './components/Login/Login'
+import Signup from './components/Signup/Signup'
 import { ColorModeSwitcher } from './ColorModeSwitcher';
+import { Router, Link } from "@reach/router"
 
 function App() {
   return (
@@ -19,7 +20,10 @@ function App() {
         <Grid minH="100vh" minW="10vh" p={3}>
           <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={8}>
-            <Login />
+            <Router>
+              <Login path="/login" />
+              <Signup path="/signup" />
+            </Router>
           </VStack>
         </Grid>
       </Box>

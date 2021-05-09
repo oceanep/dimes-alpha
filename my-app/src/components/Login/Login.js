@@ -1,16 +1,9 @@
 import React, {useState} from 'react';
 import { 
-    Textarea,
     Input,
     InputRightElement,
     Button,
     InputGroup,
-    Box,
-    Wrap, 
-    WrapItem,
-    Text,
-    ButtonGroup,
-    Container,
     VStack, 
     StackDivider,
     Link
@@ -25,7 +18,7 @@ function Login() {
     
     const handleClick = () => setShow(!show)
 
-    const handleSubmit = () => alert(`Username: ${username}, Password: ${password}`)
+    const handleSubmit = () => alert(`Username: ${username}\nPassword: ${password}\n`)
 
     const handleUsernameChange = (e) => {
       let inputValue = e.target.value
@@ -61,7 +54,7 @@ function Login() {
                         />
                         <InputRightElement width="4.5rem">
                             <Button h="1.75rem" size="sm" onClick={handleClick}>
-                            {show ? "Hide" : "Show"}
+                                {show ? "Hide" : "Show"}
                             </Button>
                         </InputRightElement>
                 </InputGroup>
