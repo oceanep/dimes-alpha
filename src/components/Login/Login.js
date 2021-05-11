@@ -6,9 +6,10 @@ import {
     InputGroup,
     VStack, 
     StackDivider,
-    Link
 } from "@chakra-ui/react"
-import { Link as ReachLink } from "@reach/router"
+import {
+    Link
+  } from "react-router-dom";
 import './Login.css'
 
 function Login() {
@@ -62,7 +63,6 @@ function Login() {
                         Login
                     </Button>
                     <Link
-                        as={ReachLink}
                         to="/signup"
                     >
                         Don't have an account?

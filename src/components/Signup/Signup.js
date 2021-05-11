@@ -6,7 +6,6 @@ import {
     InputGroup,
     VStack, 
     StackDivider,
-    Link,
     FormControl,
     FormLabel,
     FormErrorMessage,
@@ -14,7 +13,9 @@ import {
     Field,
     Form,
 } from "@chakra-ui/react"
-import { Link as ReachLink } from "@reach/router"
+import {
+    Link
+  } from "react-router-dom";
 import { Formik } from 'formik' // can use this library for easy form validation
 
 function Signup() {
@@ -102,7 +103,6 @@ function Signup() {
             </Button>
 
             <Link
-                as={ReachLink}
                 to="/login"
             >
                 Already have an account?
