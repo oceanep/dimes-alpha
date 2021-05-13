@@ -7,7 +7,8 @@ import {
   Grid,
   Flex,
   Button,
-  Spacer
+  Spacer,
+  Image
 } from '@chakra-ui/react';
 import theme from './styles/theme'
 import Login from './components/Login/Login'
@@ -28,7 +29,9 @@ function App() {
         <Grid minH="100vh" minW="10vh" >
           <nav>
             <Flex mx={"60px"} my="15px">
-              <Box bg="blue.500" w="50px"/>
+              <Box>
+                <Image maxW="100px" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/dimes_logo_2.png" alt="Dimes Logo"/>
+              </Box>
               <Spacer/>
               <Button colorScheme="teal" size="md" ml="15px">Register</Button>
               <Button colorScheme="teal" size="md" ml="15px">Sign In</Button>

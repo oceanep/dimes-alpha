@@ -10,6 +10,7 @@ import {
     Heading,
     Text,
     Button,
+    Image,
     useColorModeValue
 } from "@chakra-ui/react"
 import {
@@ -25,18 +26,20 @@ function LandingPage() {
       <Grid minH="100vh" minW="100%" templateRows="repeat(4, 1fr)" className="landing" fontSize="14px">
 
         <GridItem rowStart={1} rowEnd={2} >
-          <Flex mx={"60px"} my={"30px"} justifyContent="space-between">
-            <Box textAlign="left" maxW="40%">
+          <Flex mx={"auto"} my={"30px"} maxW="1140px" justifyContent="space-around">
+            <Box textAlign="left" maxW="40%" mt="2em">
               <Heading mb="30px" size="lg">Relationships should, would, could be easy with Dimes</Heading>
               <Text mb="30px" >Dimes utilises AI cloud technology to create the right place at the right time</Text>
               <Button colorScheme="teal" size="md" mb="15px" >Register Here</Button>
             </Box>
-            <Box bg="blue.500" w="50%"></Box>
+            <Box maxW="50%">
+              <Image maxW="100%" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/team.png" />
+            </Box>
           </Flex>
         </GridItem>
 
-        <GridItem rowStart={2} rowEnd={3} bg={bg} borderTop="1px" borderColor="gray.200">
-          <Flex mx={"60px"} my={"30px"} justifyContent="space-between" >
+        <GridItem rowStart={2} rowEnd={3} bg={bg} borderTop="1px" py="70px" borderColor="gray.200">
+          <Flex mx={"auto"} my={"30px"} maxW="1140px" justifyContent="space-between" >
 
             <Card maxW="20%">
               <Heading mt={6} maxW={60} size="md" textAlign="center" color="gray.700">
@@ -78,9 +81,11 @@ function LandingPage() {
         </GridItem>
 
         <GridItem rowStart={3} rowEnd={4} borderTop="1px" borderColor="gray.200">
-          <Flex mx={"60px"} my={"30px"} justifyContent="space-between">
-            <Box bg="blue.500" w="50%"></Box>
-            <Box textAlign="left" maxW="40%">
+          <Flex mx={"auto"} my={"30px"} maxW="1140px" justifyContent="space-around">
+            <Box maxW="50%">
+              <Image maxW="100%" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/videocall.png" />
+            </Box>
+            <Box textAlign="left" maxW="40%" mt="2em">
               <Heading mb="30px" size="lg">Create the perfect timing for your important relationships</Heading>
               <Text mb="30px" >Let Dimes help you look after your important relationships</Text>
             </Box>
@@ -88,12 +93,14 @@ function LandingPage() {
         </GridItem>
 
         <GridItem rowStart={4} rowEnd={5} bg={bg} borderTop="1px" borderColor="gray.200">
-          <Flex mx={"60px"} my={"30px"} justifyContent="space-between">
-            <Box textAlign="left" maxW="40%">
+          <Flex mx={"auto"} my={"30px"} maxW="1140px" justifyContent="space-around">
+            <Box textAlign="left" maxW="40%" mt="2em">
               <Text my="30px" >"Assisting people in prioritizing and valuing their meaningful relationships to meet as they wish for their intentions in the right place at the right time."</Text>
               <Heading mb="30px" size="lg">Founder & CEO Eric Wei</Heading>
             </Box>
-            <Box bg="blue.500" w="50%"></Box>
+            <Box maxW="30%">
+              <Image maxW="100%" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/eric.png" />
+            </Box>
           </Flex>
         </GridItem>
 
