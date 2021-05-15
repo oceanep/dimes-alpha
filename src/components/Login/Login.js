@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import { 
+import {
+    Center,
     Input,
     InputRightElement,
     Button,
     InputGroup,
-    VStack, 
+    VStack,
     StackDivider,
 } from "@chakra-ui/react"
 import {
@@ -16,7 +17,7 @@ function Login() {
     let [username, setUsername] = useState("")
     let [password, setPassword] = useState("")
     const [show, setShow] = useState(false)
-    
+
     const handleClick = () => setShow(!show)
 
     const handleSubmit = () => alert(`Username: ${username}\nPassword: ${password}\n`)
@@ -32,7 +33,7 @@ function Login() {
     }
 
     return (
-      <div className="Login">
+      <Center className="Login" minH="80%">
             <VStack
                 divider={<StackDivider borderColor="gray.200" />}
                 spacing={4}
@@ -68,7 +69,7 @@ function Login() {
                         Don't have an account?
                     </Link>
             </VStack>
-      </div>
+      </Center>
     )
 }
 

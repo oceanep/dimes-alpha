@@ -11,19 +11,25 @@ import {
     Text,
     Button,
     Image,
+    Icon,
     useColorModeValue
 } from "@chakra-ui/react"
 import {
-    Link
-  } from "react-router-dom";
+  MdPermContactCalendar,
+  MdImportExport,
+  MdPeople,
+  MdStarBorder
+} from "react-icons/md"
+
+import { Link } from "react-router-dom";
 import Card from "../../components/Card/Card.js"
-import "./LandingPage.module.scss"
+import styles from "./LandingPage.module.scss"
 
 function LandingPage() {
 
     const bg = useColorModeValue("gray.50","gray.600")
     return (
-      <Grid minH="100vh" minW="100%" templateRows="repeat(4, 1fr)" className="landing" fontSize="14px">
+      <Grid minH="100vh" minW="100%" templateRows="1fr 1fr 1fr 0.8fr" className={`${styles.landing} ${styles.test}`} fontSize="14px">
 
         <GridItem rowStart={1} rowEnd={2} >
           <Flex mx={"auto"} my={"30px"} maxW="1140px" justifyContent="space-around">
@@ -39,9 +45,10 @@ function LandingPage() {
         </GridItem>
 
         <GridItem rowStart={2} rowEnd={3} bg={bg} borderTop="1px" py="70px" borderColor="gray.200">
-          <Flex mx={"auto"} my={"30px"} maxW="1140px" justifyContent="space-between" >
+          <Flex mx={"auto"} maxW="1140px" justifyContent="space-between" >
 
             <Card maxW="20%">
+              <Icon as={MdPermContactCalendar} boxSize="5em"/>
               <Heading mt={6} maxW={60} size="md" textAlign="center" color="gray.700">
                 Set up routine schedule
               </Heading>
@@ -51,6 +58,7 @@ function LandingPage() {
             </Card>
 
             <Card maxW="20%">
+              <Icon as={MdImportExport} boxSize="5em"/>
               <Heading mt={6} maxW={60} size="md" textAlign="center" color="gray.700">
                 Import Existing Commitments
               </Heading>
@@ -60,6 +68,7 @@ function LandingPage() {
             </Card>
 
             <Card maxW="20%">
+              <Icon as={MdPeople} boxSize="5em"/>
               <Heading mt={6} maxW={60} size="md" textAlign="center" color="gray.700">
                 Connect with your Contacts
               </Heading>
@@ -69,6 +78,7 @@ function LandingPage() {
             </Card>
 
             <Card maxW="20%">
+              <Icon as={MdStarBorder} boxSize="5em"/>
               <Heading mt={6} maxW={60} size="md" textAlign="center" color="gray.700">
                 Make a plan
               </Heading>
@@ -93,7 +103,7 @@ function LandingPage() {
         </GridItem>
 
         <GridItem rowStart={4} rowEnd={5} bg={bg} borderTop="1px" borderColor="gray.200">
-          <Flex mx={"auto"} my={"30px"} maxW="1140px" justifyContent="space-around">
+          <Flex mx={"auto"} mt={"30px"} maxW="1140px" justifyContent="space-around">
             <Box textAlign="left" maxW="40%" mt="2em">
               <Text my="30px" >"Assisting people in prioritizing and valuing their meaningful relationships to meet as they wish for their intentions in the right place at the right time."</Text>
               <Heading mb="30px" size="lg">Founder & CEO Eric Wei</Heading>

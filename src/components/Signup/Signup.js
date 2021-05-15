@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {
+    Center,
     Input,
     InputRightElement,
     Button,
     InputGroup,
-    VStack, 
+    VStack,
     StackDivider,
     FormControl,
     FormLabel,
@@ -38,7 +39,7 @@ function Signup() {
         let inputValue = e.target.value
         setName(inputValue)
       }
-  
+
     const handlePasswordChange = (e) => {
         let inputValue = e.target.value
         setPassword(inputValue)
@@ -58,7 +59,7 @@ function Signup() {
     }
 
     return (
-      <div className="Signup">
+      <Center className="Signup">
           <VStack
                 divider={<StackDivider borderColor="gray.200" />}
                 spacing={4}
@@ -108,7 +109,7 @@ function Signup() {
                 Already have an account?
             </Link>
           </VStack>
-      </div>
+      </Center>
     )
 }
 
