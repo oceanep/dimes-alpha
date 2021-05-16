@@ -13,7 +13,8 @@ import {
     useHistory
   } from "react-router-dom";
 import './Login.css'
-import axios from 'axios'
+//import axios from 'axios'
+import userApi from '../../utils/user_api.js';
 
 function Login() {
     let [username, setUsername] = useState("")
@@ -22,7 +23,9 @@ function Login() {
     let history = useHistory()
     const handleClick = () => setShow(!show)
 
-    const handleSubmit = async () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const response = userApi.loginUser(username, password);
         // // make api call
         // const res = await axios.post('api/users/login', { 
         //         "user": {
@@ -43,7 +46,7 @@ function Login() {
         // localStorage.setItem('token', token)
         // localStorage.setItem('username', username)
         // re-direct to homepage
-        history.push('/home')
+        //history.push('/home')
 
     }
 
