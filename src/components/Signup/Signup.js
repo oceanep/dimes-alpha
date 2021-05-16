@@ -15,16 +15,18 @@ import {
     Form,
 } from "@chakra-ui/react"
 import {
-    Link
+    Link,
+    useHistory
   } from "react-router-dom";
 import { Formik } from 'formik' // can use this library for easy form validation
+import axios from 'axios'
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
     const handlePasswordClick = () => setShowPassword(!showPassword)
     const handleConfirmPasswordClick = () => setConfirmShowPassword(!showConfirmPassword)
-
+    let history = useHistory()
     let [email, setEmail] = useState("")
     let [name, setName] = useState("")
     let [password, setPassword] = useState("")
@@ -50,11 +52,32 @@ function Signup() {
         setConfirmPassword(inputValue)
     }
 
-    const handleSubmit = () => {
+
+
+    const handleSubmit = async () => {
         if (password != confirmPassword) {
             alert('passwords don\'t match')
         } else {
-            alert(`Email: ${email}\nName: ${name}\nPassword: ${password}\nConfirm Password: ${confirmPassword}`)
+            // make api call
+            // const res = await axios.post('api/users/register', { 
+            //     "user": {
+            //         "email": email,
+            //         "first_name": name,
+            //         "last_name": name,
+            //         "password": password, // hashed ?
+            //         "username": email
+            //     }
+            // })
+            // set variables from  response object
+            // const {
+            //     token,
+            //     username
+            // } = res.data.json.user
+            // set local storage
+            // localStorage.setItem('token', token)
+            // localStorage.setItem('username', username)
+            history.push('/home')
+
         }
     }
 

@@ -9,18 +9,43 @@ import {
     StackDivider,
 } from "@chakra-ui/react"
 import {
-    Link
+    Link,
+    useHistory
   } from "react-router-dom";
 import './Login.css'
+import axios from 'axios'
 
 function Login() {
     let [username, setUsername] = useState("")
     let [password, setPassword] = useState("")
     const [show, setShow] = useState(false)
-
+    let history = useHistory()
     const handleClick = () => setShow(!show)
 
-    const handleSubmit = () => alert(`Username: ${username}\nPassword: ${password}\n`)
+    const handleSubmit = async () => {
+        // // make api call
+        // const res = await axios.post('api/users/login', { 
+        //         "user": {
+        //             "email": username,
+        //             "password": password,
+        //         }
+        // })
+        // // assign variables using response object
+        // const {
+        //     email,
+        //     id,
+        //     token,
+        //     username,
+        //     first_name,
+        //     last_name
+        // } = res.data.json.user
+        // // set local storage
+        // localStorage.setItem('token', token)
+        // localStorage.setItem('username', username)
+        // re-direct to homepage
+        history.push('/home')
+
+    }
 
     const handleUsernameChange = (e) => {
       let inputValue = e.target.value
