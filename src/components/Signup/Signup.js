@@ -50,14 +50,18 @@ function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const response = await userApi.signupUser(email, name, name, name, password);
-        const {
-            token,
-            username,
-        } = response.data
-        localStorage.setItem('token', token)
-        localStorage.setItem('username', username)
-        history.push('/home')
+        try {
+            const response = await userApi.signupUser(email, name, name, name, password)
+            const {
+                token,
+                username,
+            } = response.data
+            localStorage.setItem('token', token)
+            localStorage.setItem('username', username)
+            history.push('/home')
+        } catch {
+            alert('PLEASE TRY AGAIN\nemail must be valid format\nname can not be more than 10 characters\npasswords must match and be > 8 chars')
+        }
     }
 
     return (

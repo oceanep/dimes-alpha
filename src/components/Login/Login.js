@@ -21,14 +21,19 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const response = await userApi.loginUser(email, password);
-        const {
-            token,
-            username,
-        } = response.data
-        localStorage.setItem('token', token)
-        localStorage.setItem('username', username)
-        history.push('/home')
+        const response = await userApi.loginUser(email, password)
+        console.log(response)
+        if (response.statusText === "Login Failed") {
+            alert('please try logging in again')
+        } else {
+            const {
+                token,
+                username,
+            } = response.data
+            localStorage.setItem('token', token)
+            localStorage.setItem('username', username)
+            history.push('/home')
+        }
     }
 
     const handleEmailChange = (e) => {
