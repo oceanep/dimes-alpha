@@ -28,10 +28,14 @@ import Signup from './components/Signup/Signup'
 import LandingPage from './pages/LandingPage/LandingPage'
 import Home from './pages/Home/Home'
 import Availability from './pages/Availability/Availability'
-import Contacts from './pages/Contacts/Contacts'
+import Relationships from './pages/Relationships/Relationships'
+import Groups from './pages/Groups/Groups'
+import Initiated from './pages/Initiated/Initiated'
+import Invited from './pages/Invited/Invited'
 import Plans from './pages/Plans/Plans'
 import Schedule from './pages/Schedule/Schedule'
 
+import './App.scss'
 
 function App() {
   return (
@@ -40,11 +44,14 @@ function App() {
         <Grid minH="100vh" minW="10vh" >
           <Router>
 
-            <ColorModeSwitcher justifySelf="flex-end" pos="absolute" top="0" right="0" mt="15px"/>
+            <ColorModeSwitcher justifySelf="flex-end" pos="absolute" top="0" right="0" mt="5px"/>
             <Switch>
               <Route path="/home" component={Home}></Route>
               <Route path="/availability" component={Availability}></Route>
-              <Route path="/contacts" component={Contacts}></Route>
+              <Route path="/relationships" component={Relationships}></Route>
+              <Route path="/Groups" component={Groups}></Route>
+              <Route path="/initiated" component={Initiated}></Route>
+              <Route path="/invites" component={Invited}></Route>
               <Route path="/plans" component={Plans}></Route>
               <Route path="/schedule" component={Schedule}></Route>
               <div>
