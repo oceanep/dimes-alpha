@@ -8,51 +8,32 @@ import {
     VStack,
     StackDivider,
 } from "@chakra-ui/react"
-import {
-    Link,
-    useHistory
-  } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import './Login.css'
-//import axios from 'axios'
 import userApi from '../../utils/user_api.js';
 
 function Login() {
-    let [username, setUsername] = useState("")
+    let [email, setEmail] = useState("")
     let [password, setPassword] = useState("")
     const [show, setShow] = useState(false)
     let history = useHistory()
     const handleClick = () => setShow(!show)
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const response = userApi.loginUser(username, password);
-        // // make api call
-        // const res = await axios.post('api/users/login', { 
-        //         "user": {
-        //             "email": username,
-        //             "password": password,
-        //         }
-        // })
-        // // assign variables using response object
-        // const {
-        //     email,
-        //     id,
-        //     token,
-        //     username,
-        //     first_name,
-        //     last_name
-        // } = res.data.json.user
-        // // set local storage
-        // localStorage.setItem('token', token)
-        // localStorage.setItem('username', username)
-        // re-direct to homepage
-        //history.push('/home')
-
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const response = await userApi.loginUser(email, password);
+        const {
+            token,
+            username,
+        } = response.data
+        localStorage.setItem('token', token)
+        localStorage.setItem('username', username)
+        history.push('/home')
     }
 
-    const handleUsernameChange = (e) => {
+    const handleEmailChange = (e) => {
       let inputValue = e.target.value
-      setUsername(inputValue)
+      setEmail(inputValue)
     }
 
     const handlePasswordChange = (e) => {
@@ -71,8 +52,8 @@ function Login() {
                         <Input
                             pr="4.5rem"
                             type={"text"}
-                            placeholder="Enter username"
-                            onChange={handleUsernameChange}
+                            placeholder="Enter email"
+                            onChange={handleEmailChange}
                         />
                 </InputGroup>
                 <InputGroup size="md">

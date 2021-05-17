@@ -6,11 +6,24 @@ let headers =
     };
 
 const userApi = {
-    async loginUser(username, password){
+    async loginUser(username, password) {
         var url = `${api_endpoint}/login`;
         var res = await axios.post(url,{
             "email": username,
             "password": password
+        }, headers);
+        return res;
+    },
+    async signupUser(email, username, firstName, lastName, password) {
+        var url = `${api_endpoint}/register`;
+        var res = await axios.post(url,{
+            "user": {
+                "email": email,
+                "first_name": firstName,
+                "last_name": lastName,
+                "password": password,
+                "username": username
+            }
         }, headers);
         return res;
     }
