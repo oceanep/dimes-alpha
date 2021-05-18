@@ -9,22 +9,20 @@ import {
     StackDivider,
     FormControl,
     FormLabel,
-    FormErrorMessage,
     FormHelperText,
-    Field,
-    Form,
 } from "@chakra-ui/react"
 import {
-    Link
+    Link,
+    useHistory
   } from "react-router-dom";
-import { Formik } from 'formik' // can use this library for easy form validation
+import userApi from '../../utils/user_api.js';
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
     const handlePasswordClick = () => setShowPassword(!showPassword)
     const handleConfirmPasswordClick = () => setConfirmShowPassword(!showConfirmPassword)
-
+    let history = useHistory()
     let [email, setEmail] = useState("")
     let [name, setName] = useState("")
     let [password, setPassword] = useState("")
@@ -50,11 +48,19 @@ function Signup() {
         setConfirmPassword(inputValue)
     }
 
-    const handleSubmit = () => {
-        if (password != confirmPassword) {
-            alert('passwords don\'t match')
-        } else {
-            alert(`Email: ${email}\nName: ${name}\nPassword: ${password}\nConfirm Password: ${confirmPassword}`)
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            const response = await userApi.signupUser(email, name, name, name, password)
+            const {
+                token,
+                username,
+            } = response.data
+            localStorage.setItem('token', token)
+            localStorage.setItem('username', username)
+            history.push('/home')
+        } catch {
+            alert('PLEASE TRY AGAIN\nemail must be valid format\nname can not be more than 10 characters\npasswords must match and be > 8 chars')
         }
     }
 
