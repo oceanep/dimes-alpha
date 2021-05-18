@@ -11,7 +11,7 @@ import styles from './Home.module.scss'
 function Home() {
 
   return (
-    <Center h="100%">Home</Center>
+    <Center h="100%">Home, welcome {localStorage.getItem('username')}</Center>
   );
 }
 

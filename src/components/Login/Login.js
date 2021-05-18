@@ -8,23 +8,37 @@ import {
     VStack,
     StackDivider,
 } from "@chakra-ui/react"
-import {
-    Link
-  } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import './Login.css'
+import userApi from '../../utils/user_api.js';
 
 function Login() {
-    let [username, setUsername] = useState("")
+    let [email, setEmail] = useState("")
     let [password, setPassword] = useState("")
     const [show, setShow] = useState(false)
-
+    let history = useHistory()
     const handleClick = () => setShow(!show)
 
-    const handleSubmit = () => alert(`Username: ${username}\nPassword: ${password}\n`)
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const response = await userApi.loginUser(email, password)
+        console.log(response)
+        if (response.statusText === "Login Failed") {
+            alert('please try logging in again')
+        } else {
+            const {
+                token,
+                username,
+            } = response.data
+            localStorage.setItem('token', token)
+            localStorage.setItem('username', username)
+            history.push('/home')
+        }
+    }
 
-    const handleUsernameChange = (e) => {
+    const handleEmailChange = (e) => {
       let inputValue = e.target.value
-      setUsername(inputValue)
+      setEmail(inputValue)
     }
 
     const handlePasswordChange = (e) => {
@@ -43,8 +57,8 @@ function Login() {
                         <Input
                             pr="4.5rem"
                             type={"text"}
-                            placeholder="Enter username"
-                            onChange={handleUsernameChange}
+                            placeholder="Enter email"
+                            onChange={handleEmailChange}
                         />
                 </InputGroup>
                 <InputGroup size="md">
