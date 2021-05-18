@@ -32,7 +32,6 @@ import Relationships from './pages/Relationships/Relationships'
 import Groups from './pages/Groups/Groups'
 import Initiated from './pages/Initiated/Initiated'
 import Invited from './pages/Invited/Invited'
-import Plans from './pages/Plans/Plans'
 import Schedule from './pages/Schedule/Schedule'
 
 import './App.scss'
@@ -52,7 +51,6 @@ function App() {
               <Route path="/Groups" component={Groups}></Route>
               <Route path="/initiated" component={Initiated}></Route>
               <Route path="/invites" component={Invited}></Route>
-              <Route path="/plans" component={Plans}></Route>
               <Route path="/schedule" component={Schedule}></Route>
               <div>
                 <LandingNav/>
