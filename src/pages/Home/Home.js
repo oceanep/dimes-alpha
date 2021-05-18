@@ -17,7 +17,7 @@ function Home() {
 
   return (
     <Flex className="home-container" px="30px" py="60px" h="100%" w="100%" alignItems='center' justifyContent='space-between'>
-      <Center h="100%">Home, welcome {localStorage.getItem('username')}</Center>
+      {/*<Center h="100%">Home, welcome {localStorage.getItem('username')}</Center>*/}
       <Flex w="50%" maxW="640px" minW='460px' h="80%" flexDirection="column" alignItems="center" justifyContent="space-between">
         <Cal />
         <Upcoming />
