@@ -10,11 +10,8 @@
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^10.2.1",
     "@testing-library/user-event": "^12.0.2",
-<<<<<<< HEAD
     "@wojtekmaj/react-timerange-picker": "^3.2.0",
-=======
     "axios": "^0.21.1",
->>>>>>> 7d43cb3522a95e89a41f2dc55e6438292e5e5cf7
     "formik": "^2.2.6",
     "framer-motion": "^4.0.0",
     "material-design-icons": "^3.0.1",
