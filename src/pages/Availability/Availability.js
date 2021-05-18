@@ -4,14 +4,20 @@ import {
     Box,
     Flex
 } from "@chakra-ui/react"
+
 import withMenu from '../withMenu/withMenu'
+import Cal from '../../components/Cal/Cal'
+import Recurring from '../../components/Recurring/Recurring'
 
 import styles from './Availability.module.scss'
 
 function Availability() {
 
   return (
-    <Center h="100%">Availability</Center>
+    <Flex className="availability-container" px="30px" py="60px" h="100%" w="100%" flexDirection="column" alignItems='center' justifyContent='space-around'>
+      <Cal />
+      <Recurring />
+    </Flex>
   );
 }
 

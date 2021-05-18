@@ -6,32 +6,28 @@ import {
     Box,
     Flex,
     Grid,
-    VStack
+    VStack,
+    GridItem
 } from "@chakra-ui/react"
 
 import {
   Link
 } from "react-router-dom";
 
+import SideMenu from '../../components/SideMenu/SideMenu'
+
 const withMenu = Component => {
 
   const wrappedComponent = ({...props})=> {
     return (
-      <Grid minH="100vh" minW="100%" templateColumns="1fr 3fr">
-        <Box columnStart={1} columnEnd={2}>
-          <Center h="100%">
-            <VStack >
-              <Link to='/home'>Home</Link>
-              <Link to='/availability'>Availability</Link>
-              <Link to='/contacts'>Contacts</Link>
-              <Link to='/plans'>Plans</Link>
-              <Link to='/schedule'>Schedule</Link>
-            </VStack>
-          </Center>
-        </Box>
-        <Box columnStart={2} columnEnd={3}>
+      <Grid minH="100vh" minW="100%" templateColumns="1fr 3fr" templateRows="50px 1fr">
+        <GridItem colStart={1} colEnd={3} rowStart={1} rowEnd={2} bg='gray.50' border="1px" borderColor="gray.200"></GridItem>
+        <GridItem colStart={1} colEnd={2} rowSpan={1} bg='gray.900' border="1px" borderColor="gray.200">
+          <SideMenu />
+        </GridItem>
+        <GridItem colStart={2} colEnd={3} rowSpan={1} border="1px" borderColor="gray.200">
           <Component {...props} />
-        </Box>
+        </GridItem>
       </Grid>
     );
   }
