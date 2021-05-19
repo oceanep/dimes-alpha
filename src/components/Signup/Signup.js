@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
     Center,
     Input,
@@ -9,15 +9,11 @@ import {
     StackDivider,
     FormControl,
     FormLabel,
-    FormHelperText,
     FormErrorMessage
 } from "@chakra-ui/react"
-import {
-    Link,
-    useHistory
-  } from "react-router-dom";
-import userApi from '../../utils/user_api.js';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Link, useHistory } from "react-router-dom"
+import userApi from '../../utils/user_api.js'
+import { Formik, Form, Field } from 'formik'
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
@@ -25,26 +21,6 @@ function Signup() {
     const handlePasswordClick = () => setShowPassword(!showPassword)
     const handleConfirmPasswordClick = () => setConfirmShowPassword(!showConfirmPassword)
     let history = useHistory()
-    let [email, setEmail] = useState("")
-    let [name, setName] = useState("")
-    let [password, setPassword] = useState("")
-    let [confirmPassword, setConfirmPassword] = useState("")
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        try {
-            const response = await userApi.signupUser(email, name, name, name, password)
-            const {
-                token,
-                username,
-            } = response.data
-            localStorage.setItem('token', token)
-            localStorage.setItem('username', username)
-            history.push('/home')
-        } catch {
-            alert('PLEASE TRY AGAIN\nemail must be valid format\nname can not be more than 10 characters\npasswords must match and be > 8 chars')
-        }
-    }
 
     return (
       <Center className="Signup">
@@ -53,56 +29,16 @@ function Signup() {
                 spacing={4}
                 align="stretch"
           >
-
-            {/* <FormControl id="email" isRequired>
-                <FormLabel>Email address</FormLabel>
-                <Input type="email" onChange={handleEmailChange}/>
-                <FormHelperText>We'll never share your email.</FormHelperText>
-            </FormControl>
-
-            <FormControl id="name" isRequired>
-                <FormLabel>Name</FormLabel>
-                <Input type="name" onChange={handleNameChange}/>
-            </FormControl>
-
-            <FormControl id="password" isRequired>
-                <FormLabel>Password</FormLabel>
-                <InputGroup>
-                    <Input type={showPassword ? "text" : "password"} onChange={handlePasswordChange}/>
-                    <InputRightElement width="4.5rem">
-                        <Button h="1.75rem" size="sm" onClick={handlePasswordClick}>
-                            {showPassword ? "Hide" : "Show"}
-                        </Button>
-                    </InputRightElement>
-                </InputGroup>
-            </FormControl>
-
-            <FormControl id="confirmPassword" isRequired>
-                <FormLabel>Confirm Password</FormLabel>
-                <InputGroup>
-                    <Input type="password" type={showConfirmPassword ? "text" : "password"} onChange={handleConfirmPasswordChange}/>
-                    <InputRightElement width="4.5rem">
-                        <Button h="1.75rem" size="sm" onClick={handleConfirmPasswordClick}>
-                            {showConfirmPassword ? "Hide" : "Show"}
-                        </Button>
-                    </InputRightElement>
-                </InputGroup>
-            </FormControl> */}
-
             <Formik
                 initialValues={{ userName: "", email: "", firstName: "", lastName: "", password: "", confirmPassword: "" }}
-                onSubmit={async (values, actions) => {
+                onSubmit={async (values) => {
                     try {
                         const response = await userApi.signupUser(values.email, values.userName, values.firstName, values.lastName, values.password)
-                        const {
-                            token,
-                            username,
-                        } = response.data
+                        const { token, username } = response.data
                         localStorage.setItem('token', token)
                         localStorage.setItem('username', username)
                         history.push('/home')
                     } catch {
-                        console.log(values, actions)
                         alert('Something went wrong, please try again')
                     }
                 }}
@@ -142,7 +78,6 @@ function Signup() {
                     return errors
                 }}
             >
-
                 {() => (
                         <Form>
                         {/* EMAIL */}
@@ -170,7 +105,7 @@ function Signup() {
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.firstName && form.touched.firstName}>
                                     <FormLabel htmlFor="firstName">First Name</FormLabel>
-                                    <Input {...field} id="firstName" placeholder="firstName" />
+                                    <Input {...field} id="firstName" placeholder="First Name" />
                                     <FormErrorMessage>{form.errors.firstName}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -180,7 +115,7 @@ function Signup() {
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.lastName && form.touched.lastName}>
                                     <FormLabel htmlFor="lastName">Last Name</FormLabel>
-                                    <Input {...field} id="lastName" placeholder="lastName" />
+                                    <Input {...field} id="lastName" placeholder="Last Name" />
                                     <FormErrorMessage>{form.errors.lastName}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -195,7 +130,7 @@ function Signup() {
                                             type={showPassword ? "text" : "password"} 
                                             {...field} 
                                             id="password" 
-                                            placeholder="password" 
+                                            placeholder="Password" 
                                         />
                                         <InputRightElement width="4.5rem">
                                             <Button h="1.75rem" size="sm" onClick={handlePasswordClick}>
@@ -217,7 +152,7 @@ function Signup() {
                                             type={showConfirmPassword ? "text" : "password"} 
                                             {...field} 
                                             id="confirmPassword" 
-                                            placeholder="confirmPassword" 
+                                            placeholder="Confirm Password" 
                                         />
                                         <InputRightElement width="4.5rem">
                                             <Button h="1.75rem" size="sm" onClick={handleConfirmPasswordClick}>
@@ -230,17 +165,12 @@ function Signup() {
                             )}
                         </Field>
                         <Button mt={6} colorScheme="teal" type="submit" variant="ghost">
-                            Submit
+                            Signup
                         </Button>
                         </Form>
                 )}
             </Formik>
-
-            <Link
-                to="/login"
-            >
-                Already have an account?
-            </Link>
+            <Link to="/login">Already have an account?</Link>
           </VStack>
       </Center>
     )
