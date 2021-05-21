@@ -1,5 +1,5 @@
 import axios from 'axios'
-let api_endpoint = 'http://ec2-3-113-15-18.ap-northeast-1.compute.amazonaws.com/api/users'
+let api_endpoint = 'http://ec2-35-74-184-115.ap-northeast-1.compute.amazonaws.com/api/users'
 let headers = {
     "Content-type": "application/json",
     "Accept" : "application/json"
