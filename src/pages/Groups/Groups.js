@@ -2,8 +2,12 @@ import {useState} from 'react';
 import {
     Center,
     Box,
-    Flex
+    Flex,
+    Icon,
+    Circle
 } from "@chakra-ui/react"
+import { MdAddCircle } from 'react-icons/md'
+
 import withMenu from '../withMenu/withMenu'
 import Contacts from '../../components/Contacts/Contacts'
 
@@ -34,7 +38,10 @@ function Groups() {
 
   return (
     <Flex className="Groups-container" px="30px" pt="15px" pb="60px" h="100%" w="100%" alignItems='center' justifyContent='center'>
-      <Box w="100%" h="100%" maxW="800px" maxH="600">
+      <Box w="100%" h="100%" maxW="800px" maxH="600" position="relative">
+        <Circle size='40px' shadow='md' position="absolute" right="2%" top="10%">
+          <Icon as={MdAddCircle} />
+        </Circle>
         <Contacts type="Groups" contactItems={contactItems} />
       </Box>
     </Flex>

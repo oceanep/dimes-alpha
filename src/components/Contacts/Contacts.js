@@ -23,9 +23,9 @@ function Contacts(props) {
     <Box __css={c_styles.container} {...rest} w="100%" h="100%">
       <Flex wrap="wrap" justifyContent="space-around" alignItems="center" className={styles.contactsInner}>
         {
-          contactItems.map((contact) => {
+          contactItems.map((contact, index) => {
             return (
-              <Flex w="30%" direction="column" align="center">
+              <Flex w="30%" direction="column" align="center" key={index}>
                 <Circle w="70%" shadow='md' overflow="hidden">
                   <Icon as={ type == "Relationships" ? MdPerson : MdGroup } boxSize="100%" />
                 </Circle>

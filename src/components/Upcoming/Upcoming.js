@@ -35,9 +35,9 @@ function Upcoming() {
       <Box w='100%' h='2em' mb='4px' shadow='md' borderTop="2px" borderColor='gray.50' rounded='md'/>
       <Flex w="100%" justifyContent="space-between" alignItems='center'>
         {
-          data.map((event) => {
+          data.map((event, index) => {
             return(
-              <Card variant='smooth'>
+              <Card variant='smooth' key={index}>
                 <Heading size='sm'>{event.name}</Heading>
                 <span>{event.date}</span>
               </Card>

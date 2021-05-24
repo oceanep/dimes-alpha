@@ -14,7 +14,7 @@ import styles from './Availability.module.scss'
 function Availability() {
 
   return (
-    <Flex className="availability-container" px="30px" py="60px" h="100%" w="100%" flexDirection="column" alignItems='center' justifyContent='space-around'>
+    <Flex className="availability-container" px="30px" py="60px" h="100%" w="100%" flexDirection="column" alignItems='start' justifyContent='space-around'>
       <Cal />
       <Recurring />
     </Flex>
