@@ -20,7 +20,17 @@ i18n
       en: {
         translation: {
           // here we will place our translations...
-          description: {
+          form: {
+            signup: {
+              usernameTitle: 'Username',
+              longUsername: 'Username must be less than 10 characters',
+              shortUsername: 'Username must be at least 3 characters',
+              confirmPassword: 'Confirm Password',
+              matchingPassword: 'Passwords must match',
+              firstName: 'First Name',
+              lastName: 'Last Name',
+              confirmPassword: 'Confirm Password',
+            },
             emailTitle: 'Email',
             invalidEmail: 'Invalid Email Address',
             longEmail: 'Email must be at most 25 characters',
@@ -29,51 +39,54 @@ i18n
             required: 'Required',
             hide: 'Hide',
             show: 'Show',
+          },
+          header: {
             signin: 'Sign In',
             register: 'Register',
+          },
+          footer: {
             privacy: 'Privacy Notice',
             terms: 'Terms of Use',
             dimesInc: 'Dimes Inc.'
-          },
+          }
         }
       },
       jp: {
+        // all of the below still need official translations
         translation: {
-          description: {
-            emailTitle: 'Eメール', // needs official translation
-            invalidEmail: '無効な電子メールアドレス', // needs official transation
+          form: {
+            signup: {
+              usernameTitle: 'ユーザー名',
+              longUsername: 'ユーザー名は10文字未満である必要があります',
+              shortUsername: 'ユーザー名は3文字以上である必要があります',
+              confirmPassword: 'パスワードを認証する',
+              matchingPassword: 'パスワードが一致する必要があります',
+              firstName: 'ファーストネーム',
+              lastName: '苗字',
+              confirmPassword: 'パスワードを認証する',
+            },
+            emailTitle: 'Eメール',
+            invalidEmail: '無効な電子メールアドレス',
             longEmail: '電子メールは最大 25 文字にする必要があります',
             longPassword: 'パスワードは8文字以上でなければなりません',
-            passwordTitle: 'パスワード', // needs official transation
-            required: '必須', // needs official transation
-            hide: '隠す', // needs official transation
-            show: '公演', // needs official transation
-            signin: 'サインイン', // needs official transation
-            register: '登録', // needs official transation
-            privacy: 'プライバシー通知', // needs official translation
-            terms: '利用規約', // needs official translation
-            dimesInc: '株式会社ダイムズ', // needs official translation
+            passwordTitle: 'パスワード', 
+            required: '必須',
+            hide: '隠す',
+            show: '公演',
+          },
+          header: {
+            signin: 'サインイン',
+            register: '登録',
+          },
+          footer: {
+            privacy: 'プライバシー通知',
+            terms: '利用規約',
+            dimesInc: '株式会社ダイムズ'
           }
         }
       },
       cn: {
-        translation: {
-          description: {
-            emailTitle: 'chineseText1', // needs official translation
-            invalidEmail: 'chineseText2', // needs official transation
-            longEmail: 'chineseText3', // needs official transation
-            longPassword: 'chineseText4', // needs official transation
-            passwordTitle: 'chineseText5', // needs official transation
-            required: 'chineseText6', // needs official transation
-            hide: 'chineseText7', // needs official transation
-            show: 'chineseText8', // needs official transation
-            signin: 'chineseText9', // needs official transation
-            register: 'chineseText10', // needs official transation
-            privacy: 'chineseText11', // needs official translation
-            terms: 'chineseText12', // needs official translation
-            dimesInc: 'chineseText13', // needs official translation
-          }
-        }
+        // will need CN translations, can copy paste the above here with correct CN translations
       }
     }
   });

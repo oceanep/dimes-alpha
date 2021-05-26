@@ -22,10 +22,10 @@ function LandingNav() {
         </Box>
         <Spacer/>
         <Link to='/signup'>
-          <Button colorScheme="teal" size="md" ml="15px">{`${t('description.register')}`}</Button>
+          <Button colorScheme="teal" size="md" ml="15px">{`${t('header.register')}`}</Button>
         </Link>
         <Link to='/login'>
-          <Button colorScheme="teal" size="md" ml="15px">{`${t('description.signin')}`}</Button>
+          <Button colorScheme="teal" size="md" ml="15px">{`${t('header.signin')}`}</Button>
         </Link>
       </Flex>
     </nav>

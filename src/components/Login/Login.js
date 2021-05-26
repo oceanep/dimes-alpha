@@ -11,7 +11,7 @@ import {
     FormLabel,
     FormErrorMessage
 } from "@chakra-ui/react"
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import './Login.css'
 import userApi from '../../utils/user_api.js'
 import { Formik, Form, Field } from 'formik';
@@ -46,16 +46,16 @@ function Login() {
                 validate={values => {
                     const errors = {}
                     if (!values.email) {
-                        errors.email = `${t('description.required')}`
+                        errors.email = `${t('form.required')}`
                     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-                        errors.email = `${t('description.invalidEmail')}`
+                        errors.email = `${t('form.invalidEmail')}`
                     } else if (values.email.length > 25) {
-                        errors.email = `${t('description.longEmail')}`
+                        errors.email = `${t('form.longEmail')}`
                     }
                     if (!values.password) {
-                        errors.password = `${t('description.required')}`
+                        errors.password = `${t('form.required')}`
                     } else if (values.password.length < 8) {
-                        errors.password = `${t('description.longPassword')}`
+                        errors.password = `${t('form.longPassword')}`
                     }
                     return errors
                 }}
@@ -67,8 +67,8 @@ function Login() {
                         <Field name="email" type="email">
                             {({ field, form }) => (
                             <FormControl isInvalid={form.errors.email && form.touched.email}>
-                                <FormLabel htmlFor="email">{t('description.emailTitle')}</FormLabel>
-                                <Input {...field} id="email" placeholder={`${t('description.emailTitle')}`} />
+                                <FormLabel htmlFor="email">{t('form.emailTitle')}</FormLabel>
+                                <Input {...field} id="email" placeholder={`${t('form.emailTitle')}`} />
                                 <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                             </FormControl>
                             )}
@@ -77,17 +77,17 @@ function Login() {
                         <Field name="password">
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.password && form.touched.password}>
-                                    <FormLabel htmlFor="password">{t('description.passwordTitle')}</FormLabel>
+                                    <FormLabel htmlFor="password">{t('form.passwordTitle')}</FormLabel>
                                     <InputGroup>
                                         <Input 
                                             type={show ? "text" : "password"} 
                                             {...field}
                                             id="password" 
-                                            placeholder={`${t('description.passwordTitle')}`}
+                                            placeholder={`${t('form.passwordTitle')}`}
                                         />
                                         <InputRightElement width="4.5rem">
                                             <Button h="1.75rem" size="sm" onClick={handleClick}>
-                                                {show ? `${t('description.hide')}` : `${t('description.show')}`}
+                                                {show ? `${t('form.hide')}` : `${t('form.show')}`}
                                             </Button>
                                         </InputRightElement>
                                     </InputGroup>
@@ -96,7 +96,7 @@ function Login() {
                             )}
                         </Field>
                         <Button mt={6} colorScheme="teal" type="submit" variant="ghost">
-                            {`${t('description.signin')}`}
+                            {`${t('header.signin')}`}
                         </Button>
                         </Form>
                 )}
