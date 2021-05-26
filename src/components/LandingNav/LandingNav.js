@@ -3,13 +3,16 @@ import {
   Flex,
   Button,
   Spacer,
-  Image
+  Image,
 } from '@chakra-ui/react';
 import {
   Link
 } from "react-router-dom";
+import { useTranslation, Trans } from 'react-i18next'
 
 function LandingNav() {
+
+  const { t, i18n } = useTranslation()
 
   return (
     <nav>
@@ -19,10 +22,10 @@ function LandingNav() {
         </Box>
         <Spacer/>
         <Link to='/signup'>
-          <Button colorScheme="teal" size="md" ml="15px">Register</Button>
+          <Button colorScheme="teal" size="md" ml="15px">{`${t('description.register')}`}</Button>
         </Link>
         <Link to='/login'>
-          <Button colorScheme="teal" size="md" ml="15px">Sign In</Button>
+          <Button colorScheme="teal" size="md" ml="15px">{`${t('description.signin')}`}</Button>
         </Link>
       </Flex>
     </nav>

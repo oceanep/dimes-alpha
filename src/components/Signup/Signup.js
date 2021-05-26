@@ -14,6 +14,7 @@ import {
 import { Link, useHistory } from "react-router-dom"
 import userApi from '../../utils/user_api.js'
 import { Formik, Form, Field } from 'formik'
+import { useTranslation, Trans } from 'react-i18next'
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
@@ -21,6 +22,7 @@ function Signup() {
     const handlePasswordClick = () => setShowPassword(!showPassword)
     const handleConfirmPasswordClick = () => setConfirmShowPassword(!showConfirmPassword)
     let history = useHistory()
+    const { t, i18n } = useTranslation()
 
     return (
       <Center className="Signup">
