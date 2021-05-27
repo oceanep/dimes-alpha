@@ -8,7 +8,7 @@ import {
 import {
   Link
 } from "react-router-dom";
-import { useTranslation, Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 function LandingNav() {
 
@@ -27,6 +27,7 @@ function LandingNav() {
         <Link to='/login'>
           <Button colorScheme="teal" size="md" ml="15px">{`${t('header.signin')}`}</Button>
         </Link>
+        <Button colorScheme="teal" size="md" ml="15px">{`${t('header.logout')}`}</Button>
       </Flex>
     </nav>
   );

@@ -30,6 +30,7 @@ i18n
               firstName: 'First Name',
               lastName: 'Last Name',
               confirmPassword: 'Confirm Password',
+              google: 'Register with Google'
             },
             emailTitle: 'Email',
             invalidEmail: 'Invalid Email Address',
@@ -43,6 +44,7 @@ i18n
           header: {
             signin: 'Sign In',
             register: 'Register',
+            logout: 'Log Out'
           },
           footer: {
             privacy: 'Privacy Notice',
@@ -64,6 +66,7 @@ i18n
               firstName: 'ファーストネーム',
               lastName: '苗字',
               confirmPassword: 'パスワードを認証する',
+              google: 'Googleに登録する',
             },
             emailTitle: 'Eメール',
             invalidEmail: '無効な電子メールアドレス',
@@ -77,6 +80,7 @@ i18n
           header: {
             signin: 'サインイン',
             register: '登録',
+            logout: 'ログアウト'
           },
           footer: {
             privacy: 'プライバシー通知',

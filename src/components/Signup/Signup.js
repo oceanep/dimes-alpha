@@ -15,6 +15,7 @@ import { useHistory } from "react-router-dom"
 import userApi from '../../utils/user_api.js'
 import { Formik, Form, Field } from 'formik'
 import { useTranslation, Trans } from 'react-i18next'
+import { FaGoogle } from "react-icons/fa"
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
@@ -167,12 +168,11 @@ function Signup() {
                                 </FormControl>
                             )}
                         </Field>
-                        <Button mt={6} colorScheme="teal" type="submit" variant="ghost">
-                        {`${t('header.register')}`}
-                        </Button>
+                        <Button mt={6} colorScheme="teal" type="submit" variant="ghost">{`${t('header.register')}`}</Button>
                         </Form>
                 )}
             </Formik>
+            <Button leftIcon={<FaGoogle />} colorScheme="teal" variant="outline">{`${t('form.signup.google')}`}</Button>
           </VStack>
       </Center>
     )
