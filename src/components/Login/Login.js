@@ -11,15 +11,17 @@ import {
     FormLabel,
     FormErrorMessage
 } from "@chakra-ui/react"
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import './Login.css'
 import userApi from '../../utils/user_api.js'
 import { Formik, Form, Field } from 'formik';
+import { useTranslation, Trans } from 'react-i18next'
 
 function Login() {
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)
     let history = useHistory()
+    const { t, i18n } = useTranslation()
 
     return (
       <Center className="Login" minH="80%">
@@ -44,16 +46,16 @@ function Login() {
                 validate={values => {
                     const errors = {}
                     if (!values.email) {
-                        errors.email = "Required"
+                        errors.email = `${t('form.required')}`
                     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-                        errors.email = "Invalid email address"
+                        errors.email = `${t('form.invalidEmail')}`
                     } else if (values.email.length > 25) {
-                        errors.email = "Email must be at most 25 characters"
+                        errors.email = `${t('form.longEmail')}`
                     }
                     if (!values.password) {
-                        errors.password = "Password is required"
+                        errors.password = `${t('form.required')}`
                     } else if (values.password.length < 8) {
-                        errors.password = "Password must be at least 8 characters"
+                        errors.password = `${t('form.longPassword')}`
                     }
                     return errors
                 }}
@@ -65,8 +67,8 @@ function Login() {
                         <Field name="email" type="email">
                             {({ field, form }) => (
                             <FormControl isInvalid={form.errors.email && form.touched.email}>
-                                <FormLabel htmlFor="email">Email</FormLabel>
-                                <Input {...field} id="email" placeholder="Email" />
+                                <FormLabel htmlFor="email">{t('form.emailTitle')}</FormLabel>
+                                <Input {...field} id="email" placeholder={`${t('form.emailTitle')}`} />
                                 <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                             </FormControl>
                             )}
@@ -75,17 +77,17 @@ function Login() {
                         <Field name="password">
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.password && form.touched.password}>
-                                    <FormLabel htmlFor="password">Password</FormLabel>
+                                    <FormLabel htmlFor="password">{t('form.passwordTitle')}</FormLabel>
                                     <InputGroup>
                                         <Input 
                                             type={show ? "text" : "password"} 
-                                            {...field} 
+                                            {...field}
                                             id="password" 
-                                            placeholder="Password" 
+                                            placeholder={`${t('form.passwordTitle')}`}
                                         />
                                         <InputRightElement width="4.5rem">
                                             <Button h="1.75rem" size="sm" onClick={handleClick}>
-                                                {show ? "Hide" : "Show"}
+                                                {show ? `${t('form.hide')}` : `${t('form.show')}`}
                                             </Button>
                                         </InputRightElement>
                                     </InputGroup>
@@ -94,12 +96,11 @@ function Login() {
                             )}
                         </Field>
                         <Button mt={6} colorScheme="teal" type="submit" variant="ghost">
-                            Login
+                            {`${t('header.signin')}`}
                         </Button>
                         </Form>
                 )}
             </Formik>
-            <Link to="/signup">Don't have an account?</Link>
             </VStack>
       </Center>
     )

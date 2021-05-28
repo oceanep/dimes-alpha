@@ -11,9 +11,11 @@ import {
     FormLabel,
     FormErrorMessage
 } from "@chakra-ui/react"
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import userApi from '../../utils/user_api.js'
 import { Formik, Form, Field } from 'formik'
+import { useTranslation, Trans } from 'react-i18next'
+import { FaGoogle } from "react-icons/fa"
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
@@ -21,6 +23,7 @@ function Signup() {
     const handlePasswordClick = () => setShowPassword(!showPassword)
     const handleConfirmPasswordClick = () => setConfirmShowPassword(!showConfirmPassword)
     let history = useHistory()
+    const { t, i18n } = useTranslation()
 
     return (
       <Center className="Signup">
@@ -46,33 +49,34 @@ function Signup() {
                     const errors = {}
 
                     if (!values.userName) {
-                        errors.userName = "Username is required"
+                        errors.userName = `${t('form.required')}`
                     } else if (values.userName.length > 10) {
-                        errors.userName = "Username must be less than 10 characters"
+                        errors.userName = `${t('form.signup.longUsername')}`
                     } else if (values.userName.length < 3) {
-                        errors.userName = "Username must be at least 3 characters"
+                        errors.userName = `${t('form.signup.shortUsername')}`
                     }
 
                     if (!values.email) {
-                        errors.email = "Required"
+                        errors.email = `${t('form.required')}`
                     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-                        errors.email = "Invalid email address"
+                        errors.email = `${t('form.invalidEmail')}`
                     } else if (values.email.length > 25) {
-                        errors.email = "Email must be at most 25 characters"
+                        errors.email = `${t('form.longEmail')}`
                     }
 
                     if (!values.password) {
-                        errors.password = "Password is required"
+                        errors.password = `${t('form.required')}`
                     } else if (values.password.length < 8) {
-                        errors.password = "Password must be at least 8 characters"
+                        errors.password = `${t('form.longPassword')}`
                     }
-                    if (!values.firstName) errors.firstName = "First name is required"
-                    if (!values.lastName) errors.lastName = "Last name is required"
+
+                    if (!values.firstName) errors.firstName = `${t('form.required')}`
+                    if (!values.lastName) errors.lastName = `${t('form.required')}`
 
                     if (!values.confirmPassword) {
-                        errors.confirmPassword = "Confirm password"
+                        errors.confirmPassword = `${t('form.signup.confirmPassword')}`
                     } else if (values.password !== values.confirmPassword) {
-                        errors.confirmPassword = "Passwords must match"
+                        errors.confirmPassword = `${t('form.signup.matchingPassword')}`
                     }
 
                     return errors
@@ -84,8 +88,8 @@ function Signup() {
                         <Field name="email" type="email">
                             {({ field, form }) => (
                             <FormControl isInvalid={form.errors.email && form.touched.email}>
-                                <FormLabel htmlFor="email">Email</FormLabel>
-                                <Input {...field} id="email" placeholder="Email" />
+                                <FormLabel htmlFor="email">{t('form.emailTitle')}</FormLabel>
+                                <Input {...field} id="email" placeholder={`${t('form.emailTitle')}`} />
                                 <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                             </FormControl>
                             )}
@@ -94,8 +98,8 @@ function Signup() {
                         <Field name="userName">
                             {({ field, form }) => (
                             <FormControl isInvalid={form.errors.userName && form.touched.userName}>
-                                <FormLabel htmlFor="userName">Username</FormLabel>
-                                <Input {...field} id="userName" placeholder="Username" />
+                                <FormLabel htmlFor="userName">{t('form.signup.usernameTitle')}</FormLabel>
+                                <Input {...field} id="userName" placeholder={`${t('form.signup.usernameTitle')}`} />
                                 <FormErrorMessage>{form.errors.userName}</FormErrorMessage>
                             </FormControl>
                             )}
@@ -104,8 +108,8 @@ function Signup() {
                         <Field name="firstName">
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.firstName && form.touched.firstName}>
-                                    <FormLabel htmlFor="firstName">First Name</FormLabel>
-                                    <Input {...field} id="firstName" placeholder="First Name" />
+                                    <FormLabel htmlFor="firstName">{t('form.signup.firstName')}</FormLabel>
+                                    <Input {...field} id="firstName" placeholder={`${t('form.signup.firstName')}`} />
                                     <FormErrorMessage>{form.errors.firstName}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -114,8 +118,8 @@ function Signup() {
                         <Field name="lastName">
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.lastName && form.touched.lastName}>
-                                    <FormLabel htmlFor="lastName">Last Name</FormLabel>
-                                    <Input {...field} id="lastName" placeholder="Last Name" />
+                                    <FormLabel htmlFor="lastName">{t('form.signup.lastName')}</FormLabel>
+                                    <Input {...field} id="lastName" placeholder={`${t('form.signup.lastName')}`} />
                                     <FormErrorMessage>{form.errors.lastName}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -124,17 +128,17 @@ function Signup() {
                         <Field name="password">
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.password && form.touched.password}>
-                                    <FormLabel htmlFor="password">Password</FormLabel>
+                                    <FormLabel htmlFor="password">{t('form.passwordTitle')}</FormLabel>
                                     <InputGroup>
                                         <Input 
                                             type={showPassword ? "text" : "password"} 
                                             {...field} 
                                             id="password" 
-                                            placeholder="Password" 
+                                            placeholder={`${t('form.passwordTitle')}`}
                                         />
                                         <InputRightElement width="4.5rem">
                                             <Button h="1.75rem" size="sm" onClick={handlePasswordClick}>
-                                                {showPassword ? "Hide" : "Show"}
+                                                {showPassword ? `${t('form.hide')}` : `${t('form.show')}`}
                                             </Button>
                                         </InputRightElement>
                                     </InputGroup>
@@ -146,17 +150,17 @@ function Signup() {
                         <Field name="confirmPassword">
                             {({ field, form }) => (
                                 <FormControl isInvalid={form.errors.confirmPassword && form.touched.confirmPassword}>
-                                    <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                                    <FormLabel htmlFor="confirmPassword">{t('form.signup.confirmPassword')}</FormLabel>
                                     <InputGroup>
                                         <Input 
                                             type={showConfirmPassword ? "text" : "password"} 
                                             {...field} 
                                             id="confirmPassword" 
-                                            placeholder="Confirm Password" 
+                                            placeholder={`${t('form.signup.confirmPassword')}`} 
                                         />
                                         <InputRightElement width="4.5rem">
                                             <Button h="1.75rem" size="sm" onClick={handleConfirmPasswordClick}>
-                                                {showConfirmPassword ? "Hide" : "Show"}
+                                                {showConfirmPassword ? `${t('form.hide')}` : `${t('form.show')}`}
                                             </Button>
                                         </InputRightElement>
                                     </InputGroup>
@@ -164,13 +168,11 @@ function Signup() {
                                 </FormControl>
                             )}
                         </Field>
-                        <Button mt={6} colorScheme="teal" type="submit" variant="ghost">
-                            Signup
-                        </Button>
+                        <Button mt={6} colorScheme="teal" type="submit" variant="ghost">{`${t('header.register')}`}</Button>
                         </Form>
                 )}
             </Formik>
-            <Link to="/login">Already have an account?</Link>
+            <Button leftIcon={<FaGoogle />} colorScheme="teal" variant="outline">{`${t('form.signup.google')}`}</Button>
           </VStack>
       </Center>
     )
