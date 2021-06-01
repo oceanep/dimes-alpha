@@ -54,7 +54,6 @@ i18n
         }
       },
       jp: {
-        // all of the below still need official translations
         translation: {
           form: {
             signup: {
@@ -90,7 +89,39 @@ i18n
         }
       },
       cn: {
-        // will need CN translations, can copy paste the above here with correct CN translations
+        translation: {
+          form: {
+            signup: {
+              usernameTitle: '用户名',
+              longUsername: '用户名必须少于 10 个字符',
+              shortUsername: '用户名必须至少为 3 个字符',
+              confirmPassword: '确认密码',
+              matchingPassword: '密码必须匹配',
+              firstName: '名',
+              lastName: '姓',
+              confirmPassword: '确认密码',
+              google: '在谷歌注册'
+            },
+            emailTitle: '电子邮件',
+            invalidEmail: '无效的邮件地址',
+            longEmail: '电子邮件不得超过 25 个字符',
+            longPassword: '密码必须至少8个字符',
+            passwordTitle: '密码', 
+            required: '必需的',
+            hide: '隐藏',
+            show: '表演',
+          },
+          header: {
+            signin: '登入',
+            register: '登记',
+            logout: '登出'
+          },
+          footer: {
+            privacy: '隐私声明',
+            terms: '使用条款',
+            dimesInc: '迪姆斯公司'
+          }
+        }
       }
     }
   });

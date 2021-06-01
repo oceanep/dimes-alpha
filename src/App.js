@@ -45,18 +45,18 @@ function App() {
 
             <ColorModeSwitcher justifySelf="flex-end" pos="absolute" top="0" right="0" mt="5px"/>
             <Switch>
-              <Route path="/home" component={Home}></Route>
-              <Route path="/availability" component={Availability}></Route>
-              <Route path="/relationships" component={Relationships}></Route>
-              <Route path="/Groups" component={Groups}></Route>
-              <Route path="/initiated" component={Initiated}></Route>
-              <Route path="/invites" component={Invited}></Route>
-              <Route path="/schedule" component={Schedule}></Route>
+              <Route path="/home" component={localStorage.getItem("token") ? Home : LandingPage}></Route>
+              <Route path="/availability" component={localStorage.getItem("token") ? Availability : LandingPage}></Route>
+              <Route path="/relationships" component={localStorage.getItem("token") ? Relationships : LandingPage}></Route>
+              <Route path="/Groups" component={localStorage.getItem("token") ? Groups : LandingPage}></Route>
+              <Route path="/initiated" component={localStorage.getItem("token") ? Initiated : LandingPage}></Route>
+              <Route path="/invites" component={localStorage.getItem("token") ? Invited : LandingPage}></Route>
+              <Route path="/schedule" component={localStorage.getItem("token") ? Schedule : LandingPage}></Route>
               <div>
                 <LandingNav/>
                 <Route path="/landing" component={LandingPage}/>
-                <Route path="/login" component={Login}></Route>
-                <Route path="/signup" component={Signup}></Route>
+                <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
+                <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
                 <LandingFooter/>
               </div>
             </Switch>
