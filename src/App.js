@@ -54,7 +54,7 @@ function App() {
               <Route path="/schedule" component={Schedule}></Route>
               <div>
                 <LandingNav/>
-                <Route path="/landing" component={LandingPage}/>
+                <Route path="/" component={LandingPage}/>
                 <Route path="/login" component={Login}></Route>
                 <Route path="/signup" component={Signup}></Route>
                 <LandingFooter/>
