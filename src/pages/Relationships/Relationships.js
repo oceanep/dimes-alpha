@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
     Center,
     Box,
@@ -10,31 +11,35 @@ import { MdAddCircle } from 'react-icons/md'
 
 import withMenu from '../withMenu/withMenu'
 import Contacts from '../../components/Contacts/Contacts'
+import Pagination from '../../components/Pagination/Pagination'
 
 import styles from './Relationships.module.scss'
 
 function Relationships() {
 
-  const contactItems= [
-    {
-      name: "Spike Spiegel"
-    },
-    {
-      name: "Faye Valentine"
-    },
-    {
-      name: "Jet"
-    },
-    {
-      name: "Edward"
-    },
-    {
-      name: "Julia"
-    },
-    {
-      name: "Vicious"
-    }
-  ]
+  const [contactItems, setContacts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contactsPerPage] = useState(6);
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      setLoading(true)
+      const res = await axios.get('https://jsonplaceholder.typicode.com/posts')
+      setContacts(res.data);
+      setLoading(false);
+    };
+
+    fetchContacts()
+  }, [])
+
+  // Get current contacts
+ const indexOfLastPost = currentPage * contactsPerPage;
+ const indexOfFirstPost = indexOfLastPost - contactsPerPage;
+ const currentContacts = contactItems.slice(indexOfFirstPost, indexOfLastPost);
+
+ //Change page
+ const paginate = pageNumber => setCurrentPage(pageNumber)
 
   return (
     <Flex className="relationships-container" px="30px" pt="15px" pb="60px" h="100%" w="100%" alignItems='center' justifyContent='center'>
@@ -42,7 +47,13 @@ function Relationships() {
         <Circle size='40px' shadow='md' position="absolute" right="2%" top="10%">
           <Icon as={MdAddCircle} />
         </Circle>
-        <Contacts type="Relationships" contactItems={contactItems} />
+        <Contacts type="Relationships" contactItems={currentContacts} />
+        <Pagination
+          contactsPerPage={contactsPerPage}
+          totalContacts={contactItems.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
       </Box>
     </Flex>
   );

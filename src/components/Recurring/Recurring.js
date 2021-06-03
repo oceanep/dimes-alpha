@@ -96,7 +96,7 @@ function Recurring() {
         <Flex px='1em' py='.5em' mb='1em' shadow='md' rounded='md' borderTop="2px" borderColor='gray.50' direction='column'>
               { days.map( (day,index) => {
                 return (
-                  <Flex key={index} justifyContent='space-around' py='10px'>
+                  <Flex key={index} justifyContent='space-around' py='10px' borderBottom='1px' borderColor='gray.50'>
                     <Box minW='2em' maxW='3em'>
                       <Checkbox isChecked={
                         availability[index].hasOwnProperty('active') ?
@@ -113,14 +113,14 @@ function Recurring() {
                               value={timeRange[index]}
                               className='recCustom'
                             />
-                            <IconButton onClick={() => addTime(day, index)} icon={<MdAddCircle/>} size='lg' shadow='md' bg='white' borderTop="2px" borderColor='gray.50' rounded='md'/>
+                            <IconButton onClick={() => addTime(day, index)} icon={<MdAddCircle/>} size='lg' bg='white' border="1px" borderColor='gray.50' rounded='md'/>
                           </Flex>
                           {
                             availability[index].hasOwnProperty('times') ?
                               availability[index]['times'].map( (time, i) =>
                                 <Flex key={i}  pl='15px' pt='10px' justifyContent='space-between' align='center'>
                                   <span>{time[0]} - {time[1]}</span>
-                                  <IconButton onClick={ () => removeTime(index, i)} icon={<MdDeleteForever/>} size='lg' shadow='md' bg='white' borderTop="2px" borderColor='gray.50' rounded='md'/>
+                                  <IconButton onClick={ () => removeTime(index, i)} icon={<MdDeleteForever/>} size='lg' bg='white' border="1px" borderColor='gray.50' rounded='md'/>
                                 </Flex>
                               )
                             :''

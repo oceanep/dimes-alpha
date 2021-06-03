@@ -75,6 +75,8 @@ const Contacts = {
       borderColor: "gray.50",
       borderRadius: "xl",
       boxShadow: "xl",
+      paddingTop: "20px",
+      paddingBottom: "20px"
     },
     bottomBar: {
       display: "flex",
