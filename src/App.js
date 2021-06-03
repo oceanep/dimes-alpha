@@ -54,7 +54,7 @@ function App() {
               <Route path="/schedule" component={localStorage.getItem("token") ? Schedule : LandingPage}></Route>
               <div>
                 <LandingNav/>
-                <Route path="/landing" component={LandingPage}/>
+                <Route path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
                 <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
                 <LandingFooter/>

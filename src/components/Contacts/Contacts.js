@@ -20,29 +20,21 @@ function Contacts(props) {
   return (
     <>
     <Heading size="lg" mb="0.5em">{ type }</Heading>
-    <Box __css={c_styles.container} {...rest} w="100%" h="100%">
+    <Box __css={c_styles.container} {...rest} w="100%" minH="560px">
       <Flex wrap="wrap" justifyContent="space-around" alignItems="center" className={styles.contactsInner}>
         {
-          contactItems.map((contact) => {
+          contactItems.map((contact, index) => {
             return (
-              <Flex w="30%" direction="column" align="center">
+              <Flex w="30%" direction="column" align="center" key={index}>
                 <Circle w="70%" shadow='md' overflow="hidden">
                   <Icon as={ type == "Relationships" ? MdPerson : MdGroup } boxSize="100%" />
                 </Circle>
-                <Text>{ contact.name }</Text>
+                <Text>{ contact.title }</Text>
               </Flex>
             )
           })
         }
       </Flex>
-      <Box __css={c_styles.bottomBar} {...rest} h="4em" >
-        <Circle size='40px' shadow='md'>
-          <Icon as={MdArrowBack} />
-        </Circle>
-        <Circle size='40px' shadow='md'>
-          <Icon as={MdArrowForward} />
-        </Circle>
-      </Box>
     </Box>
     </>
   )

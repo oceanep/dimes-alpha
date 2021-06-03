@@ -6,10 +6,13 @@ import {
     Text
 } from "@chakra-ui/react"
 
+import { MdAddCircle } from 'react-icons/md'
+
 import withMenu from '../withMenu/withMenu'
 import Cal from '../../components/Cal/Cal'
 import Upcoming from '../../components/Upcoming/Upcoming'
 import List from '../../components/List/List'
+import CreateModal from '../../components/CreateModal/CreateModal'
 
 import styles from './Home.module.scss'
 
@@ -29,6 +32,17 @@ function Home() {
           <Center borderBottom='1px' borderColor='gray.50' h='2em' >Jet's Bday 6/29/2021/ 17:00pm</Center>
           <Center borderBottom='1px' borderColor='gray.50' h='2em' >Brunch 8/19/2021/ 9:00am</Center>
         </List>
+        <CreateModal
+          label={
+            {
+              title: 'Find the right timing',
+              icon: <MdAddCircle />,
+              button: 'Create Plan',
+              placeholder: 'Duration',
+              secondary: 'Find Timing'
+            }
+          }
+        />
       </Flex>
     </Flex>
   );

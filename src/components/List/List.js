@@ -20,7 +20,7 @@ function List(props) {
           title ? <Heading size="md">{title}</Heading> : ''
         }
       </Box>
-      <Flex flexDirection='column' className={styles.listFlex}>{children}</Flex>
+      <Flex flexDirection='column' className={styles.listFlex} overflowY='scroll'>{children}</Flex>
       <Box __css={c_styles.bottomBar} {...rest} h="2em" />
     </Box>
   )
