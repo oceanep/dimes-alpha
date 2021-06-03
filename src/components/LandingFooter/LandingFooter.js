@@ -9,8 +9,17 @@ import {
 import {
   Link
 } from "react-router-dom";
+import { useTranslation, Trans } from 'react-i18next'
+
+const lngs = {
+  en: { nativeName: 'English' },
+  jp: { nativeName: '日本語' },
+  cn: { nativeName: '中国語' }
+}
 
 function LandingFooter() {
+
+  const { t, i18n } = useTranslation()
 
   return (
     <footer>
@@ -18,9 +27,22 @@ function LandingFooter() {
         <Box>
           <Image maxW="100px" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/dimes_logo_2.png" alt="Dimes Logo"/>
         </Box>
-        <Text ml="15px" fontSize="xs"><a href="" target="_blank">Privacy Notice</a> | <a href="" target="_blank">Terms of Use</a></Text>
+        <Text ml="15px" fontSize="xs"><a href="" target="_blank">{`${t('footer.privacy')}`}</a> | <a href="" target="_blank">{`${t('footer.terms')}`}</a></Text>
         <Spacer/>
-        <Text fontSize="xs">&#169;2021 Dimes Inc.</Text>
+        {Object.keys(lngs).map((lng) => (
+          <Button 
+              key={lng} 
+              // style={{ fontWeight: i18n.language === lng ? 'bold' : 'normal' }} 
+              type="submit" 
+              onClick={() => i18n.changeLanguage(lng)}
+              colorScheme="gray" 
+              size="xs" 
+              ml="15px"
+          >
+            {lngs[lng].nativeName}
+          </Button>
+        ))}
+        <Text fontSize="xs" ml="15px">&#169;&nbsp;2021 {`${t('footer.dimesInc')}`}</Text>
       </Flex>
     </footer>
   );

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react'
 import {
     Center,
     Input,
@@ -7,44 +7,21 @@ import {
     InputGroup,
     VStack,
     StackDivider,
+    FormControl,
+    FormLabel,
+    FormErrorMessage
 } from "@chakra-ui/react"
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom"
 import './Login.css'
-import userApi from '../../utils/user_api.js';
+import userApi from '../../utils/user_api.js'
+import { Formik, Form, Field } from 'formik';
+import { useTranslation, Trans } from 'react-i18next'
 
 function Login() {
-    let [email, setEmail] = useState("")
-    let [password, setPassword] = useState("")
     const [show, setShow] = useState(false)
-    let history = useHistory()
     const handleClick = () => setShow(!show)
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const response = await userApi.loginUser(email, password)
-        console.log(response)
-        if (response.statusText === "Login Failed") {
-            alert('please try logging in again')
-        } else {
-            const {
-                token,
-                username,
-            } = response.data
-            localStorage.setItem('token', token)
-            localStorage.setItem('username', username)
-            history.push('/home')
-        }
-    }
-
-    const handleEmailChange = (e) => {
-      let inputValue = e.target.value
-      setEmail(inputValue)
-    }
-
-    const handlePasswordChange = (e) => {
-        let inputValue = e.target.value
-        setPassword(inputValue)
-    }
+    let history = useHistory()
+    const { t, i18n } = useTranslation()
 
     return (
       <Center className="Login" minH="80%">
@@ -53,35 +30,77 @@ function Login() {
                 spacing={4}
                 align="stretch"
             >
-                <InputGroup size="md">
-                        <Input
-                            pr="4.5rem"
-                            type={"text"}
-                            placeholder="Enter email"
-                            onChange={handleEmailChange}
-                        />
-                </InputGroup>
-                <InputGroup size="md">
-                        <Input
-                            pr="4.5rem"
-                            type={show ? "text" : "password"}
-                            placeholder="Enter password"
-                            onChange={handlePasswordChange}
-                        />
-                        <InputRightElement width="4.5rem">
-                            <Button h="1.75rem" size="sm" onClick={handleClick}>
-                                {show ? "Hide" : "Show"}
-                            </Button>
-                        </InputRightElement>
-                </InputGroup>
-                    <Button colorScheme="teal" variant="ghost" onClick={handleSubmit}>
-                        Login
-                    </Button>
-                    <Link
-                        to="/signup"
-                    >
-                        Don't have an account?
-                    </Link>
+            <Formik
+                initialValues={{ email: "", password: "" }}
+                onSubmit={async (values) => {
+                    const response = await userApi.loginUser(values.email, values.password)
+                    if (response.statusText === "Login Failed") {
+                        alert('Unable to find account')
+                    } else {
+                        const { token, username } = response.data
+                        localStorage.setItem('token', token)
+                        localStorage.setItem('username', username)
+                        history.push('/home')
+                    }
+                }}
+                validate={values => {
+                    const errors = {}
+                    if (!values.email) {
+                        errors.email = `${t('form.required')}`
+                    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+                        errors.email = `${t('form.invalidEmail')}`
+                    } else if (values.email.length > 25) {
+                        errors.email = `${t('form.longEmail')}`
+                    }
+                    if (!values.password) {
+                        errors.password = `${t('form.required')}`
+                    } else if (values.password.length < 8) {
+                        errors.password = `${t('form.longPassword')}`
+                    }
+                    return errors
+                }}
+            >
+
+                {() => (
+                        <Form>
+                        {/* EMAIL */}
+                        <Field name="email" type="email">
+                            {({ field, form }) => (
+                            <FormControl isInvalid={form.errors.email && form.touched.email}>
+                                <FormLabel htmlFor="email">{t('form.emailTitle')}</FormLabel>
+                                <Input {...field} id="email" placeholder={`${t('form.emailTitle')}`} />
+                                <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                            </FormControl>
+                            )}
+                        </Field>
+                        {/* PASSWORD */}
+                        <Field name="password">
+                            {({ field, form }) => (
+                                <FormControl isInvalid={form.errors.password && form.touched.password}>
+                                    <FormLabel htmlFor="password">{t('form.passwordTitle')}</FormLabel>
+                                    <InputGroup>
+                                        <Input 
+                                            type={show ? "text" : "password"} 
+                                            {...field}
+                                            id="password" 
+                                            placeholder={`${t('form.passwordTitle')}`}
+                                        />
+                                        <InputRightElement width="4.5rem">
+                                            <Button h="1.75rem" size="sm" onClick={handleClick}>
+                                                {show ? `${t('form.hide')}` : `${t('form.show')}`}
+                                            </Button>
+                                        </InputRightElement>
+                                    </InputGroup>
+                                    <FormErrorMessage>{form.errors.password}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Button mt={6} colorScheme="teal" type="submit" variant="ghost">
+                            {`${t('header.signin')}`}
+                        </Button>
+                        </Form>
+                )}
+            </Formik>
             </VStack>
       </Center>
     )
