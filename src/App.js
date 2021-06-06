@@ -20,7 +20,7 @@ import {
 
 import theme from './styles/theme'
 
-import LandingNav from './components/LandingNav/LandingNav'
+import LandingNav from './components/LandingNav/LandingNav.jsx'
 import LandingFooter from './components/LandingFooter/LandingFooter'
 import Login from './components/Login/Login'
 import Signup from './components/Signup/Signup'
