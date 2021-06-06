@@ -3,17 +3,20 @@ import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
 // import i18n (needs to be bundled ;))
 import './i18n';
 
 ReactDOM.render(
-  <StrictMode>
-    <ColorModeScript />
-    <App />
-  </StrictMode>,
-  document.getElementById('root')
+    <BrowserRouter>
+      <StrictMode>
+        <ColorModeScript />
+        <App />
+      </StrictMode>
+    </BrowserRouter>,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
