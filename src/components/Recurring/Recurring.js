@@ -48,6 +48,15 @@ function Recurring() {
     onTimeChange(newArr)
   }
 
+  const changeNewTime = (time, index, i) => {
+    let newArr = [...availability]
+    console.log('index', index)
+    console.log('preparing to add...', time)
+    newArr[index].times[i] = time
+    console.log('adding...',newArr)
+    setAvailability(newArr)
+  }
+
   const addTime = (day, index) => {
 
     let newArr = [...availability]
@@ -90,53 +99,54 @@ function Recurring() {
   }
 
   return (
-    <Flex w="100%" h="100%" justifyContent="space-between" className="recurring-container">
-      <Box minW="640px">
-        <Text w="50%" align="left">Recurring Availability</Text>
-        <Flex px='1em' py='.5em' mb='1em' shadow='md' rounded='md' borderTop="2px" borderColor='gray.50' direction='column'>
-              { days.map( (day,index) => {
-                return (
-                  <Flex key={index} justifyContent='space-around' py='10px' borderBottom='1px' borderColor='gray.50'>
-                    <Box minW='2em' maxW='3em'>
-                      <Checkbox isChecked={
-                        availability[index].hasOwnProperty('active') ?
-                          availability[index].active :
-                          true
-                      } mt='.9em' defaultIsChecked onChange={(e) => toggleDayActivation(e.target.checked, index)}>{day} </Checkbox>
-                    </Box>
-                    {
-                      !availability[index].hasOwnProperty('active') || availability[index].active ?
-                        <Flex w="70%" direction='column'>
-                          <Flex className='time-container' justifyContent="space-between" align="center">
-                            <TimeRangePicker
-                              onChange={(e) => changeTime(e, index)}
-                              value={timeRange[index]}
-                              className='recCustom'
-                              disableClock={true}
-                            />
-                            <IconButton onClick={() => addTime(day, index)} icon={<MdAddCircle/>} size='lg' bg='white' border="1px" borderColor='gray.50' rounded='md'/>
-                          </Flex>
-                          {
-                            availability[index].hasOwnProperty('times') ?
-                              availability[index]['times'].map( (time, i) =>
-                                <Flex key={i}  pl='15px' pt='10px' justifyContent='space-between' align='center'>
-                                  <span>{time[0]} - {time[1]}</span>
-                                  <IconButton onClick={ () => removeTime(index, i)} icon={<MdDeleteForever/>} size='lg' bg='white' border="1px" borderColor='gray.50' rounded='md'/>
-                                </Flex>
-                              )
-                            :''
-                          }
+        <Flex minW="640px" px='1em' py='.5em' mb='1em' borderRight="2px" borderColor='gray.50' direction='column'>
+          <Text pl="10px" w="50%" align="left">Recurring Availability</Text>
+            { days.map( (day,index) => {
+              return (
+                <Flex key={index} justifyContent='space-around' py='10px' borderBottom='1px' borderColor='gray.50'>
+                  <Box minW='2em' maxW='3em'>
+                    <Checkbox isChecked={
+                      availability[index].hasOwnProperty('active') ?
+                        availability[index].active :
+                        true
+                    } mt='.9em' defaultIsChecked onChange={(e) => toggleDayActivation(e.target.checked, index)}>{day} </Checkbox>
+                  </Box>
+                  {
+                    !availability[index].hasOwnProperty('active') || availability[index].active ?
+                      <Flex w="70%" direction='column'>
+                        <Flex className='time-container' justifyContent="space-between" align="center">
+                          <TimeRangePicker
+                            onChange={(e) => changeTime(e, index)}
+                            value={timeRange[index]}
+                            className='recCustom'
+                            disableClock={true}
+                          />
+                          <IconButton onClick={() => addTime(day, index)} icon={<MdAddCircle/>} size='lg' bg='white' border="1px" borderColor='gray.50' rounded='md'/>
                         </Flex>
-                        :
-                        <Text w="70%" h="3em" pt=".6em">Unavailable</Text>
-                    }
+                        {
+                          availability[index].hasOwnProperty('times') ?
+                            availability[index]['times'].map( (time, i) =>
+                              <Flex key={i}  pl='15px' pt='10px' justifyContent='space-between' align='center'>
+                                <TimeRangePicker
+                                  onChange={(e) => changeNewTime(e, index, i)}
+                                  value={time}
+                                  className='recCustom'
+                                  disableClock={true}
+                                />
+                                <IconButton onClick={ () => removeTime(index, i)} icon={<MdDeleteForever/>} size='lg' bg='white' border="1px" borderColor='gray.50' rounded='md'/>
+                              </Flex>
+                            )
+                          :''
+                        }
+                      </Flex>
+                      :
+                      <Text w="70%" h="3em" pt=".6em">Unavailable</Text>
+                  }
 
-                  </Flex>
-                )
-              })}
+                </Flex>
+              )
+            })}
         </Flex>
-      </Box>
-    </Flex>
   );
 }
 
