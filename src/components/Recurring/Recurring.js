@@ -112,6 +112,7 @@ function Recurring() {
                               onChange={(e) => changeTime(e, index)}
                               value={timeRange[index]}
                               className='recCustom'
+                              disableClock={true}
                             />
                             <IconButton onClick={() => addTime(day, index)} icon={<MdAddCircle/>} size='lg' bg='white' border="1px" borderColor='gray.50' rounded='md'/>
                           </Flex>
