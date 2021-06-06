@@ -19,25 +19,25 @@ const lngs = {
 
 function LandingFooter() {
 
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTranslation();
 
   return (
     <footer>
       <Flex mx={"60px"} py="4em" alignItems="center">
         <Box>
-          <Image maxW="100px" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/dimes_logo_2.png" alt="Dimes Logo"/>
+          <Image maxW="100px" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/dimes_logo_2.png" alt="Dimes Logo" />
         </Box>
         <Text ml="15px" fontSize="xs"><a href="" target="_blank">{`${t('footer.privacy')}`}</a> | <a href="" target="_blank">{`${t('footer.terms')}`}</a></Text>
-        <Spacer/>
+        <Spacer />
         {Object.keys(lngs).map((lng) => (
-          <Button 
-              key={lng} 
-              // style={{ fontWeight: i18n.language === lng ? 'bold' : 'normal' }} 
-              type="submit" 
-              onClick={() => i18n.changeLanguage(lng)}
-              colorScheme="gray" 
-              size="xs" 
-              ml="15px"
+          <Button
+            key={lng}
+            // style={{ fontWeight: i18n.language === lng ? 'bold' : 'normal' }} 
+            type="submit"
+            onClick={() => i18n.changeLanguage(lng)}
+            colorScheme="gray"
+            size="xs"
+            ml="15px"
           >
             {lngs[lng].nativeName}
           </Button>
