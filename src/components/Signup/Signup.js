@@ -17,6 +17,9 @@ import { Formik, Form, Field } from 'formik'
 import { useTranslation, Trans } from 'react-i18next'
 import { FaGoogle } from "react-icons/fa"
 
+import LandingNav from '../LandingNav/LandingNav.jsx'
+import LandingFooter from '../LandingFooter/LandingFooter'
+
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
@@ -26,6 +29,8 @@ function Signup() {
     const { t, i18n } = useTranslation()
 
     return (
+      <>
+      <LandingNav/>
       <Center className="Signup">
           <VStack
                 divider={<StackDivider borderColor="gray.200" />}
@@ -130,10 +135,10 @@ function Signup() {
                                 <FormControl isInvalid={form.errors.password && form.touched.password}>
                                     <FormLabel htmlFor="password">{t('form.passwordTitle')}</FormLabel>
                                     <InputGroup>
-                                        <Input 
-                                            type={showPassword ? "text" : "password"} 
-                                            {...field} 
-                                            id="password" 
+                                        <Input
+                                            type={showPassword ? "text" : "password"}
+                                            {...field}
+                                            id="password"
                                             placeholder={`${t('form.passwordTitle')}`}
                                         />
                                         <InputRightElement width="4.5rem">
@@ -152,11 +157,11 @@ function Signup() {
                                 <FormControl isInvalid={form.errors.confirmPassword && form.touched.confirmPassword}>
                                     <FormLabel htmlFor="confirmPassword">{t('form.signup.confirmPassword')}</FormLabel>
                                     <InputGroup>
-                                        <Input 
-                                            type={showConfirmPassword ? "text" : "password"} 
-                                            {...field} 
-                                            id="confirmPassword" 
-                                            placeholder={`${t('form.signup.confirmPassword')}`} 
+                                        <Input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            {...field}
+                                            id="confirmPassword"
+                                            placeholder={`${t('form.signup.confirmPassword')}`}
                                         />
                                         <InputRightElement width="4.5rem">
                                             <Button h="1.75rem" size="sm" onClick={handleConfirmPasswordClick}>
@@ -175,6 +180,8 @@ function Signup() {
             <Button leftIcon={<FaGoogle />} colorScheme="teal" variant="outline">{`${t('form.signup.google')}`}</Button>
           </VStack>
       </Center>
+      <LandingFooter/>
+      </>
     )
 }
 

@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 
 import SideMenu from '../../components/SideMenu/SideMenu'
+import LandingNav from '../../components/LandingNav/LandingNav.jsx'
 
 import './withMenu.scss'
 
@@ -22,8 +23,10 @@ const withMenu = Component => {
 
   const wrappedComponent = ({...props})=> {
     return (
-      <Grid minH="100vh" minW="100%" templateColumns="1fr 3fr" templateRows="50px 1fr">
-        <GridItem colStart={1} colEnd={3} rowStart={1} rowEnd={2} bg='gray.50' border="1px" borderColor="gray.200"></GridItem>
+      <Grid minH="100vh" minW="100%" templateColumns="340px 3fr" templateRows="70px 1fr">
+        <GridItem colStart={1} colEnd={3} rowStart={1} rowEnd={2} bg='gray.50' border="1px" borderColor="gray.200">
+          <LandingNav/>
+        </GridItem>
         <GridItem colStart={1} colEnd={2} rowSpan={1} bg='gray.900' border="1px" borderColor="gray.200">
           <SideMenu />
         </GridItem>

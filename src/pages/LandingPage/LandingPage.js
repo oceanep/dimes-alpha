@@ -21,6 +21,9 @@ import {
   MdStarBorder
 } from "react-icons/md"
 
+import LandingNav from '../../components/LandingNav/LandingNav.jsx'
+import LandingFooter from '../../components/LandingFooter/LandingFooter'
+
 import { Link } from "react-router-dom";
 import Card from "../../components/Card/Card.js"
 import styles from "./LandingPage.module.scss"
@@ -29,6 +32,8 @@ function LandingPage() {
 
     const bg = useColorModeValue("gray.50","gray.600")
     return (
+      <>
+      <LandingNav/>
       <Grid minH="100vh" minW="100%" templateRows="1fr 1fr 1fr 0.8fr" className={`${styles.landing} ${styles.test}`} fontSize="14px">
 
         <GridItem rowStart={1} rowEnd={2} >
@@ -115,6 +120,8 @@ function LandingPage() {
         </GridItem>
 
       </Grid>
+      <LandingFooter/>
+      </>
     )
 }
 

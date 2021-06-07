@@ -51,12 +51,10 @@ function App() {
               <Route path="/initiated" component={localStorage.getItem("token") ? Initiated : LandingPage}></Route>
               <Route path="/invites" component={localStorage.getItem("token") ? Invited : LandingPage}></Route>
               <Route path="/schedule" component={localStorage.getItem("token") ? Schedule : LandingPage}></Route>
-              <div>
-                <LandingNav/>
+              <div>  
                 <Route exact path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
                 <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
-                <LandingFooter/>
               </div>
             </Switch>
         </Grid>

@@ -17,6 +17,9 @@ import userApi from '../../utils/user_api.js'
 import { Formik, Form, Field } from 'formik';
 import { useTranslation, Trans } from 'react-i18next'
 
+import LandingNav from '../LandingNav/LandingNav.jsx'
+import LandingFooter from '../LandingFooter/LandingFooter'
+
 function Login() {
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)
@@ -24,6 +27,8 @@ function Login() {
     const { t, i18n } = useTranslation()
 
     return (
+      <>
+      <LandingNav/>
       <Center className="Login" minH="80%">
             <VStack
                 divider={<StackDivider borderColor="gray.200" />}
@@ -79,10 +84,10 @@ function Login() {
                                 <FormControl isInvalid={form.errors.password && form.touched.password}>
                                     <FormLabel htmlFor="password">{t('form.passwordTitle')}</FormLabel>
                                     <InputGroup>
-                                        <Input 
-                                            type={show ? "text" : "password"} 
+                                        <Input
+                                            type={show ? "text" : "password"}
                                             {...field}
-                                            id="password" 
+                                            id="password"
                                             placeholder={`${t('form.passwordTitle')}`}
                                         />
                                         <InputRightElement width="4.5rem">
@@ -103,6 +108,8 @@ function Login() {
             </Formik>
             </VStack>
       </Center>
+      <LandingFooter/>
+      </>
     )
 }
 
