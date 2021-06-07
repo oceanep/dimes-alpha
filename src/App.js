@@ -34,7 +34,6 @@ import Groups from './pages/Groups/Groups'
 import Initiated from './pages/Initiated/Initiated'
 import Invited from './pages/Invited/Invited'
 import Schedule from './pages/Schedule/Schedule'
-
 import './App.scss'
 
 function App() {

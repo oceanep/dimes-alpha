@@ -17,26 +17,40 @@ import userApi from '../../utils/user_api.js'
 import { Formik, Form, Field } from 'formik';
 import { useTranslation, Trans } from 'react-i18next'
 
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+
 function Login() {
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)
     let history = useHistory()
     const { t, i18n } = useTranslation()
+    const notify = () => toast('Error With Email or Password', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
 
     return (
-      <Center className="Login" minH="80%">
+        <Center className="Login" minH="80%">
+          <ToastContainer />
             <VStack
                 divider={<StackDivider borderColor="gray.200" />}
                 spacing={4}
                 align="stretch"
-            >
+            >     
             <Formik
                 initialValues={{ email: "", password: "" }}
                 onSubmit={async (values) => {
                     const response = await userApi.loginUser(values.email, values.password)
                     if (response.statusText === "Login Failed") {
                         console.log("FResponse: ", response);
-                        alert('Unable to find account')
+                        notify();
                     } else {
                         console.log("Response: ", response);
                         const { token, username } = response.data
