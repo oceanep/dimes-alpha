@@ -41,9 +41,10 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
+        <LandingNav/>
         <Grid minH="100vh" minW="10vh" >
-            <ColorModeSwitcher justifySelf="flex-end" pos="absolute" top="0" right="0" mt="5px"/>
-            <Switch>
+          <ColorModeSwitcher justifySelf="flex-end" pos="absolute" top="0" right="0" mt="5px"/>
+          <Switch>
               <Route path="/home" component={localStorage.getItem("token") ? Home : LandingPage}></Route>
               <Route path="/availability" component={localStorage.getItem("token") ? Availability : LandingPage}></Route>
               <Route path="/relationships" component={localStorage.getItem("token") ? Relationships : LandingPage}></Route>
@@ -52,13 +53,12 @@ function App() {
               <Route path="/invites" component={localStorage.getItem("token") ? Invited : LandingPage}></Route>
               <Route path="/schedule" component={localStorage.getItem("token") ? Schedule : LandingPage}></Route>
               <div>
-                <LandingNav/>
                 <Route exact path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
                 <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
                 <LandingFooter/>
               </div>
-            </Switch>
+          </Switch>
         </Grid>
       </Box>
     </ChakraProvider>

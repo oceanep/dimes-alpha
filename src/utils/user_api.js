@@ -15,7 +15,7 @@ const userApi = {
             }, headers)
             return res
         } catch {
-            throw new Error('Login Failed')
+            return {statusText: 'Login Failed'};
         }
     },
     async signupUser(email, username, firstName, lastName, password) {
