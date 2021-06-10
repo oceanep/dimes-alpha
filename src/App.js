@@ -34,13 +34,14 @@ import Groups from './pages/Groups/Groups'
 import Initiated from './pages/Initiated/Initiated'
 import Invited from './pages/Invited/Invited'
 import Schedule from './pages/Schedule/Schedule'
-
+import LinkGcal from './pages/LinkGcal/LinkGcal.jsx'
 import './App.scss'
 
 function App() {
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
+        <LandingNav/>
         <Grid minH="100vh" minW="10vh" >
             <ColorModeSwitcher justifySelf="flex-end" pos="absolute" top="0" right="0" mt="5px"/>
             <Switch>
@@ -51,12 +52,12 @@ function App() {
               <Route path="/initiated" component={localStorage.getItem("token") ? Initiated : LandingPage}></Route>
               <Route path="/invites" component={localStorage.getItem("token") ? Invited : LandingPage}></Route>
               <Route path="/schedule" component={localStorage.getItem("token") ? Schedule : LandingPage}></Route>
-              <div>  
+              <div>
                 <Route exact path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
                 <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
               </div>
-            </Switch>
+          </Switch>
         </Grid>
       </Box>
     </ChakraProvider>

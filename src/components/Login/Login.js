@@ -20,16 +20,30 @@ import { useTranslation, Trans } from 'react-i18next'
 import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
 
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+
 function Login() {
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)
     let history = useHistory()
     const { t, i18n } = useTranslation()
+    const notify = () => toast('Error With Email or Password', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+    });
 
     return (
       <>
       <LandingNav/>
-      <Center className="Login" minH="80%">
+        <Center className="Login" minH="80%">
+          <ToastContainer />
             <VStack
                 divider={<StackDivider borderColor="gray.200" />}
                 spacing={4}
@@ -40,8 +54,10 @@ function Login() {
                 onSubmit={async (values) => {
                     const response = await userApi.loginUser(values.email, values.password)
                     if (response.statusText === "Login Failed") {
-                        alert('Unable to find account')
+                        console.log("FResponse: ", response);
+                        notify();
                     } else {
+                        console.log("Response: ", response);
                         const { token, username } = response.data
                         localStorage.setItem('token', token)
                         localStorage.setItem('username', username)

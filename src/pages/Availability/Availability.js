@@ -19,8 +19,8 @@ function Availability() {
     <Flex className={styles.availabilityContainer} shadow='md' rounded='md' borderTop="2px" borderColor='gray.50' mx="30px" my="30px" flexDirection="row" alignItems='start' justifyContent='space-around'>
       <Recurring />
       <Flex h="100%" minW="350px" direction="column">
-        <Text pl="10px" w="50%" align="left">Overrides</Text>
-        <Button size='lg' mt='1em'>Add a Date Override</Button>
+        <Text pl="10px" w="100%" align="left">Availability Overrides</Text>
+        <Button size='lg' mt='1em'>Add an Override</Button>
       </Flex>
     </Flex>
   );

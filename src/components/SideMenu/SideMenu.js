@@ -93,7 +93,7 @@ function SideMenu() {
                     <AccordionItem border="0px">
                       <li key={index} className={item.cName}>
                         <AccordionButton>
-                          <Icon as={item.icon} />
+                          <Icon as={item.icon} boxSize={8}/>
                           <span>{item.title}</span>
                           <AccordionIcon />
                         </AccordionButton>
@@ -117,7 +117,7 @@ function SideMenu() {
                 return (
                   <li key={index} className={item.cName}>
                     <Link to={item.path}>
-                      <Icon as={item.icon} />
+                      <Icon as={item.icon} boxSize={8} />
                       <span>{item.title}</span>
                     </Link>
                   </li>

@@ -29,6 +29,7 @@ const withMenu = Component => {
         </GridItem>
         <GridItem colStart={1} colEnd={2} rowSpan={1} bg='gray.900' border="1px" borderColor="gray.200">
           <SideMenu />
+
         </GridItem>
         <GridItem colStart={2} colEnd={3} rowSpan={1} border="1px" borderColor="gray.200" className="mainComponentContainer">
           <Component {...props} />
