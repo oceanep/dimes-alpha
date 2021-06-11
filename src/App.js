@@ -35,6 +35,7 @@ import Initiated from './pages/Initiated/Initiated'
 import Invited from './pages/Invited/Invited'
 import Schedule from './pages/Schedule/Schedule'
 import LinkGcal from './pages/LinkGcal/LinkGcal.jsx'
+import CalendarTest from './pages/CalendarTest/CalendarTest.jsx'
 import './App.scss'
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
             <ColorModeSwitcher justifySelf="flex-end" pos="absolute" top="0" right="0" mt="5px"/>
             <Switch>
               <Route path="/home" component={localStorage.getItem("token") ? Home : LandingPage}></Route>
+              <Route path="/calendar" component={localStorage.getItem("token") ? Home : CalendarTest}></Route>
               <Route path="/availability" component={localStorage.getItem("token") ? Availability : LandingPage}></Route>
               <Route path="/relationships" component={localStorage.getItem("token") ? Relationships : LandingPage}></Route>
               <Route path="/groups" component={localStorage.getItem("token") ? Groups : LandingPage}></Route>
