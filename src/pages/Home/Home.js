@@ -3,7 +3,9 @@ import {
     Center,
     Box,
     Flex,
-    Text
+    Text,
+    Button,
+    ButtonGroup
 } from "@chakra-ui/react"
 
 import { MdAddCircle } from 'react-icons/md'
@@ -19,11 +21,11 @@ import styles from './Home.module.scss'
 
 function Home() {
     return (        
-      <Flex className="home-container" px="30px" py="60px" h="100%" w="100%" alignItems='center' justifyContent='space-between'>
-        <Flex w="50%" minW='460px' h="80%" flexDirection="column" alignItems="center" justifyContent="space-between">
-        <CalendarComponent />
-        <Upcoming />
-      </Flex>
+      <Flex className="home-container" h="100%" w="100%" alignItems='center' justifyContent='space-between'>
+        <Flex w="100%" minW='460px' h="90%" flexDirection="column" alignItems="center" justifyContent="space-between">
+          <CalendarComponent />
+          <Upcoming />
+        </Flex>
     </Flex>
   );
 }

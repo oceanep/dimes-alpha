@@ -17,16 +17,16 @@ function Upcoming() {
 
   const data = [
     {
-      name: 'Event 1',
-      date: '6/02/2021'
+      name: 'Flight to ICN',
+      date: '6/12/2021'
     },
     {
-      name: 'Event 2',
-      date: '5/27/2021'
+      name: 'Dinner in Hongdae',
+      date: '6/15/2021'
     },
     {
-      name: 'Event 3',
-      date: '6/07/2021'
+      name: 'Flight to HND',
+      date: '6/20/2021'
     }
   ]
 

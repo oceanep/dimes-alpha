@@ -14,16 +14,29 @@ const CalendarComponent = ({ props }) => {
 
         [{
             id: 0,
-            start: moment().toDate(),
-            end: moment().add(1, "days").toDate(),
-            title: "Meeting",
+            start: new Date('June 12, 2021 19:30:00'),
+            end: new Date('June 12, 2021 20:30:00'),
+            title: "Flight to ICN",
         },
         {
             id: 1,
-            start: new Date('June 12, 2021 19:30:00'),
-            end: new Date('June 12, 2021 20:30:00'),
-            title: "Dinner",
+            start: new Date('June 15, 2021 19:30:00'),
+            end: new Date('June 15, 2021 20:30:00'),
+            title: "Dinner in Hongdae",
+        },
+        {
+            id: 2,
+            start: new Date('July 15, 2021 18:30:00'),
+            end: new Date('July 15, 2021 21:00:00'),
+            title: "Bros Night Out",
+        },
+        {
+            id: 3,
+            start: new Date('June 20, 2021 12:30:00'),
+            end: new Date('June 20, 2021 15:00:00'),
+            title: "Flight to HND",
         }
+
         ]
 
     );
@@ -59,7 +72,7 @@ const CalendarComponent = ({ props }) => {
                 onEventDrop={onEventDrop}
                 onEventResize={onEventResize}
                 resizable
-                style={{ height: "100vh" }}
+                style={{ height: "100vh", width: "100vh" }}
             />
         </div>
     );
