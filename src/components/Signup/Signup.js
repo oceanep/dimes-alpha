@@ -21,10 +21,6 @@ import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
 import GoogleLogin from 'react-google-login';
 
-const responseGoogle = (response) => {
-    console.log(response);
-}
-
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
@@ -33,6 +29,16 @@ function Signup() {
     let history = useHistory()
     const { t, i18n } = useTranslation()
 
+    const responseGoogle = (response) => {
+        console.log(response);
+        localStorage.setItem('access_token', response.accessToken);
+        localStorage.setItem('token', response.tokenId);
+        localStorage.setItem('username', response.profileObj.givenName);
+        history.push('/home')    
+    }
+
+
+    
     return (
       <>
       <LandingNav/>
