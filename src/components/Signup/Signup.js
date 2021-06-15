@@ -36,8 +36,6 @@ function Signup() {
         localStorage.setItem('username', response.profileObj.givenName);
         history.push('/home')    
     }
-
-
     
     return (
       <>
@@ -197,7 +195,8 @@ function Signup() {
                      cookiePolicy={'single_host_origin'}
                      />,
                      document.getElementById('googleButton');
-                    )         
+            )
+           
           </VStack>
       </Center>
       <LandingFooter/>

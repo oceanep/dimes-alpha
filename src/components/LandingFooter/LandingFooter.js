@@ -27,12 +27,11 @@ function LandingFooter() {
         <Box>
           <Image maxW="100px" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/dimes_logo_2.png" alt="Dimes Logo" />
         </Box>
-        <Text ml="15px" fontSize="xs"><a href="" target="_blank">{`${t('footer.privacy')}`}</a> | <a href="" target="_blank">{`${t('footer.terms')}`}</a></Text>
+        <Text ml="15px" fontSize="xs"><Link to="/privacy">{`${t('footer.privacy')}`}</Link> | <Link to="/terms">{`${t('footer.terms')}`}</Link></Text>
         <Spacer />
         {Object.keys(lngs).map((lng) => (
           <Button
             key={lng}
-            // style={{ fontWeight: i18n.language === lng ? 'bold' : 'normal' }} 
             type="submit"
             onClick={() => i18n.changeLanguage(lng)}
             colorScheme="gray"
@@ -42,7 +41,7 @@ function LandingFooter() {
             {lngs[lng].nativeName}
           </Button>
         ))}
-        <Text fontSize="xs" ml="15px">&#169;&nbsp;2021 {`${t('footer.dimesInc')}`}</Text>
+        <Text fontSize="xs" ml="15px">{`${t('footer.dimesInc')}`}</Text>
       </Flex>
     </footer>
   );

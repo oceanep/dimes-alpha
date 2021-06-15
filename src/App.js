@@ -36,6 +36,8 @@ import Invited from './pages/Invited/Invited'
 import Schedule from './pages/Schedule/Schedule'
 import LinkGcal from './pages/LinkGcal/LinkGcal.jsx'
 import CalendarTest from './pages/CalendarTest/CalendarTest.jsx'
+import PrivacyPage from './pages/Static/PrivacyPage.jsx'
+import TermsPage from './pages/Static/TermsPage.jsx'
 import './App.scss'
 
 function App() {
@@ -53,6 +55,8 @@ function App() {
               <Route path="/initiated" component={localStorage.getItem("token") ? Initiated : LandingPage}></Route>
               <Route path="/invites" component={localStorage.getItem("token") ? Invited : LandingPage}></Route>
               <Route path="/schedule" component={localStorage.getItem("token") ? Schedule : LandingPage}></Route>
+              <Route path="/privacy" component={PrivacyPage}></Route>
+              <Route path="/terms" component={TermsPage}></Route>
               <div>
                 <Route exact path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
