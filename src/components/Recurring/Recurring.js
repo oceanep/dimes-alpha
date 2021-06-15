@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     Center,
     Box,
@@ -16,11 +16,13 @@ import {
 import { MdAddCircle, MdDeleteForever } from 'react-icons/md'
 
 import List from '../../components/List/List'
+import userAvailability from '../../utils/user_availability.js'
 
 import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
 import './Recurring.scss'
 
 function Recurring() {
+
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
   const [timeRange, onTimeChange] = useState(
@@ -38,6 +40,17 @@ function Recurring() {
   const [availability, setAvailability] = useState([
     '','','','','','',''
   ]);
+
+  const fetchAvailability = useCallback( async () => {
+    const userId = localStorage.userId
+    console.log(userId)
+    let res = await userAvailability.getAvailability(userId)
+    console.log(res)
+  }, [])
+
+  useEffect( ()=> {
+    fetchAvailability()
+  }, [fetchAvailability])
 
   const changeTime = (time, index) => {
     let newArr = [...timeRange]
