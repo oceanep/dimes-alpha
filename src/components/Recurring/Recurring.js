@@ -23,7 +23,7 @@ import './Recurring.scss'
 
 function Recurring() {
 
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   const [timeRange, onTimeChange] = useState(
     [
@@ -41,11 +41,93 @@ function Recurring() {
     '','','','','','',''
   ]);
 
+  const convertToTime = (begin, end) => {
+    console.log(`start values: ${begin}, ${end}`)
+    let startTime = +begin * 15
+    let endTime = +end * 15
+
+    console.log(`raw values: ${startTime}, ${endTime}`)
+    let startHour = (Math.floor(startTime/60)).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+    let endHour = (Math.floor(endTime/60)).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+
+    let startMin = (startTime % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+    let endMin = (endTime % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+
+    const timeRange = [`${startHour}:${startMin}`, `${endHour}:${endMin}`]
+    console.log('times', timeRange)
+    return timeRange
+  }
+
+  const convertFromTime = (time) => {
+    let beginTime = time[0]
+    let endTime = time[1]
+
+    let beginHour = parseInt(beginTime.split(':')[0]) * 60 / 15
+    let beginMin = parseInt(beginTime.split(':')[1]) / 15
+
+    let endHour = parseInt(endTime.split(':')[0]) * 60 / 15
+    let endMin = parseInt(endTime.split(':')[1]) / 15
+
+    beginHour += beginMin
+    endHour += endMin
+
+    convertToTime(beginHour, endHour)
+
+    console.log(`begin codec: ${beginHour}`)
+    console.log(`end codec: ${endHour}`)
+
+    return {
+      beginCodec: beginHour,
+      endCodec: endHour
+    }
+  }
+
+  const roundTime = (time) => {
+    let beginTime = time[0]
+    let endTime = time[1]
+
+    let beginHour = beginTime.split(':')[0]
+    let beginMin = parseInt(beginTime.split(':')[1])
+    beginMin = ((((beginMin + 7.5)/15 | 0) * 15) % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+
+    console.log('begin minutes', beginMin)
+
+    let endHour = endTime.split(':')[0]
+    let endMin = parseInt(endTime.split(':')[1])
+    endMin = ((((endMin + 7.5)/15 | 0) * 15) % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+
+    const roundedTime = [`${beginHour}:${beginMin}`,`${endHour}:${endMin}`]
+    console.log('Rounded Time', roundedTime)
+
+    return roundedTime
+  }
+
+  const createAvailability = async (index) => {
+    const { beginCodec, endCodec } = convertFromTime(timeRange[index])
+    const userId = localStorage.userId
+
+    let res = await userAvailability.createAvailability(userId, beginCodec, endCodec, index)
+  }
+
   const fetchAvailability = useCallback( async () => {
     const userId = localStorage.userId
-    console.log(userId)
+
+    let newArr = [...availability]
     let res = await userAvailability.getAvailability(userId)
-    console.log(res)
+    console.log(res.data)
+    res.data.data.forEach((time, i) => {
+      let timeRange = convertToTime(time.begin_time_unit, time.end_time_unit)
+      let index = time.day_of_week
+      newArr[index] = {
+        index: index,
+        day: days[index],
+        active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
+        times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeRange] : [timeRange]
+      }
+      console.log('initial state ', newArr)
+    });
+    setAvailability(newArr)
+
   }, [])
 
   useEffect( ()=> {
@@ -56,7 +138,8 @@ function Recurring() {
     let newArr = [...timeRange]
     console.log('time index', index)
     console.log('time', time)
-    newArr[index] = time
+
+    newArr[index] = roundTime(time)
     console.log('new time array', newArr)
     onTimeChange(newArr)
   }
@@ -65,7 +148,7 @@ function Recurring() {
     let newArr = [...availability]
     console.log('index', index)
     console.log('preparing to add...', time)
-    newArr[index].times[i] = time
+    newArr[index].times[i] = roundTime(time)
     console.log('adding...',newArr)
     setAvailability(newArr)
   }
@@ -82,7 +165,15 @@ function Recurring() {
       times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeRange[index]] : [timeRange[index]]
     }
     console.log('adding...',newArr)
-    setAvailability(newArr)
+
+    createAvailability(index)
+      .then( () => {
+        setAvailability(newArr)
+      }, err => {
+        alert(err)
+      })
+
+
   }
 
   const removeTime = (tabIndex, index) => {

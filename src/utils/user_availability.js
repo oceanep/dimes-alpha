@@ -1,8 +1,7 @@
 import axios from 'axios'
-let api_endpoint = 'http://ec2-35-74-184-115.ap-northeast-1.compute.amazonaws.com/api/users'
+let api_endpoint = 'http://ec2-35-74-184-115.ap-northeast-1.compute.amazonaws.com/api'
 let headers = {
-    "Content-type": "application/json",
-    "Accept" : "application/json"
+    "Content-type": "application/json"
 }
 
 const userAvailability = {
@@ -19,17 +18,19 @@ const userAvailability = {
       throw new Error('Failed to fetch availability')
     }
   },
-  async createAvailability(userId, beginTime, endTime, dayOfWeek, type) {
+  async createAvailability(userId, beginTime, endTime, dayOfWeek, type = 1) {
     let url = `${api_endpoint}/user_calendars`;
+    const user_calendar = {
+      "user_id": userId,
+      "begin_time_unit": beginTime,
+      "end_time_unit": endTime,
+      "day_of_week": dayOfWeek,
+      "type": type
+    }
+    console.log('user calendar', user_calendar)
     try {
       let res = await axios.post(url, {
-        "user_calendar": {
-          "user_id": userId,
-          "begin_time_unit": beginTime,
-          "end_time_unit": endTime,
-          "day_of_week": dayOfWeek,
-          "type": type
-        }
+        "user_calendar": user_calendar
       }, headers)
       return res
     } catch {
