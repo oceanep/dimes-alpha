@@ -19,7 +19,8 @@ import { FaGoogle } from "react-icons/fa"
 
 import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
-import GoogleLogin from 'react-google-login';
+//import useScript from '../hooks/useScript.jsx'
+//import GoogleLogin from 'react-google-login';
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
@@ -36,7 +37,7 @@ function Signup() {
         localStorage.setItem('username', response.profileObj.givenName);
         history.push('/home')    
     }
-    
+    //useScript('./google_auth.js');
     return (
       <>
       <LandingNav/>
@@ -186,19 +187,23 @@ function Signup() {
                         </Form>
                 )}
             </Formik>
-                    ReactDOM.render(
-            <GoogleLogin
-              clientId="330818651692-locc5gad48668ij33bdaptre2mi9irps.apps.googleusercontent.com"
-              buttonText="Login"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-              approvalPrompt="force"
-              prompt='consent'
-              cookiePolicy={'single_host_origin'}
-              scope={"https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid"}
-            />,              
-            document.getElementById('googleButton');
-            )
+
+            <Button id="authorize_button">Authorize</Button>
+    <Button id="signout_button">Sign Out</Button>
+
+            
+            {/*  <GoogleLogin */}
+            {/*   clientId="330818651692-locc5gad48668ij33bdaptre2mi9irps.apps.googleusercontent.com" */}
+            {/*   buttonText="Login" */}
+            {/*   onSuccess={responseGoogle} */}
+            {/*   onFailure={responseGoogle} */}
+            {/*   approvalPrompt="force" */}
+            {/*   prompt='consent' */}
+            {/*   cookiePolicy={'single_host_origin'} */}
+            {/*   scope={"https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid"} */}
+            {/* />,               */}
+            {/* document.getElementById('googleButton'); */}
+            {/* ) */}
            
           </VStack>
       </Center>
