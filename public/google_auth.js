@@ -1,7 +1,7 @@
 var CLIENT_ID = '330818651692-locc5gad48668ij33bdaptre2mi9irps.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyDLBVfbmRwlIMi1fmwEwW9DRaXHIQP9IsQ';
     
-var auth_response;
+var google_auth_object;
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -100,6 +100,7 @@ function handleSigninSuccess(res) {
     localStorage.setItem('token', res.tokenId)
     localStorage.setItem('username', res.profileObj.givenName);
     localStorage.setItem('userId', res.googleId);
+    google_auth_object = gapi;
     //window.location.href = "/home";
 }
 

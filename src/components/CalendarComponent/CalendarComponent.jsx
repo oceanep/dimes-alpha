@@ -10,15 +10,16 @@ const DnDCalendar = withDragAndDrop(Calendar);
 const google_events = JSON.parse(localStorage.getItem("google_events"))
 const parsed_events = []
 
-for (var i = 0; i < google_events.length; i++) {
-    parsed_events.push({
-        id: i,
-        start: new Date(google_events[i].start["dateTime"]),
-        end: new Date(google_events[i].end["dateTime"]),
-        title: google_events[i].summary
-    })
+if (google_events) {
+    for (var i = 0; i < google_events.length; i++) {
+        parsed_events.push({
+            id: i,
+            start: new Date(google_events[i].start["dateTime"]),
+            end: new Date(google_events[i].end["dateTime"]),
+            title: google_events[i].summary
+        })
+    }
 }
-
 const CalendarComponent = ({ props }) => {
 
     const [events, setEvents] = useState(
