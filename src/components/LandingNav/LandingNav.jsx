@@ -13,6 +13,7 @@ function LandingNav() {
     let history = useHistory()
     const { t } = useTranslation()
     const logout = () => {
+        window.gapi.auth2.getAuthInstance().signOut();
         localStorage.clear();
         history.push("/");
     };

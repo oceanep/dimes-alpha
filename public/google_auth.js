@@ -100,7 +100,7 @@ function handleSigninSuccess(res) {
     localStorage.setItem('token', res.tokenId)
     localStorage.setItem('username', res.profileObj.givenName);
     localStorage.setItem('userId', res.googleId);
-    window.location.href = "/home";
+    //window.location.href = "/home";
 }
 
 /**
@@ -132,6 +132,7 @@ function listUpcomingEvents() {
         var events = response.result.items;
         //appendPre('Upcoming events:');
         localStorage.setItem('google_events', JSON.stringify(events));
+        window.location.href = "/home";
         // if (events.length > 0) {
         //     for (i = 0; i < events.length; i++) {
         //         var event = events[i];
