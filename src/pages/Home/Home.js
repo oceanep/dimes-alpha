@@ -20,11 +20,15 @@ import LandingNav from '../../components/LandingNav/LandingNav.jsx'
 import styles from './Home.module.scss'
 
 function Home() {
-    return (        
+    return (
       <Flex className="home-container" h="100%" w="100%" alignItems='center' justifyContent='space-between'>
-        <Flex w="100%" minW='460px' h="90%" flexDirection="column" alignItems="center" justifyContent="space-between">
-          <CalendarComponent />
-          <Upcoming />
+        <Flex minW='460px' h="90%" flexDirection="column" alignItems="start" justifyContent="space-between">
+          <Box w="100%">
+            <CalendarComponent />
+          </Box>
+          <Box w="70%">
+            <Upcoming />
+          </Box>
         </Flex>
     </Flex>
   );

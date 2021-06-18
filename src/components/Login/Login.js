@@ -58,9 +58,10 @@ function Login() {
                         notify();
                     } else {
                         console.log("Response: ", response);
-                        const { token, username } = response.data
+                        const { token, username, id } = response.data
                         localStorage.setItem('token', token)
                         localStorage.setItem('username', username)
+                        localStorage.setItem('userId', id)
                         history.push('/home')
                     }
                 }}
