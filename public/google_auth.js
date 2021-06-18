@@ -1,7 +1,7 @@
 var CLIENT_ID = '330818651692-locc5gad48668ij33bdaptre2mi9irps.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyDLBVfbmRwlIMi1fmwEwW9DRaXHIQP9IsQ';
-
-
+    
+var auth_response;
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -12,6 +12,7 @@ var SCOPES = "https://www.googleapis.com/auth/calendar https://www.googleapis.co
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
+
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -50,6 +51,7 @@ function initClient() {
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
+        
         signoutButton.style.display = 'block';
         listUpcomingEvents();
     } else {
@@ -62,7 +64,10 @@ function updateSigninStatus(isSignedIn) {
  *  Sign in the user upon button click.
  */
 function handleAuthClick(event) {
-    gapi.auth2.getAuthInstance().signIn();
+    gapi.auth2.getAuthInstance().signIn().then(
+        res => handleSigninSuccess(res),
+        err => console.log(err)
+    )    
 }
 
 /**
@@ -70,6 +75,32 @@ function handleAuthClick(event) {
  */
 function handleSignoutClick(event) {
     gapi.auth2.getAuthInstance().signOut();
+    localStorage.clear();
+}
+
+function handleSigninSuccess(res) {
+    /*
+      offer renamed response keys to names that match use
+    */
+    const basicProfile = res.getBasicProfile()
+    const authResponse = res.getAuthResponse(true)
+    res.googleId = basicProfile.getId()
+    res.tokenObj = authResponse
+    res.tokenId = authResponse.id_token
+    res.accessToken = authResponse.access_token
+    res.profileObj = {
+        googleId: basicProfile.getId(),
+        imageUrl: basicProfile.getImageUrl(),
+        email: basicProfile.getEmail(),
+        name: basicProfile.getName(),
+        givenName: basicProfile.getGivenName(),
+        familyName: basicProfile.getFamilyName()
+    }
+    auth_response = res;
+    localStorage.setItem('token', res.tokenId)
+    localStorage.setItem('username', res.profileObj.givenName);
+    localStorage.setItem('userId', res.googleId);
+    window.location.href = "/home";
 }
 
 /**
@@ -79,7 +110,7 @@ function handleSignoutClick(event) {
  * @param {string} message Text to be placed in pre element.
  */
 function appendPre(message) {
-    var pre = document.getElementById('content');
+    var pre = document.getElementById('cal');
     var textContent = document.createTextNode(message + '\n');
     pre.appendChild(textContent);
 }
@@ -99,19 +130,22 @@ function listUpcomingEvents() {
         'orderBy': 'startTime'
     }).then(function(response) {
         var events = response.result.items;
-        appendPre('Upcoming events:');
-        
-        if (events.length > 0) {
-            for (i = 0; i < events.length; i++) {
-                var event = events[i];
-                var when = event.start.dateTime;
-                if (!when) {
-                    when = event.start.date;
-                }
-                appendPre(event.summary + ' (' + when + ')')
-            }
-        } else {
-            appendPre('No upcoming events found.');
-        }
+        //appendPre('Upcoming events:');
+        localStorage.setItem('google_events', JSON.stringify(events));
+        // if (events.length > 0) {
+        //     for (i = 0; i < events.length; i++) {
+        //         var event = events[i];
+        //         console.log("event: ", event);
+        //         var when = event.start.dateTime;
+        //         if (!when) {
+        //             when = event.start.date;
+        //         }
+        //         appendPre(event.summary + ' (' + when + ')')
+        //     }
+        // } else {
+        //     appendPre('No upcoming events found.');
+        // }
     });
 }
+
+

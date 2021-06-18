@@ -9,7 +9,8 @@ import {
     StackDivider,
     FormControl,
     FormLabel,
-    FormErrorMessage
+    IconButton,
+    FormErrorMessage,
 } from "@chakra-ui/react"
 import { useHistory } from "react-router-dom"
 import userApi from '../../utils/user_api.js'
@@ -19,10 +20,10 @@ import { FaGoogle } from "react-icons/fa"
 
 import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
-//import useScript from '../hooks/useScript.jsx'
-//import GoogleLogin from 'react-google-login';
+//import GoogleAuth from '../../scripts/google_auth.jsx'
 
 function Signup() {
+ 
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
     const handlePasswordClick = () => setShowPassword(!showPassword)
@@ -37,7 +38,6 @@ function Signup() {
         localStorage.setItem('username', response.profileObj.givenName);
         history.push('/home')    
     }
-    //useScript('./google_auth.js');
     return (
       <>
       <LandingNav/>
@@ -187,24 +187,10 @@ function Signup() {
                         </Form>
                 )}
             </Formik>
-
-            <Button id="authorize_button">Authorize</Button>
-    <Button id="signout_button">Sign Out</Button>
-
             
-            {/*  <GoogleLogin */}
-            {/*   clientId="330818651692-locc5gad48668ij33bdaptre2mi9irps.apps.googleusercontent.com" */}
-            {/*   buttonText="Login" */}
-            {/*   onSuccess={responseGoogle} */}
-            {/*   onFailure={responseGoogle} */}
-            {/*   approvalPrompt="force" */}
-            {/*   prompt='consent' */}
-            {/*   cookiePolicy={'single_host_origin'} */}
-            {/*   scope={"https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid"} */}
-            {/* />,               */}
-            {/* document.getElementById('googleButton'); */}
-            {/* ) */}
-           
+            <Button leftIcon={<FaGoogle/>} id="authorize_button">Login with Google</Button>
+            <Button id="signout_button" style={{display:'none'}}>Log Out</Button>
+            <div id='cal'></div>                      
           </VStack>
       </Center>
       <LandingFooter/>
