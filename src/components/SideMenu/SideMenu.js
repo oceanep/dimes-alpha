@@ -39,7 +39,17 @@ function SideMenu() {
       path: '/availability',
       icon: MdModeEdit,
       cName: 'nav-text',
-      subMenu: []
+        subMenu: [
+        {
+          title: 'Manage Availability',
+          path: '/availability'
+        },
+        {
+          title: 'Manage Event Types',
+          path: '/events'
+        }
+
+        ]
     },
     {
       title: 'Contacts',

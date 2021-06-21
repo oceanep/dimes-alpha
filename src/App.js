@@ -29,6 +29,8 @@ import Signup from './components/Signup/Signup'
 import LandingPage from './pages/LandingPage/LandingPage'
 import Home from './pages/Home/Home'
 import Availability from './pages/Availability/Availability'
+import Events from './pages/Events/Events.jsx'
+import UserEventsList from './pages/Events/UserEventsList.jsx'
 import Relationships from './pages/Relationships/Relationships'
 import Groups from './pages/Groups/Groups'
 import Initiated from './pages/Initiated/Initiated'
@@ -61,6 +63,7 @@ function App() {
                 <Route exact path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
                 <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
+                <Route path="/:user_id" component={localStorage.getItem("token") ? Home : UserEventsList}></Route>
               </div>
           </Switch>
         </Grid>
