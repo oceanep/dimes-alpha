@@ -107,22 +107,37 @@ function Recurring() {
     const userId = localStorage.userId
 
     let res = await userAvailability.createAvailability(userId, beginCodec, endCodec, index)
+    return res.data.data
+  }
+
+  const updateAvailability = async (id, beginCodec, endCodec) => {
+
+    let res = await userAvailability.updateAvailability(id, beginCodec, endCodec)
+    return res.data.data
+  }
+
+  const deleteAvailability = async (id) => {
+    let res = await userAvailability.deleteAvailability(id)
+    return res
   }
 
   const fetchAvailability = useCallback( async () => {
     const userId = localStorage.userId
 
     let newArr = [...availability]
-    let res = await userAvailability.getAvailability(userId)
+    const res = await userAvailability.getAvailability(userId)
     console.log(res.data)
     res.data.data.forEach((time, i) => {
-      let timeRange = convertToTime(time.begin_time_unit, time.end_time_unit)
-      let index = time.day_of_week
+      const timeObj = {
+        id: time.id,
+        time: convertToTime(time.begin_time_unit, time.end_time_unit)
+      }
+      const index = time.day_of_week
       newArr[index] = {
         index: index,
         day: days[index],
         active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
-        times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeRange] : [timeRange]
+        times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
       }
       console.log('initial state ', newArr)
     });
@@ -148,9 +163,22 @@ function Recurring() {
     let newArr = [...availability]
     console.log('index', index)
     console.log('preparing to add...', time)
-    newArr[index].times[i] = roundTime(time)
-    console.log('adding...',newArr)
-    setAvailability(newArr)
+
+    const newTime = roundTime(time)
+    const { beginCodec, endCodec } = convertFromTime(newTime)
+    const id = newArr[index].times[i].id
+
+    updateAvailability( id, beginCodec, endCodec)
+      .then( res => {
+        newArr[index][i] = {
+          ...newArr[index][i],
+          time: convertToTime(res.begin_time_unit, res.end_time_unit)
+        }
+        console.log('adding...',newArr)
+        setAvailability(newArr)
+      }, err => {
+        alert(err)
+      })
   }
 
   const addTime = (day, index) => {
@@ -158,36 +186,48 @@ function Recurring() {
     let newArr = [...availability]
     console.log('index', index)
     console.log('preparing to add...', timeRange[index])
-    newArr[index] = {
-      index: index,
-      day: day,
-      active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
-      times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeRange[index]] : [timeRange[index]]
-    }
-    console.log('adding...',newArr)
 
     createAvailability(index)
-      .then( () => {
+      .then( (res) => {
+
+        const timeObj = {
+          id: res.id,
+          time: convertToTime(res.begin_time_unit, res.end_time_unit)
+        }
+
+        newArr[index] = {
+          index: index,
+          day: days[res.day_of_week],
+          active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
+          times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
+        }
+        console.log('adding...',newArr)
         setAvailability(newArr)
       }, err => {
         alert(err)
       })
-
 
   }
 
   const removeTime = (tabIndex, index) => {
 
     let newArr = [...availability]
-    console.log('index', index)
-    const newTimes = availability[tabIndex].times.filter((time, i) => index !== i )
-    console.log(`remaining times ${newTimes}`)
-    newArr[tabIndex] = {
-      ...availability[tabIndex], times: newTimes
-    }
 
-    console.log(newArr)
-    setAvailability(newArr)
+    const id = newArr[tabIndex].times[index].id
+    console.log('id to delete', id)
+    deleteAvailability(id)
+      .then( res => {
+        const newTimes = availability[tabIndex].times.filter((time, i) => index !== i )
+        console.log(`remaining times ${newTimes}`)
+        newArr[tabIndex] = {
+          ...availability[tabIndex], times: newTimes
+        }
+
+        console.log(newArr)
+        setAvailability(newArr)
+      }, err => {
+        alert(err)
+      })
   }
 
   const toggleDayActivation = (checked, index) => {
@@ -233,7 +273,7 @@ function Recurring() {
                               <Flex key={i}  pl='15px' pt='10px' justifyContent='space-between' align='center'>
                                 <TimeRangePicker
                                   onChange={(e) => changeNewTime(e, index, i)}
-                                  value={time}
+                                  value={time.time}
                                   className='recCustom'
                                   disableClock={true}
                                 />

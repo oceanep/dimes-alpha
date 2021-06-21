@@ -15,7 +15,7 @@ const userAvailability = {
       }, headers)
       return res
     } catch {
-      throw new Error('Failed to fetch availability')
+      return {statusText: 'No Availabilities Registered'}
     }
   },
   async createAvailability(userId, beginTime, endTime, dayOfWeek, type = 1) {
@@ -27,7 +27,6 @@ const userAvailability = {
       "day_of_week": dayOfWeek,
       "type": type
     }
-    console.log('user calendar', user_calendar)
     try {
       let res = await axios.post(url, {
         "user_calendar": user_calendar
@@ -35,6 +34,30 @@ const userAvailability = {
       return res
     } catch {
       throw new Error('Failed to create availability')
+    }
+  },
+  async updateAvailability(calId, beginTime, endTime, type = 1) {
+    let url = `${api_endpoint}/user_calendars/${calId}`;
+    try {
+      let res = await axios.patch(url, {
+        "id": calId,
+        "user_calendar": {
+          "begin_time_unit": beginTime,
+          "end_time_unit": endTime
+        }
+      }, headers)
+      return res
+    } catch {
+      throw new Error('Failed to update availability')
+    }
+  },
+  async deleteAvailability(calId) {
+    let url = `${api_endpoint}/user_calendars/${calId}`;
+    try {
+      let res = await axios.delete(url, headers)
+      return res
+    } catch {
+      throw new Error('Failed to delete availability')
     }
   }
 }
