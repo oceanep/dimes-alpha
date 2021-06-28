@@ -5,7 +5,7 @@ import {
 
 function Card(props) {
 
-  const { variant, children, ...rest } = props
+  const { variant } = props
   const styles = useStyleConfig("Card", { variant })
 
   return (

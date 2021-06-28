@@ -1,15 +1,14 @@
 import {useState} from 'react';
 import {
-    Center,
     Box,
-    Circle,
-    Icon,
     Flex,
-    Heading
+    Button,
+    Text,
+    Avatar
 } from "@chakra-ui/react"
-import { MdForward } from 'react-icons/md'
+import { MdPlaylistAdd, MdPerson } from 'react-icons/md'
 
-import Card from '../Card/Card'
+import EventCard from '../EventCard/EventCard'
 
 import styles from './Upcoming.module.scss'
 
@@ -17,36 +16,47 @@ function Upcoming() {
 
   const data = [
     {
-      name: 'Flight to ICN',
-      date: '6/12/2021'
+      title: '15 Minute Meeting',
+      type: 'One-on-one',
+      time: 'fifteen'
     },
     {
-      name: 'Dinner in Hongdae',
-      date: '6/15/2021'
+      title: '30 Minute Meeting',
+      type: 'One-on-one',
+      time: 'thirty'
     },
     {
-      name: 'Flight to HND',
-      date: '6/20/2021'
-    }
+      title: '60 Minute Meeting',
+      type: 'One-on-one',
+      time: 'sixty'
+    },
   ]
 
   return (
     <Box className="upcoming-container" w='100%'>
-      <Box w='100%' h='2em' mb='4px' shadow='md' borderTop="2px" borderColor='gray.50' rounded='md'/>
-      <Flex w="100%" justifyContent="space-between" alignItems='center'>
+      <Box w='100%' mb='4px' px="12px" borderBottom="2px" borderColor='gray.50' rounded='md'>
+        <Flex w='50%' pb="15px" justifyContent='flex-start' alignItems="center" display="inline-flex">
+          <Avatar mr="10px"name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="https://bit.ly/broken-link" />
+          <Text fontSize="md" display="inline-block">{localStorage.getItem("username") != null ? localStorage.getItem('username') : null}</Text>
+        </Flex>
+        <Box w='50%' textAlign='right' display="inline-block">
+          <Button fontSize="sm" iconRight={<MdPlaylistAdd/>} variant="outline" >New Event Template</Button>
+        </Box>
+      </Box>
+      <Flex w="100%" flexWrap="wrap" justifyContent="space-between" alignItems='center'>
         {
-          data.map((event, index) => {
+          data.map((template, index) => {
             return(
-              <Card variant='smooth' key={index}>
-                <Heading size='sm'>{event.name}</Heading>
-                <span>{event.date}</span>
-              </Card>
+              <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
+                <EventCard
+                  title={template.title}
+                  type={template.type}
+                  variant={template.time}
+                />
+              </Box>
             );
           })
         }
-        <Circle size='40px' shadow='md'>
-          <Icon as={MdForward} />
-        </Circle>
       </Flex>
     </Box>
   );

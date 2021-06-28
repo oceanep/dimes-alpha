@@ -89,11 +89,95 @@ const Contacts = {
   }
 }
 
+const EventCard = {
+  baseStyle: {
+    container: {
+      position: "relative",
+      display: "flex",
+      flexDirection: "column",
+      background: "#ffffff",
+      alignItems: "center",
+      borderRadius: "4px",
+      border: "1px solid #DADAD9",
+      boxShadow: "md",
+      width: "100%",
+      minWidth: "250px"
+    },
+    topbar: {
+      backgroundColor: "gray.300",
+      height: "6px",
+      width: "100%",
+      marginTop: "-1px",
+      marginRight: "-1px",
+      marginLeft: "-1px",
+      borderTopLeftRadius: "4px",
+      borderTopRightRadius: "4px"
+    },
+    checkbox: {
+      position: "absolute",
+      top: "5px",
+      left: "0px",
+      padding: "12px 16px",
+      userSelect: "none",
+      cursor: "pointer"
+    },
+    settings: {
+      position: "absolute",
+      top: "5px",
+      right: "0"
+    },
+    body: {
+      display: "flex",
+      flex: "1 0 auto",
+      flexDirection: "column",
+      padding: "48px 16px 20px 16px",
+      textAlign: "left",
+      width: "100%"
+    },
+    foot: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderTop: "1px solid #DADAD9",
+      width: "100%"
+    },
+    footCol1: {
+      flex: "1",
+      padding: "12px 8px 12px 16px",
+      overflow: "hidden",
+      color: "rgb(0, 107, 255)",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis"
+    },
+    footCol2: {
+      padding: "12px 16px 12px 8px"
+    }
+  },
+  variants: {
+    fifteen:{
+      topbar: {
+        backgroundColor: "yellow.300",
+      }
+    },
+    thirty:{
+      topbar: {
+        backgroundColor: "red.400",
+      }
+    },
+    sixty:{
+      topbar: {
+        backgroundColor: "purple.400",
+      }
+    }
+  }
+}
+
 const theme = extendTheme({
   components: {
     Card,
     List,
-    Contacts
+    Contacts,
+    EventCard
   },
 })
 

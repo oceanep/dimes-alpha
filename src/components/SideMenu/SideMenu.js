@@ -98,13 +98,13 @@ function SideMenu() {
                           <AccordionIcon />
                         </AccordionButton>
                       </li>
-                      <AccordionPanel >
-                          <li className={item.cName}>
+                      <AccordionPanel px="0px" py="0px">
+                          <li className={`${item.cName} sub-text`}>
                             <Link to={item.subMenu[0].path}>
                               <span>{item.subMenu[0].title}</span>
                             </Link>
                           </li>
-                          <li className={item.cName}>
+                          <li className={`${item.cName} sub-text`}>
                             <Link to={item.subMenu[1].path}>
                               <span>{item.subMenu[1].title}</span>
                             </Link>

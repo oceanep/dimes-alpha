@@ -16,11 +16,15 @@ import styles from './Availability.module.scss'
 function Availability() {
 
   return (
-    <Flex className={styles.availabilityContainer} shadow='md' rounded='md' borderTop="2px" borderColor='gray.50' mx="30px" my="30px" flexDirection="row" alignItems='start' justifyContent='space-around'>
-      <Recurring />
-      <Flex h="100%" minW="350px" direction="column">
-        <Text pl="10px" w="100%" align="left">Availability Overrides</Text>
-        <Button size='lg' mt='1em'>Add an Override</Button>
+    <Flex className={styles.availabilityContainer} minH="100%" w="100%" alignItems='start' justifyContent='center'>
+      <Flex minW='800px' flexDirection="row" alignItems="start" justifyContent="center" mt="30px" mb="60px" background="white" boxShadow="md">
+        <Box fontSize="md">
+          <Recurring />
+        </Box>
+        <Flex minW="350px" direction="column" px="30px">
+          <Text fontSize="md" pl="10px" w="100%" align="left">Availability Overrides</Text>
+          <Button fontSize="md" size='lg' mt='1em'>Add an Override</Button>
+        </Flex>
       </Flex>
     </Flex>
   );

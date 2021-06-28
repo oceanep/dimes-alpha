@@ -57,7 +57,7 @@ const CalendarComponent = ({ props }) => {
                 onEventDrop={onEventDrop}
                 onEventResize={onEventResize}
                 resizable
-                style={{ height: "100vh", width: "100vh" }}
+                style={{ height: "650px", width: "800px" }}
             />
         </div>
     );
