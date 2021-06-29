@@ -4,7 +4,7 @@ import {
     Box,
     Flex,
     Button,
-    Text
+    Heading
 } from "@chakra-ui/react"
 
 import withMenu from '../withMenu/withMenu'
@@ -22,7 +22,7 @@ function Availability() {
           <Recurring />
         </Box>
         <Flex minW="350px" direction="column" px="30px">
-          <Text fontSize="md" pl="10px" w="100%" align="left">Availability Overrides</Text>
+          <Heading size="sm" pl="30px" py="15px" w="100%" align="left">Availability Overrides</Heading>
           <Button fontSize="md" size='lg' mt='1em'>Add an Override</Button>
         </Flex>
       </Flex>

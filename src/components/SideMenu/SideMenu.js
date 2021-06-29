@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-    Center,
     Icon,
-    VStack,
     Accordion,
     AccordionItem,
     AccordionButton,
@@ -100,12 +98,12 @@ function SideMenu() {
                       </li>
                       <AccordionPanel px="0px" py="0px">
                           <li className={`${item.cName} sub-text`}>
-                            <Link to={item.subMenu[0].path}>
+                            <Link fontSize="sm" to={item.subMenu[0].path}>
                               <span>{item.subMenu[0].title}</span>
                             </Link>
                           </li>
                           <li className={`${item.cName} sub-text`}>
-                            <Link to={item.subMenu[1].path}>
+                            <Link  fontSize="sm" to={item.subMenu[1].path}>
                               <span>{item.subMenu[1].title}</span>
                             </Link>
                           </li>
@@ -116,7 +114,7 @@ function SideMenu() {
               } else {
                 return (
                   <li key={index} className={item.cName}>
-                    <Link to={item.path}>
+                    <Link fontSize="md" to={item.path}>
                       <Icon as={item.icon} boxSize={8} />
                       <span>{item.title}</span>
                     </Link>

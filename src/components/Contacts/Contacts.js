@@ -6,10 +6,11 @@ import {
   Flex,
   Circle,
   Icon,
+  IconButton,
   Text,
   Heading
 } from "@chakra-ui/react"
-import { MdArrowForward, MdArrowBack, MdPerson, MdGroup } from 'react-icons/md'
+import { MdArrowForward, MdArrowBack, MdPerson, MdGroup, MdModeEdit, MdMoreVert, MdStarBorder } from 'react-icons/md'
 
 import styles from './Contacts.module.scss'
 
@@ -19,17 +20,31 @@ function Contacts(props) {
 
   return (
     <>
-    <Heading size="lg" mb="0.5em">{ type }</Heading>
-    <Box __css={c_styles.container} {...rest} w="100%" minH="560px">
-      <Flex wrap="wrap" justifyContent="space-around" alignItems="center" className={styles.contactsInner}>
+    <Heading size="md" mb="1em">{ type }</Heading>
+    <Box __css={c_styles.container} {...rest}>
+      <Flex flexDirection="column" justifyContent="space-around" alignItems="start" className={styles.contactsInner}>
         {
           contactItems.map((contact, index) => {
             return (
-              <Flex w="30%" direction="column" align="center" key={index}>
-                <Circle w="70%" shadow='md' overflow="hidden">
-                  <Icon as={ type == "Relationships" ? MdPerson : MdGroup } boxSize="100%" />
+              <Flex w="100%" py="10px" direction="row" align="center" justifyContent="space-around" key={index}  borderBottom="1px" borderColor="gray.100">
+                <Circle w="100px" overflow="hidden">
+                  <Icon as={ type == "Relationships" ? MdPerson : MdGroup } boxSize="100px" />
                 </Circle>
-                <Text>{ contact.title }</Text>
+                <Flex align="center" w="60%" justifyContent="flex-start" justifyContent="space-between">
+                  <Box textAlign="left" pr="30px">
+                    <Text fontSize="md">{ contact.title }</Text>
+                    <Text fontSize="sm">Relationships: </Text>
+                  </Box>
+                  <Box textAlign="left">
+                    <Text fontSize="xs">Last connected: 2 days ago</Text>
+                    <Text fontSize="sm">Groups: </Text>
+                  </Box>
+                </Flex>
+                <Flex direction="row">
+                  <IconButton variant="outline" borderColor="white" icon={<MdStarBorder/>} fontSize="3xl"/>
+                  <IconButton variant="outline" borderColor="white" icon={<MdMoreVert/>} fontSize="3xl"/>
+                  <IconButton variant="outline" borderColor="white" icon={<MdModeEdit/>} fontSize="3xl"/>
+                </Flex>
               </Flex>
             )
           })

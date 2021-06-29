@@ -42,19 +42,19 @@ function Relationships() {
  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   return (
-    <Flex className="relationships-container" px="30px" pt="15px" pb="60px" h="100%" w="100%" alignItems='center' justifyContent='center'>
-      <Box w="100%" h="100%" maxW="800px" maxH="600" position="relative">
-        <Circle size='40px' shadow='md' position="absolute" right="2%" top="10%">
-          <Icon as={MdAddCircle} />
-        </Circle>
-        <Contacts type="Relationships" contactItems={currentContacts} />
-        <Pagination
-          contactsPerPage={contactsPerPage}
-          totalContacts={contactItems.length}
-          paginate={paginate}
-          currentPage={currentPage}
-        />
-      </Box>
+    <Flex className="relationships-container"  minH="100%" w="100%" alignItems='start' justifyContent='center'>
+      <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" background="white" boxShadow="md">
+          <Circle size='40px' shadow='md' position="absolute" right="2%" top="2%">
+            <Icon as={MdAddCircle} />
+          </Circle>
+          <Contacts type="Relationships" contactItems={currentContacts} />
+          <Pagination
+            contactsPerPage={contactsPerPage}
+            totalContacts={contactItems.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+      </Flex>
     </Flex>
   );
 }
