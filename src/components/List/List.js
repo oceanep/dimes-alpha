@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {
   useStyleConfig,
   Center,
@@ -12,6 +11,7 @@ import styles from './List.module.scss'
 function List(props) {
   const { variant, children, title,  ...rest } = props
   const c_styles = useStyleConfig("List", { variant })
+  console.log(c_styles)
 
   return (
     <Box __css={c_styles.container} {...rest} w="100%" h="100%">

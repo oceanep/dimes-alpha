@@ -37,9 +37,9 @@ const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage}) =>
   }
 
   return (
-    <Flex w='100%' h="4em" direction="row" justifyContent="space-around" align="center">
+    <Flex h="4em" direction="row" justifyContent="space-around" align="center">
       <a onClick={prevPage} href='!#'>
-        <Circle size='40px' shadow='md'>
+        <Circle size='40px' shadow='md'  mx="15px">
           <Icon as={MdArrowBack}/>
         </Circle>
       </a>
@@ -58,7 +58,7 @@ const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage}) =>
       }
       </HStack>
       <a onClick={nextPage} href='!#'>
-        <Circle size='40px' shadow='md'>
+        <Circle size='40px' shadow='md'  mx="15px">
           <Icon as={MdArrowForward} />
         </Circle>
       </a>

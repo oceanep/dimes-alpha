@@ -1,12 +1,9 @@
 import {useState} from 'react';
 import {
-    Center,
     Box,
-    Flex,
-    Text,
-    Button,
-    ButtonGroup
+    Flex
 } from "@chakra-ui/react"
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react"
 
 import { MdAddCircle } from 'react-icons/md'
 
@@ -21,14 +18,26 @@ import styles from './Home.module.scss'
 
 function Home() {
     return (
-      <Flex className="home-container" h="100%" w="100%" alignItems='center' justifyContent='space-between'>
-        <Flex minW='460px' h="90%" flexDirection="column" alignItems="start" justifyContent="space-between">
-          <Box w="100%">
-            <CalendarComponent />
-          </Box>
-          <Box w="70%">
-            <Upcoming />
-          </Box>
+      <Flex className="home-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
+        <Flex minW='850px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
+          <Tabs w="100%" variant="enclosed">
+            <TabList>
+              <Tab>Events</Tab>
+              <Tab>Calendar</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Box w="100%">
+                  <Upcoming />
+                </Box>
+              </TabPanel>
+              <TabPanel>
+                <Flex w="100%" justifyContent="center">
+                  <CalendarComponent />
+                </Flex>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Flex>
     </Flex>
   );
