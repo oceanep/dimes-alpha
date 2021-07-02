@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
     Box,
     Flex
@@ -15,15 +16,41 @@ import EventTemplates from '../../components/EventTemplates/EventTemplates.jsx'
 import List from '../../components/List/List'
 import CreateModal from '../../components/CreateModal/CreateModal'
 import LandingNav from '../../components/LandingNav/LandingNav.jsx'
-import Relationships from '../Relationships/Relationships'
+import Contacts from '../../components/Contacts/Contacts'
+import Pagination from '../../components/Pagination/Pagination'
 
 import styles from './Home.module.scss'
 
 function Home() {
+
+    const [contactItems, setContacts] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [contactsPerPage] = useState(6);
+
+    useEffect(() => {
+      const fetchContacts = async () => {
+        setLoading(true)
+        const res = await axios.get('https://jsonplaceholder.typicode.com/posts')
+        setContacts(res.data);
+        setLoading(false);
+      };
+
+      fetchContacts()
+    }, [])
+
+    // Get current contacts
+   const indexOfLastPost = currentPage * contactsPerPage;
+   const indexOfFirstPost = indexOfLastPost - contactsPerPage;
+   const currentContacts = contactItems.slice(indexOfFirstPost, indexOfLastPost);
+
+   //Change page
+   const paginate = pageNumber => setCurrentPage(pageNumber)
+
     return (
         <Box>
           <Flex className="home-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
-            <Flex minW='850px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
+            <Flex minW='850px' w="1500px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
               <Tabs w="100%" variant="enclosed">
             <TabList>
               <Tab>Calendar</Tab>
@@ -34,6 +61,16 @@ function Home() {
                 <Flex w="100%" justifyContent="space-between">
                   <Upcoming vertical />
                   <CalendarComponent />
+                  <Flex position="relative" minW='250px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" >
+                      <Contacts type="Relationships" contactItems={currentContacts} mini/>
+                      <Pagination
+                        contactsPerPage={contactsPerPage}
+                        totalContacts={contactItems.length}
+                        paginate={paginate}
+                        currentPage={currentPage}
+                        mini
+                      />
+                  </Flex>
                 </Flex>
               </TabPanel>
               <TabPanel>
@@ -42,7 +79,6 @@ function Home() {
                   <Box pt="30px">
                     <Upcoming />
                   </Box>
-
                 </Box>
               </TabPanel>
             </TabPanels>

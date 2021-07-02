@@ -66,7 +66,8 @@ function Relationships({ mini }) {
 }
 
 Relationships.defaultProps = {
-  mini: false
+  mini: false,
+  noMenu: false
 }
 
 Relationships.displayName = "Relationships"

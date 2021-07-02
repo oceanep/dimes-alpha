@@ -15,12 +15,12 @@ import { MdArrowForward, MdArrowBack, MdPerson, MdGroup, MdModeEdit, MdMoreVert,
 import styles from './Contacts.module.scss'
 
 function Contacts(props) {
-  const { variant, children, type, contactItems,  ...rest } = props
+  const { variant, children, type, contactItems, mini, ...rest } = props
   const c_styles = useStyleConfig("Contacts", { variant })
 
   return (
     <>
-    <Heading size="md" mb="1em">{ type }</Heading>
+    {mini ? '' : <Heading size="md" mb="1em">{ type }</Heading>}
     <Box __css={c_styles.container} {...rest}>
       <Flex flexDirection="column" justifyContent="space-around" alignItems="start" className={styles.contactsInner}>
         {
@@ -40,11 +40,16 @@ function Contacts(props) {
                     <Text fontSize="sm">Groups: </Text>
                   </Box>
                 </Flex>
-                <Flex direction="row">
-                  <IconButton variant="outline" borderColor="white" icon={<MdStarBorder/>} fontSize="3xl"/>
-                  <IconButton variant="outline" borderColor="white" icon={<MdMoreVert/>} fontSize="3xl"/>
-                  <IconButton variant="outline" borderColor="white" icon={<MdModeEdit/>} fontSize="3xl"/>
-                </Flex>
+                {
+                  mini ? ''
+                  :
+                  <Flex direction="row">
+                    <IconButton variant="outline" borderColor="white" icon={<MdStarBorder/>} fontSize="3xl"/>
+                    <IconButton variant="outline" borderColor="white" icon={<MdMoreVert/>} fontSize="3xl"/>
+                    <IconButton variant="outline" borderColor="white" icon={<MdModeEdit/>} fontSize="3xl"/>
+                  </Flex>
+                }
+
               </Flex>
             )
           })
