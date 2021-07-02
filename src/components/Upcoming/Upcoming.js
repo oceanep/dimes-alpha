@@ -11,6 +11,7 @@ import { MdPlaylistAdd, MdPerson } from 'react-icons/md'
 import EventCard from '../EventCard/EventCard'
 
 import styles from './Upcoming.module.scss'
+import QRCode from "react-qr-code";
 
 function Upcoming() {
 
@@ -18,17 +19,20 @@ function Upcoming() {
     {
       title: '15 Minute Meeting',
       type: 'One-on-one',
-      time: 'fifteen'
+        time: 'fifteen',
+        value: 'www.google.com'
     },
     {
       title: '30 Minute Meeting',
       type: 'One-on-one',
-      time: 'thirty'
+        time: 'thirty',
+        value: 'www.facebook.com'
     },
     {
       title: '60 Minute Meeting',
       type: 'One-on-one',
-      time: 'sixty'
+        time: 'sixty',
+        value: 'www.apple.com'
     },
   ]
 
@@ -36,7 +40,7 @@ function Upcoming() {
     <Box className="upcoming-container" w='100%'>
       <Box w='100%' mb='4px' px="12px" borderBottom="2px" borderColor='gray.50' rounded='md'>
         <Flex w='50%' pb="15px" justifyContent='flex-start' alignItems="center" display="inline-flex">
-          <Avatar mr="10px"name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="https://bit.ly/broken-link" />
+          <Avatar mr="10px"name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
           <Text fontSize="md" display="inline-block">{localStorage.getItem("username") != null ? localStorage.getItem('username') : null}</Text>
         </Flex>
         <Box w='50%' textAlign='right' display="inline-block">
@@ -52,6 +56,7 @@ function Upcoming() {
                   title={template.title}
                   type={template.type}
                   variant={template.time}
+                  value={template.value}
                 />
               </Box>
             );

@@ -1,5 +1,5 @@
 import axios from 'axios'
-let api_endpoint = 'http://ec2-35-74-184-115.ap-northeast-1.compute.amazonaws.com/api'
+let api_endpoint = 'https://dimes-back.ngrok.io/api'
 let headers = {
     "Content-type": "application/json"
 }
