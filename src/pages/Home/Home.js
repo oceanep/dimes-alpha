@@ -61,7 +61,7 @@ function Home() {
                 <Flex w="100%" justifyContent="space-between">
                   <Upcoming vertical />
                   <CalendarComponent />
-                  <Flex position="relative" minW='250px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" >
+                  <Flex position="relative" flexDirection="column" alignItems="center" pt="15px" pr="30px">
                       <Contacts type="Relationships" contactItems={currentContacts} mini/>
                       <Pagination
                         contactsPerPage={contactsPerPage}

@@ -22,24 +22,33 @@ function Contacts(props) {
     <>
     {mini ? '' : <Heading size="md" mb="1em">{ type }</Heading>}
     <Box __css={c_styles.container} {...rest}>
-      <Flex flexDirection="column" justifyContent="space-around" alignItems="start" className={styles.contactsInner}>
+      <Flex flexDirection="column" justifyContent="space-around" alignItems={ mini ? "center" : "start"} className={styles.contactsInner}>
         {
           contactItems.map((contact, index) => {
             return (
-              <Flex w="100%" py="10px" direction="row" align="center" justifyContent="space-around" key={index}  borderBottom="1px" borderColor="gray.100">
+              <Flex w={mini ? '' : "100%"} py="10px" direction={ mini ? "column" : "row"} align="center" justifyContent="space-around" key={index}  borderBottom={mini ? '' : "1px"} borderColor="gray.100">
                 <Circle w="100px" overflow="hidden">
                   <Icon as={ type == "Relationships" ? MdPerson : MdGroup } boxSize="100px" />
                 </Circle>
-                <Flex align="center" w="60%" justifyContent="flex-start" justifyContent="space-between">
-                  <Box textAlign="left" pr="30px">
-                    <Text fontSize="md">{ contact.title }</Text>
-                    <Text fontSize="sm">Relationships: </Text>
-                  </Box>
-                  <Box textAlign="left">
-                    <Text fontSize="xs">Last connected: 2 days ago</Text>
-                    <Text fontSize="sm">Groups: </Text>
-                  </Box>
-                </Flex>
+                {
+                  mini ?
+                    <Box>
+                      <Text fontSize="md">{ contact.title.split(" ", 1) }</Text>
+                      <Text fontSize="sm">Relationships: </Text>
+                    </Box>
+                  :
+                    <Flex align="center" w="60%" justifyContent="flex-start" justifyContent="space-between">
+                      <Box textAlign="left" pr="30px">
+                        <Text fontSize="md">{ contact.title.split(" ", 1) }</Text>
+                        <Text fontSize="sm">Relationships: </Text>
+                      </Box>
+                      <Box textAlign="left">
+                        <Text fontSize="xs">Last connected: 2 days ago</Text>
+                        <Text fontSize="sm">Groups: </Text>
+                      </Box>
+                    </Flex>
+                }
+
                 {
                   mini ? ''
                   :
