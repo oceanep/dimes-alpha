@@ -11,9 +11,12 @@ import withMenu from '../withMenu/withMenu'
 import Cal from '../../components/Cal/Cal'
 import CalendarComponent from '../../components/CalendarComponent/CalendarComponent.jsx'
 import Upcoming from '../../components/Upcoming/Upcoming'
+import EventTemplates from '../../components/EventTemplates/EventTemplates.jsx'
 import List from '../../components/List/List'
 import CreateModal from '../../components/CreateModal/CreateModal'
 import LandingNav from '../../components/LandingNav/LandingNav.jsx'
+import Relationships from '../Relationships/Relationships'
+
 import styles from './Home.module.scss'
 
 function Home() {
@@ -23,18 +26,23 @@ function Home() {
             <Flex minW='850px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
               <Tabs w="100%" variant="enclosed">
             <TabList>
-              <Tab>Events</Tab>
               <Tab>Calendar</Tab>
+              <Tab>Events</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
-                <Flex w="100%" justifyContent="center">
+                <Flex w="100%" justifyContent="space-between">
+                  <Upcoming vertical />
                   <CalendarComponent />
                 </Flex>
               </TabPanel>
               <TabPanel>
                 <Box w="100%">
-                  <Upcoming />
+                  <EventTemplates />
+                  <Box pt="30px">
+                    <Upcoming />
+                  </Box>
+
                 </Box>
               </TabPanel>
             </TabPanels>

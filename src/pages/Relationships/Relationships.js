@@ -15,7 +15,7 @@ import Pagination from '../../components/Pagination/Pagination'
 
 import styles from './Relationships.module.scss'
 
-function Relationships() {
+function Relationships({ mini }) {
 
   const [contactItems, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -42,21 +42,31 @@ function Relationships() {
  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   return (
-    <Flex className="relationships-container"  minH="100%" w="100%" alignItems='start' justifyContent='center'>
-      <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" background="white" boxShadow="md">
-          <Circle size='40px' shadow='md' position="absolute" right="2%" top="2%">
-            <Icon as={MdAddCircle} />
-          </Circle>
-          <Contacts type="Relationships" contactItems={currentContacts} />
+    <Flex className="relationships-container"  minH="100%" w={ mini ? '' : "100%"} alignItems='start' justifyContent='center'>
+      <Flex position="relative" minW={ mini ? '250px' : '650px'} w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" background="white" boxShadow="md">
+          {
+            mini ? ''
+            :
+            <Circle size='40px' shadow='md' position="absolute" right="2%" top="2%">
+              <Icon as={MdAddCircle} />
+            </Circle>
+          }
+
+          <Contacts type="Relationships" contactItems={currentContacts} mini={mini} />
           <Pagination
             contactsPerPage={contactsPerPage}
             totalContacts={contactItems.length}
             paginate={paginate}
             currentPage={currentPage}
+            mini={mini}
           />
       </Flex>
     </Flex>
   );
+}
+
+Relationships.defaultProps = {
+  mini: false
 }
 
 Relationships.displayName = "Relationships"

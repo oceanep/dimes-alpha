@@ -55,5 +55,9 @@ function Contacts(props) {
   )
 }
 
+Contacts.defaultProps = {
+  mini: false
+}
+
 Contacts.displayName = "Contacts"
 export default Contacts;

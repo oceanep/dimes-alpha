@@ -10,10 +10,10 @@ import { MdPlaylistAdd, MdPerson } from 'react-icons/md'
 
 import EventCard from '../EventCard/EventCard'
 
-import styles from './Upcoming.module.scss'
+import styles from './EventTemplates.module.scss'
 import QRCode from "react-qr-code";
 
-function Upcoming({ vertical }) {
+function EventTemplates({ vertical }) {
 
   const data = [
     {
@@ -37,19 +37,17 @@ function Upcoming({ vertical }) {
   ]
 
   return (
-    <Box className="upcoming-container" w={ vertical ? '' : '100%'}>
+    <Box className="EventTemplates-container" w={ vertical ? '' : '100%'}>
       <Flex w='100%' mb='4px' px="12px" pb="15px" borderBottom="2px" borderColor='gray.50' rounded='md'>
-        {/*
         <Flex w={ vertical ? '' : '50%'} justifyContent='flex-start' alignItems="center" display="inline-flex">
           <Avatar mr="10px"name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
           <Text fontSize="md" display="inline-block">{localStorage.getItem("username") != null ? localStorage.getItem('username') : null}</Text>
         </Flex>
-        */}
         {
           vertical ? ''
           :
-          <Flex w='100%' justifyContent='flex-end'>
-            <Button fontSize="sm" iconRight={<MdPlaylistAdd/>} variant="outline" >New Event</Button>
+          <Flex w='50%' justifyContent='flex-end'>
+            <Button fontSize="sm" iconRight={<MdPlaylistAdd/>} variant="outline" >New Event Template</Button>
           </Flex>
         }
       </Flex>
@@ -73,9 +71,9 @@ function Upcoming({ vertical }) {
   );
 }
 
-Upcoming.defaultProps = {
+EventTemplates.defaultProps = {
   vertical: false
 }
 
-Upcoming.displayName = "Upcoming"
-export default Upcoming;
+EventTemplates.displayName = "EventTemplates"
+export default EventTemplates;
