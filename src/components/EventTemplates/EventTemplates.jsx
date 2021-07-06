@@ -1,40 +1,36 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {
     Box,
     Flex,
     Button,
     Text,
-    Avatar
+    Avatar,
+    Skeleton
 } from "@chakra-ui/react"
 import { MdPlaylistAdd, MdPerson } from 'react-icons/md'
 
 import EventCard from '../EventCard/EventCard'
+import TemplateModal from '../TemplateModal/TemplateModal'
+import useTemplates from '../../hooks/useTemplates'
+import eventTemplates from '../../utils/event_templates'
 
 import styles from './EventTemplates.module.scss'
 import QRCode from "react-qr-code";
 
 function EventTemplates({ vertical }) {
+  const userId = localStorage.userId
+  const templates = useTemplates(eventTemplates.getTemplates, userId)
 
-  const data = [
-    {
-      title: '15 Minute Meeting',
-      type: 'One-on-one',
-        time: 'fifteen',
-        value: 'www.google.com'
-    },
-    {
-      title: '30 Minute Meeting',
-      type: 'One-on-one',
-        time: 'thirty',
-        value: 'www.facebook.com'
-    },
-    {
-      title: '60 Minute Meeting',
-      type: 'One-on-one',
-        time: 'sixty',
-        value: 'www.apple.com'
-    },
-  ]
+  const [loading, setLoading] = useState(true)
+
+  // const [templates, setTemplates] = useState([])
+
+  useEffect( () => {
+    if (templates && templates !== null){
+      setLoading(false)
+    }
+  }, [templates])
+
 
   return (
     <Box className="EventTemplates-container" w={ vertical ? '' : '100%'}>
@@ -47,24 +43,35 @@ function EventTemplates({ vertical }) {
           vertical ? ''
           :
           <Flex w='50%' justifyContent='flex-end'>
-            <Button fontSize="sm" iconRight={<MdPlaylistAdd/>} variant="outline" >New Event Template</Button>
+            <TemplateModal
+              label={{
+                icon: <MdPlaylistAdd/>,
+                button: 'New Event Template',
+                title: 'New Event Template',
+                placeholder: 'Duration',
+                secondary: 'next'
+              }}
+            />
           </Flex>
         }
       </Flex>
       <Flex w="100%" flexDirection={ vertical ? "column" : 'row' } flexWrap={ vertical ? "nowrap" : "wrap"} justifyContent="space-between" alignItems={ vertical ? 'flex-start' : 'center'}>
         {
-          data.map((template, index) => {
-            return(
-              <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
-                <EventCard
-                  title={template.title}
-                  type={template.type}
-                  variant={template.time}
-                  value={template.value}
-                />
-              </Box>
-            );
-          })
+          templates.length > 0 ?
+            templates.map((template, index) => {
+              return(
+                <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
+                  <EventCard
+                    title={template.title}
+                    desc={template.desc}
+                    variant={template.variant}
+                    value={template.value}
+                  />
+                </Box>
+              );
+            })
+          :
+            ''
         }
       </Flex>
     </Box>

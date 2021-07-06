@@ -18,7 +18,7 @@ import styles from './Relationships.module.scss'
 function Relationships() {
 
   const [contactItems, setContacts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [contactsPerPage] = useState(6);
 

@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {
     Box,
     Flex,
@@ -9,32 +9,24 @@ import {
 import { MdPlaylistAdd, MdPerson } from 'react-icons/md'
 
 import EventCard from '../EventCard/EventCard'
+import CreateModal from '../CreateModal/CreateModal'
+import useEvents from '../../hooks/useEvents'
+import userEvents from '../../utils/user_events'
 
 import styles from './Upcoming.module.scss'
 import QRCode from "react-qr-code";
 
 function Upcoming({ vertical }) {
+  const userId = localStorage.user_id
+  const events = useEvents(userEvents.getEvents, userId)
 
-  const data = [
-    {
-      title: '15 Minute Meeting',
-      type: 'One-on-one',
-        time: 'fifteen',
-        value: 'www.google.com'
-    },
-    {
-      title: '30 Minute Meeting',
-      type: 'One-on-one',
-        time: 'thirty',
-        value: 'www.facebook.com'
-    },
-    {
-      title: '60 Minute Meeting',
-      type: 'One-on-one',
-        time: 'sixty',
-        value: 'www.apple.com'
-    },
-  ]
+  const [loading, setLoading] = useState(true)
+
+  useEffect( () => {
+    if (events && events !== null){
+      setLoading(false)
+    }
+  }, [events])
 
   return (
     <Box className="upcoming-container" w={ vertical ? '' : '100%'}>
@@ -49,20 +41,30 @@ function Upcoming({ vertical }) {
           vertical ? ''
           :
           <Flex w='100%' justifyContent='flex-end'>
-            <Button fontSize="sm" iconRight={<MdPlaylistAdd/>} variant="outline" >New Event</Button>
+            <CreateModal
+              label={{
+                icon: <MdPlaylistAdd/>,
+                button: 'New Event',
+                title: 'New Event',
+                placeholder: 'Duration',
+                secondary: 'next'
+              }}
+            />
           </Flex>
         }
       </Flex>
-      <Flex w="100%" flexDirection={ vertical ? "column" : 'row' } flexWrap={ vertical ? "nowrap" : "wrap"} justifyContent="space-between" alignItems={ vertical ? 'flex-start' : 'center'}>
+      <Flex w="100%" flexDirection={ vertical ? "column" : 'row' } flexWrap={ vertical ? "nowrap" : "wrap"} justifyContent={ vertical ? 'space-between' : 'flex-start'} alignItems={ vertical ? 'flex-start' : 'center'}>
         {
-          data.map((template, index) => {
+          events.map((event, index) => {
             return(
               <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
                 <EventCard
-                  title={template.title}
-                  type={template.type}
-                  variant={template.time}
-                  value={template.value}
+                  title={event.title}
+                  desc={event.desc}
+                  variant={event.variant}
+                  value={event.value}
+                  time={event.timeRange}
+                  day={event.dayOfWeek}
                 />
               </Box>
             );

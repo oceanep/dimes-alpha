@@ -59,7 +59,8 @@ function Home() {
             <TabPanels>
               <TabPanel>
                 <Flex w="100%" justifyContent="space-between">
-                  <Upcoming vertical />
+                  {//<Upcoming vertical />
+                  }
                   <CalendarComponent />
                   <Flex position="relative" flexDirection="column" alignItems="center" pt="15px" pr="30px">
                       <Contacts type="Relationships" contactItems={currentContacts} mini/>

@@ -19,12 +19,15 @@ import { MdAddCircle, MdDeleteForever, MdUndo } from 'react-icons/md'
 
 import List from '../../components/List/List'
 import userAvailability from '../../utils/user_availability.js'
+import timeUtils from '../../utils/time_utils.js'
 
 import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
 import './Recurring.scss'
 
 function Recurring() {
 
+  const { convertToTime, convertFromTime, roundTime } = timeUtils
+  console.log("time utils: ", convertToTime)
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   const [loading, setLoading] = useState(true);
@@ -44,66 +47,66 @@ function Recurring() {
     '','','','','','',''
   ]);
 
-  const convertToTime = (begin, end) => {
-    console.log(`start values: ${begin}, ${end}`)
-    let startTime = +begin * 15
-    let endTime = +end * 15
-
-    console.log(`raw values: ${startTime}, ${endTime}`)
-    let startHour = (Math.floor(startTime/60)).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-    let endHour = (Math.floor(endTime/60)).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-
-    let startMin = (startTime % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-    let endMin = (endTime % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-
-    const timeRange = [`${startHour}:${startMin}`, `${endHour}:${endMin}`]
-    console.log('times', timeRange)
-    return timeRange
-  }
-
-  const convertFromTime = (time) => {
-    let beginTime = time[0]
-    let endTime = time[1]
-
-    let beginHour = parseInt(beginTime.split(':')[0]) * 60 / 15
-    let beginMin = parseInt(beginTime.split(':')[1]) / 15
-
-    let endHour = parseInt(endTime.split(':')[0]) * 60 / 15
-    let endMin = parseInt(endTime.split(':')[1]) / 15
-
-    beginHour += beginMin
-    endHour += endMin
-
-    convertToTime(beginHour, endHour)
-
-    console.log(`begin codec: ${beginHour}`)
-    console.log(`end codec: ${endHour}`)
-
-    return {
-      beginCodec: beginHour,
-      endCodec: endHour
-    }
-  }
-
-  const roundTime = (time) => {
-    let beginTime = time[0]
-    let endTime = time[1]
-
-    let beginHour = beginTime.split(':')[0]
-    let beginMin = parseInt(beginTime.split(':')[1])
-    beginMin = ((((beginMin + 7.5)/15 | 0) * 15) % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-
-    console.log('begin minutes', beginMin)
-
-    let endHour = endTime.split(':')[0]
-    let endMin = parseInt(endTime.split(':')[1])
-    endMin = ((((endMin + 7.5)/15 | 0) * 15) % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-
-    const roundedTime = [`${beginHour}:${beginMin}`,`${endHour}:${endMin}`]
-    console.log('Rounded Time', roundedTime)
-
-    return roundedTime
-  }
+  // const convertToTime = (begin, end) => {
+  //   console.log(`start values: ${begin}, ${end}`)
+  //   let startTime = +begin * 15
+  //   let endTime = +end * 15
+  //
+  //   console.log(`raw values: ${startTime}, ${endTime}`)
+  //   let startHour = (Math.floor(startTime/60)).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+  //   let endHour = (Math.floor(endTime/60)).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+  //
+  //   let startMin = (startTime % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+  //   let endMin = (endTime % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+  //
+  //   const timeRange = [`${startHour}:${startMin}`, `${endHour}:${endMin}`]
+  //   console.log('times', timeRange)
+  //   return timeRange
+  // }
+  //
+  // const convertFromTime = (time) => {
+  //   let beginTime = time[0]
+  //   let endTime = time[1]
+  //
+  //   let beginHour = parseInt(beginTime.split(':')[0]) * 60 / 15
+  //   let beginMin = parseInt(beginTime.split(':')[1]) / 15
+  //
+  //   let endHour = parseInt(endTime.split(':')[0]) * 60 / 15
+  //   let endMin = parseInt(endTime.split(':')[1]) / 15
+  //
+  //   beginHour += beginMin
+  //   endHour += endMin
+  //
+  //   convertToTime(beginHour, endHour)
+  //
+  //   console.log(`begin codec: ${beginHour}`)
+  //   console.log(`end codec: ${endHour}`)
+  //
+  //   return {
+  //     beginCodec: beginHour,
+  //     endCodec: endHour
+  //   }
+  // }
+  //
+  // const roundTime = (time) => {
+  //   let beginTime = time[0]
+  //   let endTime = time[1]
+  //
+  //   let beginHour = beginTime.split(':')[0]
+  //   let beginMin = parseInt(beginTime.split(':')[1])
+  //   beginMin = ((((beginMin + 7.5)/15 | 0) * 15) % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+  //
+  //   console.log('begin minutes', beginMin)
+  //
+  //   let endHour = endTime.split(':')[0]
+  //   let endMin = parseInt(endTime.split(':')[1])
+  //   endMin = ((((endMin + 7.5)/15 | 0) * 15) % 60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
+  //
+  //   const roundedTime = [`${beginHour}:${beginMin}`,`${endHour}:${endMin}`]
+  //   console.log('Rounded Time', roundedTime)
+  //
+  //   return roundedTime
+  // }
 
   const createAvailability = async (index) => {
     const { beginCodec, endCodec } = convertFromTime(timeRange[index])
