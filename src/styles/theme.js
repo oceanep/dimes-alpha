@@ -71,8 +71,8 @@ const Contacts = {
   baseStyle: {
     container: {
       background: "white",
-      borderTop: "2px",
-      borderColor: "gray.50",
+      // borderTop: "2px",
+      // borderColor: "gray.50",
       width: "100%",
       paddingBottom: "20px"
     },

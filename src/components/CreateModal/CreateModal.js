@@ -17,6 +17,7 @@ import {
   InputGroup,
   Input,
   InputRightAddon,
+  Select,
   textArea,
   Button,
   Box
@@ -81,7 +82,7 @@ function CreateModal({ label, ...rest }) {
 
   return (
     <>
-      <Button onClick={onOpen} rightIcon={label.icon} w='100%' mt="15px" shadow='md' bg='white' borderTop="2px" borderColor='gray.50' rounded='md'>{label.button}</Button>
+      <Button onClick={onOpen} leftIcon={label.icon} fontSize="sm" variant="outline">{label.button}</Button>
 
       <Modal isOpen={isOpen} onClose={onClose} size={timesDisplayed ? 'xl' : 'sm'}>
         <ModalOverlay />
@@ -110,14 +111,17 @@ function CreateModal({ label, ...rest }) {
                     />
                     <Spacer/>
                     <InputGroup>
-                      <Input
+                      <Select
                         placeholder={label.placeholder}
                         size='md'
-                        value={duration}
                         onChange={setDuration}
                         isRequired
-                      />
-                      <InputRightAddon children='minutes' />
+                      >
+                        <option value="15">15 Minute</option>
+                        <option value="30">30 Minute</option>
+                        <option value="60">60 Minute</option>
+                      </Select>
+                      <InputRightAddon children='Meeting' />
                     </InputGroup>
                   </Flex>
                 </ModalBody>

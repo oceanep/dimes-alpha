@@ -1,5 +1,5 @@
 import axios from 'axios'
-let api_endpoint = 'http://ec2-35-74-184-115.ap-northeast-1.compute.amazonaws.com/api'
+let api_endpoint = 'https://dimes-back.ngrok.io/api'
 let headers = {
     "Content-type": "application/json"
 }
@@ -14,36 +14,49 @@ const userEvents = {
         }
       }, headers)
       return res
-    } catch {
+    } catch (error) {
+        if (error) {
+          throw error
+        }
         return {statusText: 'No Events Registered'}
     }
   },
-  async createEvent(userId, title, duration, active) {
+  async createEvent(userId, ownerId, title, desc, status = 1, beginTime, endTime, dayOfWeek, active) {
     let url = `${api_endpoint}/user_events`;
-    const event_template = {
-  		"user_id": userId,
-  		"title": title,
-  		"duration": duration,
-  		"active": active
+    const user_event = {
+      "active": active,
+      "begin_time_unit": beginTime,
+      "day_of_week": dayOfWeek,
+      "description": desc,
+      "end_time_unit": endTime,
+      "owner_id": ownerId,
+      "status": status,
+      "title": title,
+      "user_id": userId
   	}
     try {
       let res = await axios.post(url, {
-        "event_template": event_template
+        "user_event": user_event
       }, headers)
       return res
     } catch {
       throw new Error('Failed to create event')
     }
   },
-  async updateEvent(eventId, title, duration, active) {
+  async updateEvent(eventId, ownerId, title, desc, status = 1, beginTime, endTime, dayOfWeek, active) {
     let url = `${api_endpoint}/user_events`;
     try {
       let res = await axios.patch(url, {
         "event_id": eventId,
-        "event_template": {
-      		"title": title,
-      		"duration": duration,
-      		"active": active
+        "user_event": {
+          "active": active,
+          "begin_time_unit": beginTime,
+          "day_of_week": dayOfWeek,
+          "description": desc,
+          "end_time_unit": endTime,
+          "owner_id": ownerId,
+          "status": status,
+          "title": title,
         }
       }, headers)
     } catch {

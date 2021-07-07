@@ -1,7 +1,9 @@
 import { Fragment } from 'react'
 import {
   useStyleConfig,
-  Box,
+    Box,
+    Flex,
+    Spacer,
   Checkbox,
   Button,
   Text,
@@ -20,11 +22,13 @@ import {
 import { MdSettings, MdContentCopy, MdModeEdit, MdDelete, MdExpandMore, MdExpandLess } from 'react-icons/md'
 
 import styles from './EventCard.module.scss'
+import QRCode from "react-qr-code";
 
 function EventCard(props) {
 
-  const { variant, title, type } = props
-  const subtitle = `${ variant == "fifteen" ? '15 mins,' : ''}${ variant == "thirty" ? '30 mins,' : ''}${ variant == "sixty" ? '60 mins,' : ''} ${type}`
+  const { title, desc, variant, value, time, day } = props
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  // const subtitle = `${ variant == "fifteen" ? '15 mins,' : ''}${ variant == "thirty" ? '30 mins,' : ''}${ variant == "sixty" ? '60 mins,' : ''} ${type}`
   const c_styles = useStyleConfig("EventCard", { variant })
 
   return (
@@ -48,13 +52,22 @@ function EventCard(props) {
           ) }
         </Menu>
       </Box>
+      <Flex w='50%' pb="15px" justifyContent='space-around' alignItems="center" display="inline-flex">
       <Box __css={c_styles.body}>
         <button className={styles.cardBody}>
           <Text fontSize="md">{title}</Text>
-          <Text fontSize="sm" color="gray.400">{subtitle}</Text>
+          <Text fontSize="sm" color="gray.400">{desc}</Text>
+          {
+            day && time ?
+              <Text fontSize="sm" color="gray.400">{`${days[day]} ${time}`}</Text>
+            :
+            ''
+          }
           <Link fontSize="md" color="teal.500" href="#">View Booking Page</Link>
         </button>
       </Box>
+        <Box><QRCode size={50} value={value} /></Box>
+      </Flex>
       <Box __css={c_styles.foot}>
         <Box __css={c_styles.footCol1}>
           <Button leftIcon={<MdContentCopy/>} float="left" pl="0px" background="none" _hover={{ background: "none" }} _active={{ background: "none" }} _focus={{ border: "none" }}>

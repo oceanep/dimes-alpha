@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react"
 import { MdArrowForward, MdArrowBack } from 'react-icons/md'
 
-const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage}) => {
+const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage, mini}) => {
 
 
   const [lastPage, deactivateLastPage] = useState(false)
@@ -45,6 +45,8 @@ const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage}) =>
       </a>
       <HStack>
       {
+        mini ? ''
+        :
         pageNumbers.map((number,index) => (
           currentPage == (index+1) ?
             <a onClick={() => pagination(number)} >
@@ -66,4 +68,9 @@ const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage}) =>
   )
 }
 
+Pagination.defaultProps = {
+  mini: false
+}
+
+Pagination.displayName = "Pagination"
 export default Pagination
