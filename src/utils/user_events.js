@@ -1,5 +1,6 @@
 import axios from 'axios'
-let api_endpoint = 'https://dimes-back.ngrok.io/api'
+import BASE_URL from './env.js'
+let api_endpoint = BASE_URL
 let headers = {
     "Content-type": "application/json"
 }
@@ -21,8 +22,9 @@ const userEvents = {
         return {statusText: 'No Events Registered'}
     }
   },
-  async createEvent(userId, ownerId, title, desc, status = 1, beginTime, endTime, dayOfWeek, active) {
+  async createEvent(userId, ownerId, title, desc, status = 1, beginTime, endTime, dayOfWeek, active = true) {
     let url = `${api_endpoint}/user_events`;
+    console.log('create event: ', userId, ownerId, title, desc, status, beginTime, endTime, dayOfWeek, active)
     const user_event = {
       "active": active,
       "begin_time_unit": beginTime,

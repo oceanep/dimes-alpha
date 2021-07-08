@@ -50,7 +50,7 @@ function Home() {
     return (
         <Box>
           <Flex className="home-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
-            <Flex minW='850px' w="1500px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
+            <Flex minW='900px' w="1500px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
               <Tabs w="100%" variant="enclosed">
             <TabList>
               <Tab>Calendar</Tab>
@@ -59,8 +59,7 @@ function Home() {
             <TabPanels>
               <TabPanel>
                 <Flex w="100%" justifyContent="space-between">
-                  {//<Upcoming vertical />
-                  }
+                  <Upcoming vertical />
                   <CalendarComponent />
                   <Flex position="relative" flexDirection="column" alignItems="center" pt="15px" pr="30px">
                       <Contacts type="Relationships" contactItems={currentContacts} mini/>
