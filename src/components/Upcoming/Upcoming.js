@@ -64,7 +64,7 @@ function Upcoming({ vertical }) {
                   variant={event.variant}
                   value={event.value}
                   time={event.timeRange}
-                  day={event.dayOfWeek}
+                  day={`${(""+event.dayOfWeek).split("")[0]}/${(""+event.dayOfWeek).substring(1)}`}
                 />
               </Box>
             );

@@ -199,7 +199,7 @@ function CreateModal({ label, ...rest }) {
   )
 
   const page3 = () => {
-    const date = `${(""+meet.dayOfWeek).split("")[0]}/${(""+meet.dayOfWeek).split("")[1]}`
+    const date = `${(""+meet.dayOfWeek).split("")[0]}/${(""+meet.dayOfWeek).substring(1)}`
     const  cTime = timeUtils.convertToTime(meet.beginTime, meet.endTime)
 
     return (

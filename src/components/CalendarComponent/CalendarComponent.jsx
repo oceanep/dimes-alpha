@@ -5,6 +5,9 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react"
 
+import useEvents from '../../hooks/useEvents'
+import userEvents from '../../utils/user_events'
+
 const localizer = momentLocalizer(moment)
 const DnDCalendar = withDragAndDrop(Calendar);
 const google_events = JSON.parse(localStorage.getItem("google_events"))
@@ -20,7 +23,25 @@ if (google_events) {
         })
     }
 }
+
+
+
 const CalendarComponent = ({ props }) => {
+
+    const userId = localStorage.user_id
+    const dimes_events = useEvents(userEvents.getEvents, 2)
+
+    if (dimes_events) {
+      for (var i = 0; i < dimes_events.length; i++) {
+          console.log('checking cal dates: ', `${(""+dimes_events[i].dayOfWeek).split("")[0]} ${(""+dimes_events[i].dayOfWeek).substring(1)} ${dimes_events[i].timeRange[0]}`)
+          parsed_events.push({
+              id: i,
+              start: new Date(`${(""+dimes_events[i].dayOfWeek).split("")[0]} ${(""+dimes_events[i].dayOfWeek).substring(1)}, 2021 ${dimes_events[i].timeRange[0]}:00`),
+              end: new Date(`${(""+dimes_events[i].dayOfWeek).split("")[0]} ${(""+dimes_events[i].dayOfWeek).substring(1)}, 2021 ${dimes_events[i].timeRange[1]}:00`),
+              title: dimes_events[i].title
+          })
+      }
+    }
 
     const [events, setEvents] = useState(
         parsed_events

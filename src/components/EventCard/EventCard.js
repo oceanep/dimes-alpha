@@ -59,7 +59,7 @@ function EventCard(props) {
           <Text fontSize="sm" color="gray.400">{desc}</Text>
           {
             day && time ?
-              <Text fontSize="sm" color="gray.400">{`${days[day]} ${time}`}</Text>
+              <Text fontSize="sm" color="gray.400">{`${days[day] ? days[day] : day} ${time}`}</Text>
             :
             ''
           }
