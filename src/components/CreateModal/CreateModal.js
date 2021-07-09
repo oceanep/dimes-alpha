@@ -51,9 +51,6 @@ function CreateModal({ label, ...rest }) {
     dayOfWeek: null,
   });
 
-  console.log(meet)
-
-
   const setEventTitle = (title) => {
     setMeet({...meet, title})
   }
