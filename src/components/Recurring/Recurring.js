@@ -71,7 +71,8 @@ function Recurring() {
 
     let newArr = [...availability]
     const res = await userAvailability.getAvailability(userId)
-    console.log(res.data)
+      console.log("Availe: ", res.data);
+      if(!res == undefined){
     res.data.data.forEach((time, i) => {
       const timeObj = {
         id: time.id,
@@ -86,6 +87,7 @@ function Recurring() {
       }
       console.log('initial state ', newArr)
     });
+      }
     setAvailability(newArr)
 
   }, [])

@@ -28,6 +28,7 @@ const userAvailability = {
       "day_of_week": dayOfWeek,
       "type": type
     }
+      console.log("User calendar: ", user_calendar);
     try {
       let res = await axios.post(url, {
         "user_calendar": user_calendar
