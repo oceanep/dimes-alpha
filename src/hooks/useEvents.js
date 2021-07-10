@@ -15,6 +15,7 @@ function useEvents(apiCall, ...rest ) {
       try {
         const res = await apiCall(parseInt(userId))
         const newEvents = res.data.data.map( event => {
+
             let timeRange = timeUtils.convertToTime(event.begin_time_unit, event.end_time_unit)
             let diff = Math.abs(parseInt(event.begin_time_unit) - parseInt(event.end_time_unit))
             return {

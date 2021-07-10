@@ -12,7 +12,6 @@ function useTemplates(apiCall, ...rest ) {
     const getTemplates = async () => {
       try {
         const res = await apiCall(parseInt(userId))
-        console.log('template:', res.data.data)
         const newTemplates = res.data.data.map( template => (
           {
             //write catch for UI based failing later

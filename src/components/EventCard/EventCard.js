@@ -52,14 +52,14 @@ function EventCard(props) {
           ) }
         </Menu>
       </Box>
-      <Flex w='50%' pb="15px" justifyContent='space-around' alignItems="center" display="inline-flex">
+      <Flex w='50%' justifyContent='space-around' alignItems="center" display="inline-flex">
       <Box __css={c_styles.body}>
         <button className={styles.cardBody}>
           <Text fontSize="md">{title}</Text>
           <Text fontSize="sm" color="gray.400">{desc}</Text>
           {
             day && time ?
-              <Text fontSize="sm" color="gray.400">{`${days[day]} ${time}`}</Text>
+              <Text fontSize="sm" color="gray.400">{`${days[day] ? days[day] : day} ${time}`}</Text>
             :
             ''
           }

@@ -1,5 +1,6 @@
 import axios from 'axios'
-let api_endpoint = 'https://dimes-back.ngrok.io/api/users'
+import BASE_URL from './env.js'
+let api_endpoint = BASE_URL
 let headers = {
     "Content-type": "application/json",
     "Accept" : "application/json"
