@@ -52,7 +52,7 @@ function EventCard(props) {
           ) }
         </Menu>
       </Box>
-      <Flex w='50%' pb="15px" justifyContent='space-around' alignItems="center" display="inline-flex">
+      <Flex w='50%' justifyContent='space-around' alignItems="center" display="inline-flex">
       <Box __css={c_styles.body}>
         <button className={styles.cardBody}>
           <Text fontSize="md">{title}</Text>

@@ -102,7 +102,8 @@ const EventCard = {
       minWidth: "250px"
     },
     topbar: {
-      backgroundColor: "gray.300",
+      // backgroundColor: "gray.300",
+      backgroundColor: "teal.500",
       height: "6px",
       width: "100%",
       marginTop: "-1px",
@@ -130,7 +131,8 @@ const EventCard = {
       flexDirection: "column",
       padding: "48px 16px 20px 16px",
       textAlign: "left",
-      width: "100%"
+      width: "100%",
+      minHeight: "190px"
     },
     foot: {
       display: "flex",
@@ -154,17 +156,20 @@ const EventCard = {
   variants: {
     fifteen:{
       topbar: {
-        backgroundColor: "yellow.300",
+        // backgroundColor: "yellow.300",
+        backgroundColor: "teal.500"
       }
     },
     thirty:{
       topbar: {
-        backgroundColor: "red.400",
+        // backgroundColor: "red.400",
+        backgroundColor: "teal.500"
       }
     },
     sixty:{
       topbar: {
-        backgroundColor: "purple.400",
+        // backgroundColor: "purple.400",
+        backgroundColor: "teal.500"
       }
     }
   }

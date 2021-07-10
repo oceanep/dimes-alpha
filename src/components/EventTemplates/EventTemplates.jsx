@@ -55,7 +55,7 @@ function EventTemplates({ vertical }) {
           </Flex>
         }
       </Flex>
-      <Flex w="100%" flexDirection={ vertical ? "column" : 'row' } flexWrap={ vertical ? "nowrap" : "wrap"} justifyContent="space-between" alignItems={ vertical ? 'flex-start' : 'center'}>
+      <Flex w="100%" flexDirection={ vertical ? "column" : 'row' } flexWrap={ vertical ? "nowrap" : "wrap"} justifyContent="flex-start" alignItems={ vertical ? 'flex-start' : 'center'}>
         {
           templates.length > 0 ?
             templates.map((template, index) => {
