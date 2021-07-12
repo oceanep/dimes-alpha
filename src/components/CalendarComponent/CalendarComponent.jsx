@@ -23,37 +23,36 @@ const CalendarComponent = ({ props }) => {
         parsed_events
     );
 
+    if (google_events) {
+        for (var i = 0; i < google_events.length; i++) {
+            parsed_events.push({
+                id: i,
+                start: new Date(google_events[i].start["dateTime"]),
+                end: new Date(google_events[i].end["dateTime"]),
+                title: google_events[i].summary
+            })
+        }
+    }
 
 
     useEffect(() => {
 
-      parsed_events = [...events]
-      if (dimes_events) {
-        for (var i = 0; i < dimes_events.length; i++) {
-            parsed_events.push({
-                id: i,
-                start: new Date(`${(""+dimes_events[i].dayOfWeek).split("")[0]} ${(""+dimes_events[i].dayOfWeek).substring(1)}, 2021 ${dimes_events[i].timeRange[0]}:00`),
-                end: new Date(`${(""+dimes_events[i].dayOfWeek).split("")[0]} ${(""+dimes_events[i].dayOfWeek).substring(1)}, 2021 ${dimes_events[i].timeRange[1]}:00`),
-                title: dimes_events[i].title
-            })
+        parsed_events = [...events]
+        if (dimes_events) {
+            for (var i = 0; i < dimes_events.length; i++) {
+                parsed_events.push({
+                    id: i,
+                    start: new Date(`${("" + dimes_events[i].dayOfWeek).split("")[0]} ${("" + dimes_events[i].dayOfWeek).substring(1)}, 2021 ${dimes_events[i].timeRange[0]}:00`),
+                    end: new Date(`${("" + dimes_events[i].dayOfWeek).split("")[0]} ${("" + dimes_events[i].dayOfWeek).substring(1)}, 2021 ${dimes_events[i].timeRange[1]}:00`),
+                    title: dimes_events[i].title
+                })
+            }
         }
-      }
 
-      if (google_events) {
-          for (var i = 0; i < google_events.length; i++) {
-              parsed_events.push({
-                  id: i,
-                  start: new Date(google_events[i].start["dateTime"]),
-                  end: new Date(google_events[i].end["dateTime"]),
-                  title: google_events[i].summary
-              })
-          }
-      }
-
-      console.log('dimes events', dimes_events)
-      console.log('parsed events', parsed_events)
-      setEvents(parsed_events)
-    }, [dimes_events, google_events])
+        console.log('dimes events', dimes_events)
+        console.log('parsed events', parsed_events)
+        setEvents(parsed_events)
+    }, [dimes_events])
 
     const onEventResize = (data) => {
         const { start, end } = data;
