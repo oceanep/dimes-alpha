@@ -8,7 +8,7 @@ let headers = {
 
 const userApi = {
     async loginUser(email, password) {
-        var url = `${api_endpoint}/login`;
+        var url = `${api_endpoint}/users/login`;
         try {
             var res = await axios.post(url, {
                 "email": email,
@@ -20,7 +20,7 @@ const userApi = {
         }
     },
     async signupUser(email, username, firstName, lastName, password) {
-        var url = `${api_endpoint}/register`
+        var url = `${api_endpoint}/users/register`
         try {
             var res = await axios.post(url, {
                 "user": {

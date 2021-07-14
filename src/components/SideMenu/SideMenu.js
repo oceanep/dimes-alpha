@@ -97,7 +97,7 @@ function SideMenu() {
 
               if (item.subMenu.length > 0) {
                 return (
-                  <Accordion allowMultiple>
+                  <Accordion allowMultiple key={`${index}-sm`}>
                     <AccordionItem border="0px">
                       <li key={index} className={item.cName}>
                         <AccordionButton>

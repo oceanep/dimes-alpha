@@ -50,8 +50,6 @@ const CalendarComponent = ({ props }) => {
           }
       }
 
-      console.log('dimes events', dimes_events)
-      console.log('parsed events', parsed_events)
       setEvents(parsed_events)
     }, [dimes_events, google_events])
 

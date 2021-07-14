@@ -27,7 +27,6 @@ import './Recurring.scss'
 function Recurring() {
 
   const { convertToTime, convertFromTime, roundTime } = timeUtils
-  console.log("time utils: ", convertToTime)
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   const [loading, setLoading] = useState(true);
@@ -71,23 +70,24 @@ function Recurring() {
 
     let newArr = [...availability]
     const res = await userAvailability.getAvailability(userId)
-      console.log("Availe: ", res.data);
-      if(!res == undefined){
-    res.data.data.forEach((time, i) => {
-      const timeObj = {
-        id: time.id,
-        time: convertToTime(time.begin_time_unit, time.end_time_unit)
-      }
-      const index = time.day_of_week
-      newArr[index] = {
-        index: index,
-        day: days[index],
-        active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
-        times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
-      }
-      console.log('initial state ', newArr)
-    });
-      }
+    console.log('availability response: ', res)
+    console.log('test', !(res === undefined))
+    if(!(res === undefined)){
+      res.data.data.forEach((time, i) => {
+        const timeObj = {
+          id: time.id,
+          time: convertToTime(time.begin_time_unit, time.end_time_unit)
+        }
+        const index = time.day_of_week
+        newArr[index] = {
+          index: index,
+          day: days[index],
+          active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
+          times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
+        }
+        console.log('initial state ', newArr)
+      });
+    }
     setAvailability(newArr)
 
   }, [])
