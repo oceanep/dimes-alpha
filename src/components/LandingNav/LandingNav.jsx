@@ -37,17 +37,17 @@ function LandingNav() {
 
     return (
         <nav>
-            <Flex mx={"60px"} py="10px" alignItems="center" position="relative">
+            <Flex mx={"60px"} py="10px" alignItems="center" zindex="999" position="relative" >
                 <Box>
                     <Link to={localStorage.getItem("token") != null ? '/home' : '/'}><Image maxW="100px" src="https://dimes-frontend-assets.s3-ap-northeast-1.amazonaws.com/img/dimes_logo_2.png" alt="Dimes Logo" /></Link>
                 </Box>
                 <Spacer />
-                <Menu zIndex="dropdown" pointerEvents="all">
+                <Menu zindex="999" >
                     <MenuButton
                         id="menubutton"
                         as="button"
-                        pointerEvents="all"
                         transition="all 0.2s"
+                        zindex="999"
                     >
                         <Avatar size="md" src="sample_avi.png" id="menuavi">
                             <AvatarBadge boxSize="1.25em" bg="green.500">
@@ -57,7 +57,7 @@ function LandingNav() {
                         <MenuList>
                             <MenuGroup title="Profile">
                                 <MenuItem >My Account</MenuItem>
-                                <MenuItem >Notifications </MenuItem>
+                                <MenuItem >Notifications (5)</MenuItem>
                             </MenuGroup>
                             <MenuDivider />
                             <MenuGroup title="Help">
