@@ -19,7 +19,6 @@ import {
   Input,
   InputRightAddon,
   Select,
-  textArea,
   Button,
   Box
 } from "@chakra-ui/react"
