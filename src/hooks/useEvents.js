@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect, useReducer, createContext, useContext } from 'react';
 
 import timeUtils from '../utils/time_utils.js'
 import userEvents from '../utils/user_events.js'
@@ -28,7 +28,18 @@ const reducer = (state, action) => {
   }
 }
 
-function useEvents(apiCall, ...rest ) {
+const UseEventsContext = createContext()
+const UseEventsDispatchContext = createContext()
+
+export function useEventsState() {
+  return useContext(UseEventsContext)
+}
+
+export function UseEventsDispatch() {
+  return useContext(UseEventsDispatchContext)
+}
+
+function UseEventsProvider({children}) {
 
   //custom hook usable for both events and event templates, takes appropriate
   //function utility call
@@ -38,13 +49,15 @@ function useEvents(apiCall, ...rest ) {
     error: undefined
   }
 
-  const [ userId ] = [...rest]
+  const userId = localStorage.userId
+
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const getEvents = async () => {
     dispatch({type: ACTIONS.LOADING})
     try {
-      const res = await apiCall(parseInt(userId))
+      console.log('in get event: ', userId)
+      const res = await userEvents.getEvents(userId)
       const newEvents = res.data.data.map( event => {
 
           let timeRange = timeUtils.convertToTime(event.begin_time_unit, event.end_time_unit)
@@ -64,7 +77,7 @@ function useEvents(apiCall, ...rest ) {
           }
         }
       )
-      console.log('before dispatch: ', newEvents)
+      console.log('before get events dispatch: ', newEvents)
       dispatch({ payload: newEvents, type: ACTIONS.FETCHED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
@@ -72,31 +85,35 @@ function useEvents(apiCall, ...rest ) {
     }
   }
 
-  const createEvent = async (userId, ownerId, title, desc, status = 1, beginTime, endTime, date, active = true) => {
+  const createEvent = async (title, desc, status = 1, beginTime, endTime, date, active = true) => {
     dispatch({type: ACTIONS.LOADING})
     try {
-      const res = await userEvents(userId, ownerId, title, desc, status, beginTime, endTime, date, active)
+      console.log('in create event: ', userId)
+      const res = await userEvents.createEvent(userId, userId, title, desc, status, beginTime, endTime, date, active)
+      console.log('after api call: ',res.data.data)
 
       const timeRange = timeUtils.convertToTime(res.data.data.begin_time_unit, res.data.data.end_time_unit)
       const diff = Math.abs(parseInt(res.data.data.begin_time_unit) - parseInt(res.data.data.end_time_unit))
+      const formatedDate = new Date(res.data.data.date)
 
       const newEvent = {
-        title: res.data.title,
-        desc: res.data.description,
+        title: res.data.data.title,
+        desc: res.data.data.description,
         variant: `${ diff == 1 ? 'fifteen' : ''}${ diff == 2 ? 'thirty' : ''}${ diff == 4 ? 'sixty' : ''}`,
         value: `${ diff == 1 ? 'www.google.com' : ''}${ diff == 2 ? 'www.facebook.com' : ''}${ diff == 4 ? 'www.apple.com' : ''}`,
         timeRange: timeRange,
-        date: res.data.date,
-        ownerId: res.data.owner_id,
-        active: res.data.active,
-        userId: res.data.user_id
+        date: formatedDate,
+        ownerId: res.data.data.owner_id,
+        active: res.data.data.active,
+        userId: res.data.data.user_id
       }
 
-      console.log('before dispatch: ', newEvent)
+      console.log('before new event dispatch: ', newEvent)
       dispatch({ payload: newEvent, type: ACTIONS.CREATED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
       console.log(err)
+      alert(err)
     }
   }
 
@@ -104,7 +121,13 @@ function useEvents(apiCall, ...rest ) {
     getEvents()
   }, [])
 
-  return [ state, { createEvent } ]
+  return (
+    <UseEventsContext.Provider value={state}>
+      <UseEventsDispatchContext.Provider value={{ createEvent }}>
+        {children}
+      </UseEventsDispatchContext.Provider>
+    </UseEventsContext.Provider>
+  )
 }
 
-export default useEvents
+export default UseEventsProvider
