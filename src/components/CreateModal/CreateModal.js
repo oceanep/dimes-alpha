@@ -29,6 +29,7 @@ import TimeMatches from '../TimeMatches/TimeMatches'
 import Card from '../Card/Card'
 import timeUtils from '../../utils/time_utils.js'
 import userEvents from '../../utils/user_events.js'
+import useEvents from '../../hooks/useEvents.js'
 
 import './CreateModal.scss'
 
@@ -49,6 +50,9 @@ function CreateModal({ label, ...rest }) {
     endTime: null,
     dayOfWeek: null,
   });
+
+  const userId = localStorage.user_id
+  const [{events, loading, error}, { createEvent }] = useEvents(userEvents.getEvents, userId)
 
   const setEventTitle = (title) => {
     setMeet({...meet, title})
@@ -113,9 +117,8 @@ function CreateModal({ label, ...rest }) {
     }
 
   const saveEvent = async () => {
-    const userId = localStorage.user_id
-
-    const res = await userEvents.createEvent(2, 2, meet.title, meet.desc, 1, meet.beginTime, meet.endTime, meet.dayOfWeek)
+    
+    const res = await createEvent(2, 2, meet.title, meet.desc, 1, meet.beginTime, meet.endTime, meet.dayOfWeek)
     setMeet({
       title: '',
       desc: '',

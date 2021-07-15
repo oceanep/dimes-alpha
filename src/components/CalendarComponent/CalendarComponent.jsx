@@ -1,4 +1,5 @@
 import { Calendar, momentLocalizer } from 'react-big-calendar'
+import { Spinner, Flex } from "@chakra-ui/react"
 import moment from 'moment'
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
@@ -14,44 +15,67 @@ const DnDCalendar = withDragAndDrop(Calendar);
 const CalendarComponent = ({ props }) => {
 
     const userId = localStorage.user_id
-    const dimes_events = useEvents(userEvents.getEvents, 2)
+    const [{ events, loading, error }] = useEvents(userEvents.getEvents, 2)
 
     const google_events = JSON.parse(localStorage.getItem("google_events"))
     let parsed_events = []
+console.log('calendar component events: ', events, loading)
+    if (events) {
+      for (var i = 0; i < events.length; i++) {
+          parsed_events.push({
+              id: i,
+              start: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[0]}:00`),
+              end: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[1]}:00`),
+              title: events[i].title
+          })
+      }
+    }
 
-    const [events, setEvents] = useState(
+    if (google_events) {
+        for (var i = 0; i < google_events.length; i++) {
+            parsed_events.push({
+                id: i,
+                start: new Date(google_events[i].start["dateTime"]),
+                end: new Date(google_events[i].end["dateTime"]),
+                title: google_events[i].summary
+            })
+        }
+    }
+
+    const [calEvents, setEvents] = useState(
         parsed_events
     );
 
 
 
-    useEffect(() => {
 
-      parsed_events = [...events]
-      if (dimes_events) {
-        for (var i = 0; i < dimes_events.length; i++) {
-            parsed_events.push({
-                id: i,
-                start: new Date(`${(""+dimes_events[i].dayOfWeek).split("")[0]} ${(""+dimes_events[i].dayOfWeek).substring(1)}, 2021 ${dimes_events[i].timeRange[0]}:00`),
-                end: new Date(`${(""+dimes_events[i].dayOfWeek).split("")[0]} ${(""+dimes_events[i].dayOfWeek).substring(1)}, 2021 ${dimes_events[i].timeRange[1]}:00`),
-                title: dimes_events[i].title
-            })
-        }
-      }
-
-      if (google_events) {
-          for (var i = 0; i < google_events.length; i++) {
-              parsed_events.push({
-                  id: i,
-                  start: new Date(google_events[i].start["dateTime"]),
-                  end: new Date(google_events[i].end["dateTime"]),
-                  title: google_events[i].summary
-              })
-          }
-      }
-
-      setEvents(parsed_events)
-    }, [dimes_events, google_events])
+    // useEffect(() => {
+    //
+    //   parsed_events = [...calEvents]
+    //   if (events) {
+    //     for (var i = 0; i < events.length; i++) {
+    //         parsed_events.push({
+    //             id: i,
+    //             start: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[0]}:00`),
+    //             end: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[1]}:00`),
+    //             title: events[i].title
+    //         })
+    //     }
+    //   }
+    //
+    //   if (google_events) {
+    //       for (var i = 0; i < google_events.length; i++) {
+    //           parsed_events.push({
+    //               id: i,
+    //               start: new Date(google_events[i].start["dateTime"]),
+    //               end: new Date(google_events[i].end["dateTime"]),
+    //               title: google_events[i].summary
+    //           })
+    //       }
+    //   }
+    //
+    //   setEvents(parsed_events)
+    // }, [events, google_events])
 
     const onEventResize = (data) => {
         const { start, end } = data;
@@ -76,16 +100,23 @@ const CalendarComponent = ({ props }) => {
 
     return (
         <div>
-            <DnDCalendar
-                defaultDate={moment().toDate()}
-                defaultView="month"
-                events={events}
-                localizer={localizer}
-                onEventDrop={onEventDrop}
-                onEventResize={onEventResize}
-                resizable
-                style={{ height: "650px", width: "800px" }}
-            />
+          {
+            loading ?
+              <Flex w="100%" justifyContent="center" align="center">
+                <Spinner size="xl" color="teal.500" />
+              </Flex>
+            :
+              <DnDCalendar
+                  defaultDate={moment().toDate()}
+                  defaultView="month"
+                  events={calEvents}
+                  localizer={localizer}
+                  onEventDrop={onEventDrop}
+                  onEventResize={onEventResize}
+                  resizable
+                  style={{ height: "650px", width: "800px" }}
+              />
+          }
         </div>
     );
 };

@@ -132,7 +132,7 @@ const EventCard = {
       padding: "48px 16px 20px 16px",
       textAlign: "left",
       width: "100%",
-      minHeight: "190px"
+      minHeight: "220px"
     },
     foot: {
       display: "flex",

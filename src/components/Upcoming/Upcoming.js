@@ -4,7 +4,8 @@ import {
     Flex,
     Button,
     Text,
-    Avatar
+    Avatar,
+    Spinner
 } from "@chakra-ui/react"
 import { MdPlaylistAdd, MdPerson } from 'react-icons/md'
 
@@ -18,15 +19,13 @@ import QRCode from "react-qr-code";
 
 function Upcoming({ vertical }) {
   const userId = localStorage.user_id
-  const events = useEvents(userEvents.getEvents, userId)
+  const [{ events, loading, error }] = useEvents(userEvents.getEvents, userId)
 
-  const [loading, setLoading] = useState(true)
 
-  useEffect( () => {
-    if (events && events !== null){
-      setLoading(false)
-    }
-  }, [events])
+  // useEffect( () => {
+  //   if (events && events !== null){
+  //   }
+  // }, [events])
 
   return (
     <Box className="upcoming-container" w={ vertical ? '' : '100%'}>
@@ -55,21 +54,28 @@ function Upcoming({ vertical }) {
       </Flex>
       <Flex w="100%" flexDirection={ vertical ? "column" : 'row' } flexWrap={ vertical ? "nowrap" : "wrap"} justifyContent={ vertical ? 'space-between' : 'flex-start'} alignItems={ vertical ? 'flex-start' : 'center'}>
         {
-          events.map((event, index) => {
-            return(
-              <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
-                <EventCard
-                  title={event.title}
-                  desc={event.desc}
-                  variant={event.variant}
-                  value={event.value}
-                  time={event.timeRange}
-                  day={`${(""+event.dayOfWeek).split("")[0]}/${(""+event.dayOfWeek).substring(1)}`}
-                />
-              </Box>
-            );
-          })
+          !loading ?
+            events.map((event, index) => {
+              const formatedDate = `${event.date.getMonth() + 1}/${event.date.getDate()}/${event.date.getFullYear()}`
+              return(
+                <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
+                  <EventCard
+                    title={event.title}
+                    desc={event.desc}
+                    variant={event.variant}
+                    value={event.value}
+                    time={event.timeRange}
+                    day={formatedDate}
+                  />
+                </Box>
+              );
+            })
+          :
+            <Flex w="100%" justifyContent="center" align="center">
+              <Spinner size="xl" color="teal.500" />
+            </Flex>
         }
+
       </Flex>
     </Box>
   );

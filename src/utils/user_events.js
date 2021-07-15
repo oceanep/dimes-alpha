@@ -22,13 +22,13 @@ const userEvents = {
         return {statusText: 'No Events Registered'}
     }
   },
-  async createEvent(userId, ownerId, title, desc, status = 1, beginTime, endTime, dayOfWeek, active = true) {
+  async createEvent(userId, ownerId, title, desc, status = 1, beginTime, endTime, date, active = true) {
     let url = `${api_endpoint}/user_events`;
-    console.log('create event: ', userId, ownerId, title, desc, status, beginTime, endTime, dayOfWeek, active)
+    console.log('create event: ', userId, ownerId, title, desc, status, beginTime, endTime, date, active)
     const user_event = {
       "active": active,
       "begin_time_unit": beginTime,
-      "day_of_week": dayOfWeek,
+      "date": date,
       "description": desc,
       "end_time_unit": endTime,
       "owner_id": ownerId,
