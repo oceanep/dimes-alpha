@@ -66,7 +66,7 @@ const userEvents = {
     }
   },
   async deleteEvent(eventId) {
-    let url = `${api_endpoint}/user_events`;
+    let url = `${api_endpoint}/user_events/${eventId}`;
     try {
       let res = await axios.delete(url, headers)
       return res

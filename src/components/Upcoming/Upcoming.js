@@ -28,7 +28,7 @@ function Upcoming({ vertical }) {
   // }, [events])
 
   return (
-    <Box className="upcoming-container" w={ vertical ? '' : '100%'}>
+    <Box className="upcoming-container" w={ vertical ? '' : '100%'} maxH={ vertical ? '650px' : ''} overflowY={ vertical ? 'scroll' : ''}>
       <Flex w='100%' mb='4px' px="12px" pb="15px" borderBottom="2px" borderColor='gray.50' rounded='md'>
         {/*
         <Flex w={ vertical ? '' : '50%'} justifyContent='flex-start' alignItems="center" display="inline-flex">
@@ -56,7 +56,6 @@ function Upcoming({ vertical }) {
         {
           !loading ?
             events.map((event, index) => {
-              console.log('populating events: ', event)
               const formatedDate = `${event.date.getMonth() + 1}/${event.date.getDate()}/${event.date.getFullYear()}`
               return(
                 <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
@@ -66,6 +65,7 @@ function Upcoming({ vertical }) {
                     variant={event.variant}
                     value={event.value}
                     time={event.timeRange}
+                    id={event.id}
                     day={formatedDate}
                   />
                 </Box>

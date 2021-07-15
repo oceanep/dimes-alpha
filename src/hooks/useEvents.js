@@ -20,7 +20,7 @@ const reducer = (state, action) => {
     case 'created':
       return { ...state, loading: false, events: [...state.events, action.payload], error: undefined };
     case 'deleted':
-      return { ...state, loading: false };
+      return { ...state, loading: false, events: action.payload };
     case 'error':
       return { ...state, loading: false, error: action.payload };
     default:
@@ -71,6 +71,7 @@ function UseEventsProvider({children}) {
             value: `${ diff == 1 ? 'www.google.com' : ''}${ diff == 2 ? 'www.facebook.com' : ''}${ diff == 4 ? 'www.apple.com' : ''}`,
             timeRange: timeRange,
             date: date,
+            id: event.id,
             ownerId: event.owner_id,
             active: event.active,
             userId: event.user_id
@@ -85,12 +86,12 @@ function UseEventsProvider({children}) {
     }
   }
 
+  //Memoize these functions later to prevent unnecessary rerenders
+
   const createEvent = async (title, desc, status = 1, beginTime, endTime, date, active = true) => {
     dispatch({type: ACTIONS.LOADING})
     try {
-      console.log('in create event: ', userId)
       const res = await userEvents.createEvent(userId, userId, title, desc, status, beginTime, endTime, date, active)
-      console.log('after api call: ',res.data.data)
 
       const timeRange = timeUtils.convertToTime(res.data.data.begin_time_unit, res.data.data.end_time_unit)
       const diff = Math.abs(parseInt(res.data.data.begin_time_unit) - parseInt(res.data.data.end_time_unit))
@@ -103,6 +104,7 @@ function UseEventsProvider({children}) {
         value: `${ diff == 1 ? 'www.google.com' : ''}${ diff == 2 ? 'www.facebook.com' : ''}${ diff == 4 ? 'www.apple.com' : ''}`,
         timeRange: timeRange,
         date: formatedDate,
+        id: res.data.data.id,
         ownerId: res.data.data.owner_id,
         active: res.data.data.active,
         userId: res.data.data.user_id
@@ -117,13 +119,29 @@ function UseEventsProvider({children}) {
     }
   }
 
+  const deleteEvent = async (eventId) => {
+    dispatch({type: ACTIONS.LOADING})
+    try {
+      console.log('inside delete: ', eventId)
+      const res = await userEvents.deleteEvent(eventId)
+      const filteredEvents = state.events.filter(event => event.id !== eventId)
+
+      console.log('filtered events: ', filteredEvents)
+      dispatch({ payload: filteredEvents, type: ACTIONS.DELETED })
+    } catch (err) {
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      console.log(err)
+      alert(err)
+    }
+  }
+
   useEffect( () => {
     getEvents()
   }, [])
 
   return (
     <UseEventsContext.Provider value={state}>
-      <UseEventsDispatchContext.Provider value={{ createEvent }}>
+      <UseEventsDispatchContext.Provider value={{ createEvent, deleteEvent }}>
         {children}
       </UseEventsDispatchContext.Provider>
     </UseEventsContext.Provider>
