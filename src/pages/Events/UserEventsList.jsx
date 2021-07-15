@@ -19,22 +19,17 @@ import {
 
 import { MdNavigateNext, MdArrowBack, MdAccessTime, MdDateRange } from 'react-icons/md'
 
-import useUserEventsList from '../../hooks/useUserEventsList'
+import usePages from '../../hooks/usePages'
 import AvailabilityButton from '../../components/AvailabilityButton/AvailabilityButton'
 
 import Cal from '../../components/Cal/Cal'
 
 function UserEventsList({match}) {
 
-  const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = useUserEventsList()
+  const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = usePages()
   const [showTimes, setShowTimes] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [selectedTime, setSelectedTime] = useState('')
-
-  useEffect(() => {
-    console.log('in effect: firstPage ', firstPage)
-    console.log('in effect: secondPage ', secondPage)
-  }, [firstPage, secondPage, thirdPage])
 
   const templateClick = (e) => {
     e.preventDefault()

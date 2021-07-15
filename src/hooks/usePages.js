@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 
-function useUserEventsList(initialState = true) {
+function usePages(initialState = true) {
 
   const [firstPage, setFirstPage] = useState(initialState)
   const [secondPage, setSecondPage] = useState(!initialState)
@@ -28,4 +28,4 @@ function useUserEventsList(initialState = true) {
   return [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage]
 }
 
-export default useUserEventsList;
+export default usePages;
