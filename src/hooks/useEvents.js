@@ -14,7 +14,7 @@ const ACTIONS = {
 const reducer = (state, action) => {
   switch(action.type) {
     case 'loading':
-      return { ...state, loading: true, events: undefined, error: undefined };
+      return { ...state, loading: true };
     case 'fetched':
       return { ...state, loading: false, events: action.payload, error: undefined };
     case 'created':
@@ -33,19 +33,7 @@ function useEvents(apiCall, ...rest ) {
   //custom hook usable for both events and event templates, takes appropriate
   //function utility call
   const initialState = {
-    events: [
-      {
-        title: '',
-        desc: '',
-        variant: '',
-        value: '',
-        timeRange: [],
-        date: null,
-        ownerId: null,
-        active: null,
-        userId: null
-      }
-    ],
+    events: [],
     loading: true,
     error: undefined
   }

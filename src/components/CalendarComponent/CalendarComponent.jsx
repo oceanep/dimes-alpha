@@ -19,29 +19,31 @@ const CalendarComponent = ({ props }) => {
 
     const google_events = JSON.parse(localStorage.getItem("google_events"))
     let parsed_events = []
-console.log('calendar component events: ', events, loading)
-    if (events) {
-      for (var i = 0; i < events.length; i++) {
-          parsed_events.push({
-              id: i,
-              start: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[0]}:00`),
-              end: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[1]}:00`),
-              title: events[i].title
-          })
-      }
-    }
 
-    if (google_events) {
-        for (var i = 0; i < google_events.length; i++) {
-            parsed_events.push({
-                id: i,
-                start: new Date(google_events[i].start["dateTime"]),
-                end: new Date(google_events[i].end["dateTime"]),
-                title: google_events[i].summary
-            })
-        }
-    }
+    console.log('calendar component events: ', events, loading)
 
+    // if (events) {
+    //   for (var i = 0; i < events.length; i++) {
+    //       parsed_events.push({
+    //           id: i,
+    //           start: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[0]}:00`),
+    //           end: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[1]}:00`),
+    //           title: events[i].title
+    //       })
+    //   }
+    // }
+    //
+    // if (google_events) {
+    //     for (var i = 0; i < google_events.length; i++) {
+    //         parsed_events.push({
+    //             id: i,
+    //             start: new Date(google_events[i].start["dateTime"]),
+    //             end: new Date(google_events[i].end["dateTime"]),
+    //             title: google_events[i].summary
+    //         })
+    //     }
+    // }
+    //
     const [calEvents, setEvents] = useState(
         parsed_events
     );
@@ -49,33 +51,33 @@ console.log('calendar component events: ', events, loading)
 
 
 
-    // useEffect(() => {
-    //
-    //   parsed_events = [...calEvents]
-    //   if (events) {
-    //     for (var i = 0; i < events.length; i++) {
-    //         parsed_events.push({
-    //             id: i,
-    //             start: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[0]}:00`),
-    //             end: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[1]}:00`),
-    //             title: events[i].title
-    //         })
-    //     }
-    //   }
-    //
-    //   if (google_events) {
-    //       for (var i = 0; i < google_events.length; i++) {
-    //           parsed_events.push({
-    //               id: i,
-    //               start: new Date(google_events[i].start["dateTime"]),
-    //               end: new Date(google_events[i].end["dateTime"]),
-    //               title: google_events[i].summary
-    //           })
-    //       }
-    //   }
-    //
-    //   setEvents(parsed_events)
-    // }, [events, google_events])
+    useEffect(() => {
+
+      parsed_events = [...calEvents]
+      if (events) {
+        for (var i = 0; i < events.length; i++) {
+            parsed_events.push({
+                id: i,
+                start: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[0]}:00`),
+                end: new Date(`${events[i].date.getMonth() + 1}/${events[i].date.getDate()}/${events[i].date.getFullYear()} ${events[i].timeRange[1]}:00`),
+                title: events[i].title
+            })
+        }
+      }
+
+      if (google_events) {
+          for (var i = 0; i < google_events.length; i++) {
+              parsed_events.push({
+                  id: i,
+                  start: new Date(google_events[i].start["dateTime"]),
+                  end: new Date(google_events[i].end["dateTime"]),
+                  title: google_events[i].summary
+              })
+          }
+      }
+
+      setEvents(parsed_events)
+    }, [events, google_events])
 
     const onEventResize = (data) => {
         const { start, end } = data;
