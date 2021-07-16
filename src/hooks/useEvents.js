@@ -112,6 +112,7 @@ function UseEventsProvider({children}) {
 
       console.log('before new event dispatch: ', newEvent)
       dispatch({ payload: newEvent, type: ACTIONS.CREATED })
+      return newEvent
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
       console.log(err)
