@@ -8,7 +8,7 @@ let headers = {
 
 const userApi = {
     async loginUser(email, password) {
-        var url = `${api_endpoint}/login`;
+        const url = `${api_endpoint}/login`;
         try {
             var res = await axios.post(url, {
                 "email": email,
@@ -20,7 +20,7 @@ const userApi = {
         }
     },
     async signupUser(email, username, firstName, lastName, password) {
-        var url = `${api_endpoint}/register`
+        const url = `${api_endpoint}/register`
         try {
             var res = await axios.post(url, {
                 "user": {
@@ -35,6 +35,15 @@ const userApi = {
         } catch {
             throw new Error('Signup Failed')
         }
+    },
+    async getUser(username) {
+      const url = `${api_endpoint}/users/${username}`
+      try {
+        const res = axios.get(url, headers)
+        return res
+      } catch (err) {
+        return err
+      }
     }
 }
 

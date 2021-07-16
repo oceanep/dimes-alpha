@@ -29,7 +29,6 @@ import Signup from './components/Signup/Signup'
 import LandingPage from './pages/LandingPage/LandingPage'
 import Home from './pages/Home/Home'
 import Availability from './pages/Availability/Availability'
-import Events from './pages/Events/Events.jsx'
 import UserEventsList from './pages/Events/UserEventsList.jsx'
 import Relationships from './pages/Relationships/Relationships'
 import Groups from './pages/Groups/Groups'
@@ -43,6 +42,7 @@ import TermsPage from './pages/Static/TermsPage.jsx'
 import './App.scss'
 
 function App() {
+
   return (
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
@@ -59,12 +59,12 @@ function App() {
               <Route path="/schedule" component={localStorage.getItem("token") ? Schedule : LandingPage}></Route>
               <Route path="/privacy" component={PrivacyPage}></Route>
               <Route path="/terms" component={TermsPage}></Route>
-              <div>
+
                 <Route exact path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
                 <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
-                <Route path="/:user_id" component={localStorage.getItem("token") ? Home : UserEventsList}></Route>
-              </div>
+                <Route path="/:user_id" component={UserEventsList}></Route>
+
           </Switch>
         </Grid>
       </Box>

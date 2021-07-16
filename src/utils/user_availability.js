@@ -14,6 +14,7 @@ const userAvailability = {
           id: id
         }
       }, headers)
+      console.log('user availability: ', res)
       return res
     } catch {
       return {statusText: 'No Availabilities Registered'}

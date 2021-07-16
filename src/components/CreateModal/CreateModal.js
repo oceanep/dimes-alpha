@@ -19,7 +19,6 @@ import {
   Input,
   InputRightAddon,
   Select,
-  textArea,
   Button,
   Box
 } from "@chakra-ui/react"
@@ -30,6 +29,8 @@ import TimeMatches from '../TimeMatches/TimeMatches'
 import Card from '../Card/Card'
 import timeUtils from '../../utils/time_utils.js'
 import userEvents from '../../utils/user_events.js'
+import { UseEventsDispatch } from '../../hooks/useEvents'
+import usePages from '../../hooks/usePages'
 
 import './CreateModal.scss'
 
@@ -48,8 +49,11 @@ function CreateModal({ label, ...rest }) {
     desc: '',
     beginTime: null,
     endTime: null,
-    dayOfWeek: null,
+    date: null,
   });
+
+  const { createEvent } = UseEventsDispatch()
+  const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = usePages()
 
   const setEventTitle = (title) => {
     setMeet({...meet, title})
@@ -64,13 +68,14 @@ function CreateModal({ label, ...rest }) {
   const getDateNumber = () => {
     let month = value.getMonth() + 1
     let day = value.getDate()
+    let year = new Date().getFullYear()
 
-    return parseInt(`${month}${day}`)
+    return `${month}/${day}/${year}`
   }
 
   const calculateTimes = ()=> {
     const tFactor = duration/15
-    console.log('duration and tfactor: ', duration, tFactor)
+    // console.log('duration and tfactor: ', duration, tFactor)
 
     const t1a = Math.floor(Math.random() * 97)
     const t2a = Math.floor(Math.random() * 97)
@@ -80,7 +85,7 @@ function CreateModal({ label, ...rest }) {
     const t2b = t2a + tFactor
     const t3b = t3a + tFactor
 
-    console.log("calculateTimes: ", t1a, t1b)
+    // console.log("calculateTimes: ", t1a, t1b)
 
     setMatches([
       [t1a, t1b],
@@ -99,31 +104,39 @@ function CreateModal({ label, ...rest }) {
     () => {
       calcDurationBasedInfo()
       //to make sure only one display is shown at a time
-      setFormDisplay(timesDisplayed)
-      //event info should ALWAYS be hidden if this view is shown
-      setEventDisplay(false)
-      //invert the display of available times
-      setTimesDisplay(!timesDisplayed)
+      goSecondPage()
+      // setFormDisplay(timesDisplayed)
+      // //event info should ALWAYS be hidden if this view is shown
+      // setEventDisplay(false)
+      // //invert the display of available times
+      // setTimesDisplay(!timesDisplayed)
     }
 
   const displayEvent =
     (match) => {
-      setMeet({...meet, beginTime: match[0], endTime: match[1], dayOfWeek: getDateNumber()})
-      setEventDisplay(!eventDisplayed)
-      setTimesDisplay(!timesDisplayed)
+      setMeet({...meet, beginTime: match[0], endTime: match[1], date: getDateNumber()})
+      goThirdPage()
+      // setEventDisplay(!eventDisplayed)
+      // setTimesDisplay(!timesDisplayed)
     }
 
   const saveEvent = async () => {
-    const userId = localStorage.user_id
 
-    const res = await userEvents.createEvent(2, 2, meet.title, meet.desc, 1, meet.beginTime, meet.endTime, meet.dayOfWeek)
+    const date = new Date(meet.date).toISOString()
+    const res = await createEvent(meet.title, meet.desc, 1, meet.beginTime, meet.endTime, date)
+    closeModal()
+
+  }
+
+  const closeModal = () => {
     setMeet({
       title: '',
       desc: '',
       beginTime: null,
       endTime: null,
-      dayOfWeek: null,
+      date: null,
     })
+    goFirstPage()
     onClose()
   }
 
@@ -196,7 +209,6 @@ function CreateModal({ label, ...rest }) {
   )
 
   const page3 = () => {
-    const date = `${(""+meet.dayOfWeek).split("")[0]}/${(""+meet.dayOfWeek).substring(1)}`
     const  cTime = timeUtils.convertToTime(meet.beginTime, meet.endTime)
 
     return (
@@ -209,7 +221,7 @@ function CreateModal({ label, ...rest }) {
           </Flex>
           <Flex justifyContent="flex-start" alignItems="center" w="100%">
             <Heading size="sm" w="250px">Date: </Heading>
-            <Text w='100%' align='left'>{`${date} ${cTime[0]} - ${cTime[1]}`}</Text>
+            <Text w='100%' align='left'>{`${meet.date} ${cTime[0]} - ${cTime[1]}`}</Text>
           </Flex>
           <Flex justifyContent="flex-start" alignItems="center" w="100%">
             <Heading size="sm" w="250px">Description: </Heading>
@@ -224,16 +236,19 @@ function CreateModal({ label, ...rest }) {
     <>
       <Button onClick={onOpen} leftIcon={label.icon} fontSize="sm" variant="outline">{label.button}</Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} size={timesDisplayed ? 'xl' : 'sm'}>
+      <Modal isOpen={isOpen} onClose={closeModal} size={timesDisplayed ? 'xl' : 'sm'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{label.title}</ModalHeader>
           <ModalCloseButton />
-            { timesDisplayed ? page2() : '' }
-            { formDisplayed ? page1() : '' }
-            { eventDisplayed ? page3() : '' }
+            { firstPage ? page1() : null }
+            { secondPage ? page2() : null}
+            { thirdPage ? page3() : null}
+
           <ModalFooter>
-            <Button colorScheme="blue" onClick={ eventDisplayed ? saveEvent : displayTimes }>{ timesDisplayed ? 'Return' : label.secondary}</Button>
+            { firstPage ? <Button colorScheme="blue" onClick={ displayTimes }>{label.secondary}</Button> : null }
+            { secondPage ? <Button colorScheme="blue" onClick={ goFirstPage }>Return</Button> : null }
+            { thirdPage ? <Button colorScheme="blue" onClick={ saveEvent }>Save</Button> : null }
           </ModalFooter>
         </ModalContent>
       </Modal>
