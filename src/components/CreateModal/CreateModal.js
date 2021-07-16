@@ -31,14 +31,21 @@ import timeUtils from '../../utils/time_utils.js'
 import userEvents from '../../utils/user_events.js'
 import { UseEventsDispatch } from '../../hooks/useEvents'
 import usePages from '../../hooks/usePages'
+import useTemplates from '../../hooks/useTemplates'
+import eventTemplates from '../../utils/event_templates'
+import eventInvites from '../../utils/event_invites'
 
 import './CreateModal.scss'
 
 function CreateModal({ label, ...rest }) {
 
+  const userId = localStorage.userId
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [value, onChange] = useState(new Date())
   const [duration, setDuration] = useState('')
+  const [email, setEmail] = useState('')
+  const [url, setUrl] = useState('')
   // const [title, setTitle] = useState('')
   const [timesDisplayed, setTimesDisplay] = useState(false)
   const [formDisplayed, setFormDisplay] = useState(true)
@@ -54,6 +61,7 @@ function CreateModal({ label, ...rest }) {
 
   const { createEvent } = UseEventsDispatch()
   const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = usePages()
+  const templates = useTemplates(eventTemplates.getTemplates, userId)
 
   const setEventTitle = (title) => {
     setMeet({...meet, title})
@@ -123,7 +131,11 @@ function CreateModal({ label, ...rest }) {
   const saveEvent = async () => {
 
     const date = new Date(meet.date).toISOString()
-    const res = await createEvent(meet.title, meet.desc, 1, meet.beginTime, meet.endTime, date)
+    const eventRes = await createEvent(meet.title, meet.desc, 1, meet.beginTime, meet.endTime, date)
+    console.log('eventRes: ', eventRes)
+    const eventId = eventRes.id
+    const inviteRes = await eventInvites.createInvite(10, eventId, email, 0)
+    console.log("schedule result?: ", inviteRes)
     closeModal()
 
   }
@@ -171,11 +183,33 @@ function CreateModal({ label, ...rest }) {
               onChange={ e => setDuration(e.target.value) }
               isRequired
             >
-              <option value="15">15 Minute</option>
-              <option value="30">30 Minute</option>
-              <option value="60">60 Minute</option>
+              {
+                templates.map( template => <option value="15">{`${template.title.split(' ')[0]} ${template.title.split(' ')[1]}`}</option>)
+              }
+
             </Select>
             <InputRightAddon children='Meeting' />
+          </InputGroup>
+          <InputGroup mb="20px">
+            <Input
+              placeholder='Email'
+              size='md'
+              value={email}
+              onChange={e => setEmail(e.target.value) }
+              isRequired
+              />
+              <InputRightAddon children='Email' />
+          </InputGroup>
+          <InputGroup mb="20px">
+            <Input
+              placeholder='URL'
+              size='md'
+              value={url}
+              onChange={e => setUrl(e.target.value) }
+              isRequired
+              mb="20px"
+              />
+              <InputRightAddon children='Url' />
           </InputGroup>
             {/*
               <VStack>
