@@ -10,15 +10,14 @@ import useToggle from '../../hooks/useToggle'
 function AvailabilityButton({time, onConfirm}) {
 
   const [confirm, toggle] = useToggle()
-
   return (
-    <Flex my="15px" w="100%" justifyContent="flex-start" align="center" overflowY="scroll">
+    <Flex minH="40px" my="15px" w="100%" justifyContent="flex-start" align="center" overflowY="scroll">
       <Button
         variant="outline"
         w={ confirm ? '48.5%' : '100%'}
         onClick={toggle}
       >
-        <Text w="45px">{time}</Text>
+        <Text >{`${time[0]} - ${time[1]}`}</Text>
       </Button>
       {
         confirm ?

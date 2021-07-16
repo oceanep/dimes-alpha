@@ -10,7 +10,9 @@ import {
   InputGroup,
   Input,
   InputRightAddon,
-  Textarea
+  Textarea,
+  Avatar,
+  Spinner
 } from "@chakra-ui/react"
 
 import {
@@ -20,20 +22,72 @@ import {
 import { MdNavigateNext, MdArrowBack, MdAccessTime, MdDateRange } from 'react-icons/md'
 
 import usePages from '../../hooks/usePages'
+import useUsers from '../../hooks/useUsers'
+import useAvailability from '../../hooks/useAvailability'
+import eventTemplates from '../../utils/event_templates'
+import timeUtils from '../../utils/time_utils.js'
+
 import AvailabilityButton from '../../components/AvailabilityButton/AvailabilityButton'
 
 import Cal from '../../components/Cal/Cal'
 
 function UserEventsList({match}) {
 
+  const { convertToTime, convertFromTime } = timeUtils
   const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = usePages()
+  const user = useUsers(match.params.user_id)
+  const [ availability, fetchAvailability ] = useAvailability(match.params.user_id)
+
+  const [templates, setTemplates] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [template, setTemplate] = useState(null)
   const [showTimes, setShowTimes] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [selectedTime, setSelectedTime] = useState('')
 
-  const templateClick = (e) => {
+  useEffect(() => {
+    loadTemplates()
+  }, [])
+
+  const loadTemplates = async () => {
+    try {
+      const res = await eventTemplates.getTemplates(match.params.user_id)
+      setTemplates(res.data.data)
+      setLoading(!loading)
+    } catch (err) {
+      throw err
+    }
+  }
+
+  const calcDisplayTimes = (time) => {
+    const increment = template.duration/15
+    console.log('increment: ', increment)
+    console.log('begin and end codec: ', time.begin_time_unit, time.end_time_unit)
+    const iterations = time.end_time_unit - ((time.end_time_unit - time.begin_time_unit) % increment)
+    console.log('iterations: ', iterations)
+    let currentTime = time.begin_time_unit
+
+    let printableTimes = []
+
+    for (let i = 0; i < iterations; i++){
+      printableTimes.push(convertToTime(currentTime, currentTime + increment))
+      currentTime += increment
+    }
+    console.log("times for display: ", printableTimes)
+
+    return printableTimes
+  }
+
+  const activeDays = () => {
+    const active = availability.map(day => day.length > 0 )
+    return active
+  }
+
+  const templateClick = (e, template) => {
     e.preventDefault()
     goSecondPage()
+    setTemplate(template)
+    fetchAvailability()
     console.log('secondpage?: ', secondPage)
   }
 
@@ -60,16 +114,29 @@ function UserEventsList({match}) {
   const first = () => (
     <>
       <Box>
-        <Heading size="sm">Name</Heading>
+        <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
+          <Avatar mr="10px"name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
+          <Heading size="md">{user.username}</Heading>
+        </Flex>
+        <Text fontSize="sm" color="gray.500">{user.email}</Text>
         <Text mt="30px" fontSize="md">Follow the instructions to schedule an event with me!</Text>
       </Box>
-      <Flex mt="60px">
-        <a href='' onClick={templateClick}>
-          <Flex pl="15px" pr="10px" py="20px" direction="row" align="center" border="1px" borderColor="gray.100" rounded="md" _hover={{ backgroundColor: 'gray.100'}}>
-            <Heading size="md">Event Template Name</Heading>
-            <Icon as={MdNavigateNext} boxSize="2em"/>
-          </Flex>
-        </a>
+      <Flex mt="60px" direction="column">
+        {
+          !loading ?
+            templates.map( template => (
+              <a href='' onClick={ e => templateClick(e, template)} key={template.id}>
+                <Flex mb="30px" pl="15px" pr="10px" py="20px" direction="row" align="center" border="1px" borderColor="gray.100" rounded="md" _hover={{ backgroundColor: 'gray.100'}}>
+                  <Heading size="md">{template.title}</Heading>
+                  <Icon as={MdNavigateNext} boxSize="2em"/>
+                </Flex>
+              </a>
+            ))
+
+          :
+            <Spinner/>
+        }
+
       </Flex>
     </>
   )
@@ -85,11 +152,15 @@ function UserEventsList({match}) {
       </Flex>
       <Flex px="15px" w="35%">
         <Box>
-          <Heading size="sm">Name</Heading>
-          <Heading size="md">Event: 15 Minute Meeting</Heading>
+          <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
+            <Avatar mr="10px"name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
+            <Heading size="md">{user.username}</Heading>
+          </Flex>
+          <Text fontSize="sm" color="gray.500">{user.email}</Text>
+          <Heading size="md" mt="15px">{`Event: ${template.title}`}</Heading>
           <Box>
             <Icon as={MdAccessTime} display="inline-block" mr="10px"/>
-            <Text fontSize="md" display="inline-block">Duration: 15 min</Text>
+            <Text fontSize="md" display="inline-block">{`Duration: ${template.duration} min`}</Text>
           </Box>
         </Box>
       </Flex>
@@ -99,7 +170,9 @@ function UserEventsList({match}) {
           </Box>
           <Box maxW="350px">
             <Cal
+              defaultDate={selectedDate}
               dayClick={dayClick}
+              activeDays={activeDays()}
             />
           </Box>
       </Flex>
@@ -120,8 +193,12 @@ function UserEventsList({match}) {
       </Flex>
       <Flex px="15px" w="45%">
         <Box>
-          <Heading size="sm">Name</Heading>
-          <Heading size="md" mb="15px">Event: 15 Minute Meeting</Heading>
+          <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
+            <Avatar mr="10px"name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
+            <Heading size="sm">{user.username}</Heading>
+          </Flex>
+          <Text fontSize="sm" color="gray.500">{user.email}</Text>
+          <Heading size="md" my="15px">Event: 15 Minute Meeting</Heading>
           <Box mb="15px">
             <Icon as={MdAccessTime} display="inline-block" mr="10px"/>
             <Text fontSize="md" display="inline-block">Duration: 15 min</Text>
@@ -147,14 +224,38 @@ function UserEventsList({match}) {
     </Flex>
   )
 
-  const times = () => (
-      <Flex direction="column" justifyContent="flex-start" align="center" minW={showTimes ? '250px' : ''}>
-        <AvailabilityButton
-          time="9:00"
-          onConfirm={selectTime}
-        />
+  const times = () => {
+    const day = selectedDate.getDay()
+    let pairs = [];
+    availability[day].forEach( time => {
+      // console.log('button loop: ', time)
+      pairs.push(calcDisplayTimes(time))
+      // console.log('pairs: ', pairs)
+
+    })
+    return (
+      <Flex direction="column" justifyContent="flex-start" align="center" minW={showTimes ? '250px' : ''} maxH="435px" overflowY="scroll">
+        {
+          availability[day].length > 0 ?
+              pairs[0].map( (pair, i) => {
+                console.log('pair: ', pair)
+                return (
+                  <AvailabilityButton
+                  time={pair}
+                  onConfirm={selectTime}
+                  key={`${i}`}
+                />
+              )
+              })
+          :
+            <Box>
+              <Text fontSize="sm">No Availability</Text>
+            </Box>
+        }
       </Flex>
     )
+
+  }
 
   // let id = match.params.user_id
   return (
