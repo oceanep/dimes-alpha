@@ -52,6 +52,7 @@ function initClient() {
  */
 
 function updateSigninStatus(isSignedIn) {
+    if(authorizeButton != null){
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
         //want this to be a chain
@@ -62,6 +63,7 @@ function updateSigninStatus(isSignedIn) {
         console.log("logged in");
         authorizeButton.style.display = 'block';
         //signoutButton.style.display = 'none';
+    }
     }
 }
 
