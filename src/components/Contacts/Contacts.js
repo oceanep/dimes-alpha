@@ -28,7 +28,10 @@ function Contacts(props) {
             return (
               <Flex w={mini ? '' : "100%"} py="10px" direction={ mini ? "column" : "row"} align="center" justifyContent="space-around" key={index}  borderBottom={mini ? '' : "1px"} borderColor="gray.100">
                 <Circle w="100px" overflow="hidden">
-                  <Icon as={ type == "Relationships" ? MdPerson : MdGroup } boxSize="100px" />
+                {type == "Relationships" ?
+                 <img src={contact.photo} overflow="hidden"/> :
+                 <Icon as={ MdGroup } boxSize="100px" /> }
+
                 </Circle>
                 {
                   mini ?
