@@ -53,14 +53,15 @@ function initClient() {
 
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
-        authorizeButton.style.display = 'none';
+        //authorizeButton.style.display = 'none';
         //want this to be a chain
-        signoutButton.style.display = 'block';
+        //signoutButton.style.display = 'block';
         listUpcomingEvents();
         listConnectionNames();
     } else {
-        authorizeButton.style.display = 'block';
-        signoutButton.style.display = 'none';
+        console.log("logged in");
+        //authorizeButton.style.display = 'block';
+        //signoutButton.style.display = 'none';
     }
 }
 
