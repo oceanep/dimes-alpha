@@ -25,6 +25,8 @@ import usePages from '../../hooks/usePages'
 import useUsers from '../../hooks/useUsers'
 import useAvailability from '../../hooks/useAvailability'
 import eventTemplates from '../../utils/event_templates'
+import userEvents from '../../utils/user_events'
+import eventInvites from '../../utils/event_invites'
 import timeUtils from '../../utils/time_utils.js'
 
 import AvailabilityButton from '../../components/AvailabilityButton/AvailabilityButton'
@@ -34,7 +36,7 @@ import Cal from '../../components/Cal/Cal'
 function UserEventsList({match}) {
 
   const { convertToTime, convertFromTime } = timeUtils
-  const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = usePages()
+  const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage, fourthPage, goFourthPage] = usePages()
   const user = useUsers(match.params.user_id)
   const [ availability, fetchAvailability ] = useAvailability(match.params.user_id)
 
@@ -44,6 +46,10 @@ function UserEventsList({match}) {
   const [showTimes, setShowTimes] = useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [selectedTime, setSelectedTime] = useState('')
+
+  const [title, setTitle] = useState('')
+  const [email, setEmail] = useState('')
+  const [desc, setDesc] = useState('')
 
   useEffect(() => {
     loadTemplates()
@@ -61,10 +67,11 @@ function UserEventsList({match}) {
 
   const calcDisplayTimes = (time) => {
     const increment = template.duration/15
-    console.log('increment: ', increment)
-    console.log('begin and end codec: ', time.begin_time_unit, time.end_time_unit)
-    const iterations = time.end_time_unit - ((time.end_time_unit - time.begin_time_unit) % increment)
-    console.log('iterations: ', iterations)
+    // console.log('increment: ', increment)
+    // console.log('begin and end codec: ', time.begin_time_unit, time.end_time_unit)
+    const diff = time.end_time_unit - time.begin_time_unit
+    const iterations = diff % increment > 0 ? (diff/increment) - (diff%increment) : diff/increment
+    // console.log('iterations: ', iterations)
     let currentTime = time.begin_time_unit
 
     let printableTimes = []
@@ -73,7 +80,7 @@ function UserEventsList({match}) {
       printableTimes.push(convertToTime(currentTime, currentTime + increment))
       currentTime += increment
     }
-    console.log("times for display: ", printableTimes)
+    // console.log("times for display: ", printableTimes)
 
     return printableTimes
   }
@@ -83,12 +90,25 @@ function UserEventsList({match}) {
     return active
   }
 
+  const scheduleEvent = async () => {
+    const { beginCodec, endCodec } = convertFromTime(selectedTime)
+    try {
+      const eventRes = await userEvents.createEvent(10, 10, title, desc, 1, beginCodec, endCodec, selectedDate.toISOString(), true)
+      const eventId = eventRes.data.data.id
+      const inviteRes = await eventInvites.createInvite(10, eventId, email, 0)
+      console.log("schedule result?: ", inviteRes)
+      goFourthPage()
+    } catch(err) {
+      alert(err)
+    }
+  }
+
   const templateClick = (e, template) => {
     e.preventDefault()
     goSecondPage()
     setTemplate(template)
     fetchAvailability()
-    console.log('secondpage?: ', secondPage)
+    // console.log('secondpage?: ', secondPage)
   }
 
   const backClick = (e) => {
@@ -198,38 +218,62 @@ function UserEventsList({match}) {
             <Heading size="sm">{user.username}</Heading>
           </Flex>
           <Text fontSize="sm" color="gray.500">{user.email}</Text>
-          <Heading size="md" my="15px">Event: 15 Minute Meeting</Heading>
+          <Heading size="md" my="15px">{`Event: ${template.title}`}</Heading>
           <Box mb="15px">
             <Icon as={MdAccessTime} display="inline-block" mr="10px"/>
-            <Text fontSize="md" display="inline-block">Duration: 15 min</Text>
+            <Text fontSize="md" display="inline-block">{`Duration: ${template.duration} min`}</Text>
           </Box>
           <Box>
-            <Text fontSize="md" display="inline-block"><Icon as={MdDateRange} display="inline-block" mr="10px"/>{`${selectedTime}, ${selectedDate}`}</Text>
+            <Text fontSize="md" display="inline-block"><Icon as={MdDateRange} display="inline-block" mr="10px"/>{`${selectedTime[0]} - ${selectedTime[1]}, ${selectedDate}`}</Text>
           </Box>
         </Box>
       </Flex>
       <Flex direction="column" justifyContent="space-between" w="50%" minH="500px" px="15px" borderLeft="1px" borderColor="gray.200">
         <Heading size="sm">Enter Details:</Heading>
         <InputGroup>
-          <Input />
-          <InputRightAddon children="Name" />
+          <Input
+            value={title}
+            onChange={ e => setTitle(e.target.value)}
+          />
+          <InputRightAddon children="Title" />
         </InputGroup>
         <InputGroup>
-          <Input />
+          <Input
+            value={email}
+            onChange={ e => setEmail(e.target.value)}
+          />
           <InputRightAddon children="Email" />
         </InputGroup>
-        <Textarea/>
-        <Button>Schedule</Button>
+        <Textarea
+          value={desc}
+          onChange={ e => setDesc(e.target.value)}
+        />
+        <Button onClick={scheduleEvent}>Schedule</Button>
       </Flex>
     </Flex>
+  )
+
+  const fourth = () => (
+    <>
+      <Box>
+        <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
+          <Avatar mr="10px"name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
+          <Heading size="md">{user.username}</Heading>
+        </Flex>
+        <Text fontSize="sm" color="gray.500">{user.email}</Text>
+      </Box>
+      <Flex mt="60px" direction="column">
+        <Heading size="lg" >Invite Sent!</Heading>
+      </Flex>
+    </>
   )
 
   const times = () => {
     const day = selectedDate.getDay()
     let pairs = [];
     availability[day].forEach( time => {
-      // console.log('button loop: ', time)
-      pairs.push(calcDisplayTimes(time))
+      // console.log('calc times: ', calcDisplayTimes(time))
+      pairs = pairs.concat(calcDisplayTimes(time))
       // console.log('pairs: ', pairs)
 
     })
@@ -237,8 +281,8 @@ function UserEventsList({match}) {
       <Flex direction="column" justifyContent="flex-start" align="center" minW={showTimes ? '250px' : ''} maxH="435px" overflowY="scroll">
         {
           availability[day].length > 0 ?
-              pairs[0].map( (pair, i) => {
-                console.log('pair: ', pair)
+              pairs.map( (pair, i) => {
+                // console.log('pair: ', pair)
                 return (
                   <AvailabilityButton
                   time={pair}
@@ -264,6 +308,7 @@ function UserEventsList({match}) {
         { firstPage ? first() : null}
         { secondPage ? second() : null}
         { thirdPage ? third() : null}
+        { fourthPage ? fourth() : null }
       </Flex>
     </Flex>
   )
