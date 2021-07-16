@@ -41,7 +41,8 @@ function initClient() {
         authorizeButton.onclick = handleAuthClick;
         signoutButton.onclick = handleSignoutClick;
     }, function(error) {
-        appendPre(JSON.stringify(error, null, 2));
+        consolel.log(error)
+        //appendPre(JSON.stringify(error, null, 2));
     });
 }
 
@@ -114,11 +115,11 @@ function handleSigninSuccess(res) {
  *
  * @param {string} message Text to be placed in pre element.
  */
-function appendPre(message) {
-    var pre = document.getElementById('cal');
-    var textContent = document.createTextNode(message + '\n');
-    pre.appendChild(textContent);
-}
+// function appendPre(message) {
+//     var pre = document.getElementById('cal');
+//     var textContent = document.createTextNode(message + '\n');
+//     pre.appendChild(textContent);
+// }
 
 /**
  * Print the summary and start datetime/date of the next ten events in
