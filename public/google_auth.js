@@ -1,18 +1,19 @@
 var CLIENT_ID = '330818651692-locc5gad48668ij33bdaptre2mi9irps.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyDLBVfbmRwlIMi1fmwEwW9DRaXHIQP9IsQ';
-    
+
 var google_auth_object;
 
 // Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest", "https://www.googleapis.com/discovery/v1/apis/people/v1/rest"];
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid";
+var SCOPES = "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/contacts openid";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 
+var auth_response;
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -31,10 +32,10 @@ function initClient() {
         clientId: CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES
-    }).then(function () {
+    }).then(function() {
         // Listen for sign-in state changes.
         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-        
+
         // Handle the initial sign-in state.
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
         authorizeButton.onclick = handleAuthClick;
@@ -48,17 +49,20 @@ function initClient() {
  *  Called when the signed in status changes, to update the UI
  *  appropriately. After a sign-in, the API is called.
  */
+
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
-        
+        //want this to be a chain
         signoutButton.style.display = 'block';
         listUpcomingEvents();
+        listConnectionNames();
     } else {
         authorizeButton.style.display = 'block';
         signoutButton.style.display = 'none';
     }
 }
+
 
 /**
  *  Sign in the user upon button click.
@@ -67,7 +71,7 @@ function handleAuthClick(event) {
     gapi.auth2.getAuthInstance().signIn().then(
         res => handleSigninSuccess(res),
         err => console.log(err)
-    )    
+    )
 }
 
 /**
@@ -99,9 +103,9 @@ function handleSigninSuccess(res) {
     auth_response = res;
     localStorage.setItem('token', res.tokenId)
     localStorage.setItem('username', res.profileObj.givenName);
-    localStorage.setItem('userId', res.googleId);
+    //FIX THIS -- Implement API Side User Signup
+    localStorage.setItem('userId', res.googleId.slice(0,3));
     google_auth_object = gapi;
-    //window.location.href = "/home";
 }
 
 /**
@@ -133,21 +137,30 @@ function listUpcomingEvents() {
         var events = response.result.items;
         //appendPre('Upcoming events:');
         localStorage.setItem('google_events', JSON.stringify(events));
-        window.location.href = "/home";
-        // if (events.length > 0) {
-        //     for (i = 0; i < events.length; i++) {
-        //         var event = events[i];
-        //         console.log("event: ", event);
-        //         var when = event.start.dateTime;
-        //         if (!when) {
-        //             when = event.start.date;
-        //         }
-        //         appendPre(event.summary + ' (' + when + ')')
-        //     }
-        // } else {
-        //     appendPre('No upcoming events found.');
-        // }
     });
 }
 
+function listConnectionNames() {
+    gapi.client.people.people.connections.list({
+        'resourceName': 'people/me',
+        'pageSize': 10,
+        'personFields': 'names,emailAddresses,photos,coverPhotos',
+    }).then(function(response) {
+        var connections = response.result.connections;
+        //appendPre('Connections:');
+        localStorage.setItem('google_contacts', JSON.stringify(connections));
+        window.location.href = "/home";
+        return response;       
+    });
+}
 
+const asyncLocalStorage = {
+    setItem: async function (key, value) {
+        await null;
+        return localStorage.setItem(key, value);
+    },
+    getItem: async function (key) {
+        await null;
+        return localStorage.getItem(key);
+    }
+};

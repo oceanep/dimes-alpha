@@ -81,13 +81,6 @@ function SideMenu() {
         }
       ]
     },
-    {
-      title: 'Schedule',
-      path: '/schedule',
-      icon: MdSchedule,
-      cName: 'nav-text',
-      subMenu: false
-    },
   ]
 
   return (
