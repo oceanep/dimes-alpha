@@ -44,8 +44,8 @@ function EventTemplates({ vertical }) {
                             <TemplateModal
                                 label={{
                                     icon: <MdPlaylistAdd />,
-                                    button: 'New Event Template',
-                                    title: 'New Event Template',
+                                    button: 'New Event Type',
+                                    title: 'New Event Type',
                                     placeholder: 'Duration',
                                     secondary: 'next'
                                 }}
@@ -62,6 +62,7 @@ function EventTemplates({ vertical }) {
                                     <EventCard
                                         title={template.title}
                                         desc={template.desc}
+                                        url={template.url}
                                         variant={template.variant}
                                         value={template.value}
                                     />

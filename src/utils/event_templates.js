@@ -20,15 +20,16 @@ const eventTemplates = {
         return err
     }
   },
-  async createTemplate(userId, title, duration, desc, active) {
+    async createTemplate(userId, title, duration, desc, active, event_url) {
     let url = `${api_endpoint}/event_templates`;
-    console.log('createTemplate', userId, title, desc, duration, active)
+      console.log('createTemplate', userId, title, desc, duration, active, event_url)
     const event_template = {
-  		"user_id": userId,
-  		"title": title,
-      "description": desc,
-  		"duration": duration,
-  		"active": active
+  	"user_id": userId,
+  	"title": title,
+        "description": desc,
+  	"duration": duration,
+  	"active": active,
+        "url": event_url
   	}
     try {
       let res = await axios.post(url, {

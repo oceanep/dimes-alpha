@@ -63,7 +63,7 @@ function EventCard(props) {
       <Flex minW='40%' maxW='60%' justifyContent='center' alignItems="center" display="inline-flex">
       <Box __css={c_styles.body}>
         <button className={styles.cardBody}>
-          <Text fontSize="md">{title}</Text>
+          <Text fontSize="md">{title}</Text>        
           <Text fontSize="sm" color="gray.400">{desc}</Text>
           {
             day && time ?

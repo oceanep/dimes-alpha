@@ -63,7 +63,7 @@ function App() {
                 <Route exact path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
                 <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
-                <Route path="/:user_id" component={UserEventsList}></Route>
+              <Route path="/:user_id/:event_template_url?" component={UserEventsList}></Route>
 
           </Switch>
         </Grid>
