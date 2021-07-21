@@ -27,21 +27,18 @@ function handleClientLoad() {
  *  listeners.
  */
 function initClient() {
-    authorizeButton = document.getElementById('authorize_button');
     gapi.client.init({
         apiKey: API_KEY,
         clientId: CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES
     }).then(function() {
-        if(authorizeButton != null){
         // Listen for sign-in state changes.
-            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
         // Handle the initial sign-in state.
-            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-            authorizeButton.onclick = handleAuthClick;
-            signoutButton.onclick = handleSignoutClick;
-        }
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        authorizeButton.onclick = handleAuthClick;
+        signoutButton.onclick = handleSignoutClick;        
     }, function(error) {
         console.log(error)
         //appendPre(JSON.stringify(error, null, 2));
@@ -54,18 +51,16 @@ function initClient() {
  */
 
 function updateSigninStatus(isSignedIn) {
-    if(authorizeButton != null){
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
         //want this to be a chain
-        //signoutButton.style.display = 'block';
+        signoutButton.style.display = 'block';
         listUpcomingEvents();
         listConnectionNames();
     } else {
         console.log("logged in");
         authorizeButton.style.display = 'block';
-        //signoutButton.style.display = 'none';
-    }
+        signoutButton.style.display = 'none';
     }
 }
 
