@@ -29,7 +29,8 @@ import TimeMatches from '../TimeMatches/TimeMatches'
 import Card from '../Card/Card'
 import timeUtils from '../../utils/time_utils.js'
 import userEvents from '../../utils/user_events.js'
-import { UseEventsDispatch } from '../../hooks/useEvents'
+import { useTemplatesState } from '../../hooks/useTemplates'
+import { useEventsDispatch } from '../../hooks/useEvents'
 import usePages from '../../hooks/usePages'
 import useTemplates from '../../hooks/useTemplates'
 import eventTemplates from '../../utils/event_templates'
@@ -59,9 +60,9 @@ function CreateModal({ label, ...rest }) {
     date: null,
   });
 
-  const { createEvent } = UseEventsDispatch()
+  const { createEvent } = useEventsDispatch()
   const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = usePages()
-  const templates = useTemplates(eventTemplates.getTemplates, userId)
+  const { templates } = useTemplatesState()
 
   const setEventTitle = (title) => {
     setMeet({...meet, title})
@@ -184,7 +185,7 @@ function CreateModal({ label, ...rest }) {
               isRequired
             >
               {
-                templates.map( template => <option value="15">{`${template.title.split(' ')[0]} ${template.title.split(' ')[1]}`}</option>)
+                templates.map( template => <option value="15">{template.title}</option>)
               }
 
             </Select>

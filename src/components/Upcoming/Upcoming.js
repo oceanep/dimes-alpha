@@ -11,7 +11,8 @@ import { MdPlaylistAdd, MdPerson } from 'react-icons/md'
 
 import EventCard from '../EventCard/EventCard'
 import CreateModal from '../CreateModal/CreateModal'
-import { useEventsState } from '../../hooks/useEvents'
+import { useEventsState, useEventsDispatch } from '../../hooks/useEvents'
+
 import userEvents from '../../utils/user_events'
 
 import styles from './Upcoming.module.scss'
@@ -20,7 +21,7 @@ import QRCode from "react-qr-code";
 function Upcoming({ vertical }) {
   const userId = localStorage.user_id
   const { events, loading, error } = useEventsState()
-
+  const { deleteEvent } = useEventsDispatch()
 
   // useEffect( () => {
   //   if (events && events !== null){
@@ -28,7 +29,7 @@ function Upcoming({ vertical }) {
   // }, [events])
 
   return (
-    <Box className="upcoming-container" w={ vertical ? '' : '100%'} maxH={ vertical ? '650px' : ''} overflowY={ vertical ? 'scroll' : ''}>
+    <Box className="upcoming-container" w={ vertical ? '' : '100%'} maxH={ vertical ? '650px' : ''} overflowY={ vertical ? 'scroll' : ''} overflowX={ vertical ? 'hidden' : ''}>
       <Flex w='100%' mb='4px' px="12px" pb="15px" borderBottom="2px" borderColor='gray.50' rounded='md'>
         {/*
         <Flex w={ vertical ? '' : '50%'} justifyContent='flex-start' alignItems="center" display="inline-flex">
@@ -67,6 +68,7 @@ function Upcoming({ vertical }) {
                     time={event.timeRange}
                     id={event.id}
                     day={formatedDate}
+                    onDelete={deleteEvent}
                   />
                 </Box>
               );
