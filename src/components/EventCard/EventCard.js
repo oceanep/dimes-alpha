@@ -24,19 +24,16 @@ import { MdSettings, MdContentCopy, MdModeEdit, MdDelete, MdExpandMore, MdExpand
 import styles from './EventCard.module.scss'
 import QRCode from "react-qr-code";
 
-import { UseEventsDispatch } from '../../hooks/useEvents'
-
 function EventCard(props) {
 
-  const { title, desc, variant, value, time, day, id } = props
+  const { title, desc, variant, value, time, day, id, url, onDelete } = props
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   // const subtitle = `${ variant == "fifteen" ? '15 mins,' : ''}${ variant == "thirty" ? '30 mins,' : ''}${ variant == "sixty" ? '60 mins,' : ''} ${type}`
   const c_styles = useStyleConfig("EventCard", { variant })
 
-  const { deleteEvent } = UseEventsDispatch()
 
   const deleteE = () => {
-    deleteEvent(id)
+    onDelete(id)
   }
 
   return (
@@ -63,7 +60,7 @@ function EventCard(props) {
       <Flex minW='40%' maxW='60%' justifyContent='center' alignItems="center" display="inline-flex">
       <Box __css={c_styles.body}>
         <button className={styles.cardBody}>
-          <Text fontSize="md">{title}</Text>        
+          <Text fontSize="md">{title}</Text>
           <Text fontSize="sm" color="gray.400">{desc}</Text>
           {
             day && time ?

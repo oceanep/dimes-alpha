@@ -20,6 +20,7 @@ import Contacts from '../../components/Contacts/Contacts'
 import Pagination from '../../components/Pagination/Pagination'
 
 import UseEventsProvider from '../../hooks/useEvents'
+import UseTemplatesProvider from '../../hooks/useTemplates'
 
 import styles from './Home.module.scss'
 
@@ -30,16 +31,8 @@ function Home() {
     const [currentPage, setCurrentPage] = useState(1);
     const [contactsPerPage] = useState(6);
 
-    useEffect(() => {
-      const fetchContacts = async () => {
-        setLoading(true)
-        const res = await axios.get('https://jsonplaceholder.typicode.com/posts')
-        setContacts(res.data);
-        setLoading(false);
-      };
-
-      fetchContacts()
-    }, [])
+    // useEffect(() => {
+    // }, [])
 
     // Get current contacts
    const indexOfLastPost = currentPage * contactsPerPage;
@@ -51,6 +44,7 @@ function Home() {
 
     return (
         <UseEventsProvider>
+        <UseTemplatesProvider>
           <Box>
             <Flex className="home-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
               <Flex minW='800px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
@@ -79,6 +73,7 @@ function Home() {
           </Flex>
         </Flex>
       </Box>
+    </UseTemplatesProvider>
     </UseEventsProvider>
   );
 }
