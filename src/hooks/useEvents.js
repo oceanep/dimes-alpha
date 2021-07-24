@@ -35,14 +35,12 @@ export function useEventsState() {
   return useContext(UseEventsContext)
 }
 
-export function UseEventsDispatch() {
+export function useEventsDispatch() {
   return useContext(UseEventsDispatchContext)
 }
 
 function UseEventsProvider({children}) {
 
-  //custom hook usable for both events and event templates, takes appropriate
-  //function utility call
   const initialState = {
     events: [],
     loading: true,

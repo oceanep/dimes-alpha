@@ -24,7 +24,7 @@ import {
     Box
 } from "@chakra-ui/react"
 
-import eventTemplates from '../../utils/event_templates.js'
+import { useTemplatesDispatch } from '../../hooks/useTemplates'
 
 import './TemplateModal.scss'
 
@@ -44,6 +44,8 @@ function TemplateModal({ label }) {
         active: true
     });
 
+    const { createTemplate } = useTemplatesDispatch()
+
     const onNext = () => {
         setTemplate({
             title,
@@ -60,9 +62,7 @@ function TemplateModal({ label }) {
     }
 
     const onSave = async () => {
-        const userId = localStorage.userId
-        const res = await eventTemplates.createTemplate(
-            2,
+        createTemplate(
             template.title,
             parseInt(template.duration),
             template.desc,

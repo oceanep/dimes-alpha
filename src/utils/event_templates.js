@@ -23,12 +23,12 @@ const eventTemplates = {
     async createTemplate(userId, title, duration, desc, active, event_url) {
     let url = `${api_endpoint}/event_templates`;
       console.log('createTemplate', userId, title, desc, duration, active, event_url)
-    const event_template = {
-  	"user_id": userId,
-  	"title": title,
+        const event_template = {
+      	"user_id": userId,
+      	"title": title,
         "description": desc,
-  	"duration": duration,
-  	"active": active,
+      	"duration": duration,
+      	"active": active,
         "url": event_url
   	}
     try {
@@ -40,7 +40,7 @@ const eventTemplates = {
       throw new Error('Failed to create event')
     }
   },
-  async updateTemplate(eventId, title, duration, desc, active) {
+  async updateTemplate(eventId, title, duration, desc, active, event_url) {
     let url = `${api_endpoint}/event_templates`;
     try {
       let res = await axios.patch(url, {
@@ -49,7 +49,8 @@ const eventTemplates = {
       		"title": title,
       		"duration": duration,
           "description": desc,
-      		"active": active
+      		"active": active,
+          "url": event_url
         }
       }, headers)
     } catch {
