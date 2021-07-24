@@ -10,8 +10,8 @@ var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/
 // included, separated by spaces.
 var SCOPES = "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/contacts openid";
 
-var authorizeButton = document.getElementById('authorize_button');
-var signoutButton = document.getElementById('signout_button');
+var authorizeButton; // = document.getElementById('authorize_button');
+var signoutButton ; //= document.getElementById('signout_button');
 
 var auth_response;
 
@@ -27,6 +27,8 @@ function handleClientLoad() {
  *  listeners.
  */
 function initClient() {
+    authorizeButton = document.getElementById('authorize_button');
+    signoutButton = document.getElementById('signout_button');
     gapi.client.init({
         apiKey: API_KEY,
         clientId: CLIENT_ID,
