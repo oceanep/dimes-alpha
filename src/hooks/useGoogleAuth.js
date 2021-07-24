@@ -7,6 +7,7 @@ const useGoogleAuth = (url) => {
         script.src = url
         script.id = 'google_auth';
         script.async = true;
+        script.defer = true;
         document.body.appendChild(script);
         script.onload = () => {
             window.handleClientLoad();
