@@ -59,8 +59,8 @@ function updateSigninStatus(isSignedIn) {
         listConnectionNames();
     } else {
         console.log("logged in");
-        authorizeButton.style.display = 'block';
-        signoutButton.style.display = 'none';
+        //authorizeButton.style.display = 'block';
+        //signoutButton.style.display = 'none';
     }
 }
 
