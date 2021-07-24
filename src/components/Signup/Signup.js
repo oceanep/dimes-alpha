@@ -20,10 +20,10 @@ import { FaGoogle } from "react-icons/fa"
 
 import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
-//import GoogleAuth from '../../scripts/google_auth.jsx'
+import useGoogleAuth from '../../hooks/useGoogleAuth'
 
 function Signup() {
- 
+    useGoogleAuth('https://apis.google.com/js/api.js');
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
     const handlePasswordClick = () => setShowPassword(!showPassword)
