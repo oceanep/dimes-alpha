@@ -4,18 +4,13 @@ import {
     Button,
     Spacer,
     Image,
-    Text,
     Avatar,
     AvatarBadge,
     Menu,
     MenuButton,
     MenuList,
     MenuItem,
-    MenuItemOption,
     MenuGroup,
-    MenuOptionGroup,
-    MenuIcon,
-    MenuCommand,
     MenuDivider,
 } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
@@ -30,10 +25,6 @@ function LandingNav() {
         localStorage.clear();
         history.push("/");
     };
-
-    const openMenu = () => {
-        alert("hello world");
-    }
 
     return (
         <nav>
