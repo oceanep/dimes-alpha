@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import {
     Center,
     Input,
@@ -20,17 +20,15 @@ import { FaGoogle } from "react-icons/fa"
 
 import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
-import useGoogleAuth from '../../hooks/useGoogleAuth'
 
 function Signup() {
-    useGoogleAuth('https://apis.google.com/js/api.js');
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
     const handlePasswordClick = () => setShowPassword(!showPassword)
     const handleConfirmPasswordClick = () => setConfirmShowPassword(!showConfirmPassword)
     let history = useHistory()
     const { t, i18n } = useTranslation()
-
+    
     const responseGoogle = (response) => {
         console.log(response);
         localStorage.setItem('access_token', response.accessToken);
@@ -38,8 +36,14 @@ function Signup() {
         localStorage.setItem('username', response.profileObj.givenName);
         history.push('/home')    
     }
+
+    const initSignin = () =>{
+        window.initSignin();
+        window.authorizeButton.click();
+    }
+    
     return (
-      <>
+        <>
       <LandingNav/>
       <Center className="Signup">
           <VStack
@@ -188,7 +192,7 @@ function Signup() {
                 )}
             </Formik>
             
-            <Button leftIcon={<FaGoogle/>} id="authorize_button">Login with Google</Button>
+            <Button onClick={initSignin} leftIcon={<FaGoogle/>} id="authorize_button">Login with Google</Button>
             <Button id="signout_button" style={{display:'none'}}>Log Out</Button>
             <div id='cal'></div>                      
           </VStack>

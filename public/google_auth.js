@@ -15,6 +15,9 @@ var signoutButton ; //= document.getElementById('signout_button');
 
 var auth_response;
 
+
+window.google_obj = undefined;
+
 /**
  *  On load, called to load the auth2 library and API client library.
  */
@@ -27,8 +30,8 @@ function handleClientLoad() {
  *  listeners.
  */
 function initClient() {
-    authorizeButton = document.getElementById('authorize_button');
-    signoutButton = document.getElementById('signout_button');
+    //authorizeButton = document.getElementById('authorize_button');
+    //signoutButton = document.getElementById('signout_button');
     gapi.client.init({
         apiKey: API_KEY,
         clientId: CLIENT_ID,
@@ -36,15 +39,26 @@ function initClient() {
         scope: SCOPES
     }).then(function() {
         // Listen for sign-in state changes.
-        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+        //gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
         // Handle the initial sign-in state.
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        authorizeButton.onclick = handleAuthClick;
-        signoutButton.onclick = handleSignoutClick;        
+        //updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        //
+        window.google_obj = gapi.auth2.getAuthInstance();
     }, function(error) {
         console.log(error)
         //appendPre(JSON.stringify(error, null, 2));
     });
+}
+
+function initSignin() {
+    authorizeButton = document.getElementById('authorize_button');
+    //signoutButton = document.getElementById('signout_button');
+    authorizeButton.onclick = handleAuthClick;
+
+    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+    // Handle the initial sign-in state.
+    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+    //signoutButton.onclick = handleSignoutClick;
 }
 
 /**
@@ -54,9 +68,9 @@ function initClient() {
 
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
-        authorizeButton.style.display = 'none';
+        //authorizeButton.style.display = 'none';
         //want this to be a chain
-        signoutButton.style.display = 'block';
+        //signoutButton.style.display = 'block';
         listUpcomingEvents();
         listConnectionNames();
     } else {

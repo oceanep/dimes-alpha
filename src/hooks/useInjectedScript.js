@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 
-const useGoogleAuth = (url) => {
+const useInjectedScript = () => {
 
     useEffect(() => {                       
         const script = document.createElement('script');
-        script.src = url
-        script.id = 'google_auth';
+        script.innerText = "var hello;";
+        script.id = 'injectedJs';
         script.async = true;
         script.defer = true;
         document.body.appendChild(script);
         script.onload = () => {
-            window.handleClientLoad();
+            alert("hello world");
         };
         script.onreadystatechange = () => {
             if(this.readyState === 'complete'){
@@ -20,4 +20,4 @@ const useGoogleAuth = (url) => {
     })
 }
 
-export default useGoogleAuth;
+export default useInjectedScript;
