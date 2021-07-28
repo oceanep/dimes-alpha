@@ -36,9 +36,7 @@ import useToggle from "../../hooks/useToggle"
 //remove after implementing availability context
 import timeUtils from '../../utils/time_utils.js'
 
-function EventCard(props) {
-
-  const { type, title, desc, duration, variant, value, time, day, id, url, onDelete, onEditSave } = props
+function EventCard({ type, title, desc, duration, variant, value, time, day, id, url, onDelete, onEditSave }) {
 
   //set up initial placeholders for inputs, mostly aesthetic
   let initialTime = null
@@ -49,6 +47,7 @@ function EventCard(props) {
     initialTime = [timeUtils.convertFromTime(time).beginCodec, timeUtils.convertFromTime(time).endCodec]
     intialTimePlaceholder = `${time[0]} - ${time[1]}`
     initDurPh = `${duration * 15} Minutes`
+    duration = duration * 15
   }
 
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -58,7 +57,7 @@ function EventCard(props) {
   const username = localStorage.username
   const [editable: state, toggleEdit: toggle ] = useToggle()
 
-  const [newDuration, setDuration] = useState(duration * 15)
+  const [newDuration, setDuration] = useState(duration)
   const [newTime, setTime] = useState(initialTime)
   const [newDesc, setDesc] = useState(desc)
   const [newTitle, setTitle] = useState(title)
