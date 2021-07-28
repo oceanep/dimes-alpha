@@ -62,7 +62,7 @@ function TemplateModal({ label }) {
     }
 
     const onSave = async () => {
-        createTemplate(
+        const res = await createTemplate(
             template.title,
             parseInt(template.duration),
             template.desc,
@@ -84,14 +84,13 @@ function TemplateModal({ label }) {
                 >
                     <option value="15">15 Minute</option>
                     <option value="30">30 Minute</option>
-                    <option value=
-                        "60">60 Minute</option>
+                    <option value="60">60 Minute</option>
                 </Select>
         // <InputRightAddon children='Meeting' />
             </InputGroup>
             <InputGroup>
                 <Input
-                    placeholder="Event Name"
+                    placeholder="Template Name"
                     size='md'
                     onChange={e => setTitle(e.target.value)}
                 />
@@ -110,7 +109,7 @@ function TemplateModal({ label }) {
             </InputGroup>
             <InputGroup>
                 <Textarea
-                    placeholder="Event Description"
+                    placeholder="Template Description"
                     onChange={e => setDesc(e.target.value)}
                 />
                 {// <InputRightAddon children='Description' />

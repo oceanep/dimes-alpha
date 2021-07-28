@@ -36,14 +36,14 @@ function Contacts(props) {
                 {
                   mini ?
                     <Box>
-                      <Text fontSize="md">{ contact.title.split(" ", 1) }</Text>
-                      <Text fontSize="sm">Relationships: </Text>
+                      <Text fontSize="md">{contact.name}</Text>
+                      <Text fontSize="sm">{`Relationships: ${contact.relationType}`}</Text>
                     </Box>
                   :
                     <Flex align="center" w="60%" justifyContent="flex-start" justifyContent="space-between">
                       <Box textAlign="left" pr="30px">
-                        <Text fontSize="md">{ contact.title.split(" ", 1) }</Text>
-                        <Text fontSize="sm">Relationships: </Text>
+                        <Text fontSize="md">{contact.name}</Text>
+                        <Text fontSize="sm">{`Relationships: ${contact.relationType}`}</Text>
                       </Box>
                       <Box textAlign="left">
                         <Text fontSize="xs">Last connected: 2 days ago</Text>
