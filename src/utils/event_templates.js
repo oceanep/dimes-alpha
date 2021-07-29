@@ -23,13 +23,13 @@ const eventTemplates = {
     async createTemplate(userId, title, duration, desc, active, event_url) {
     let url = `${api_endpoint}/event_templates`;
       console.log('createTemplate', userId, title, desc, duration, active, event_url)
-        const event_template = {
-      	"user_id": userId,
-      	"title": title,
-        "description": desc,
-      	"duration": duration,
-      	"active": active,
-        "url": event_url
+      const event_template = {
+    	"user_id": userId,
+    	"title": title,
+      "description": desc,
+    	"duration": duration,
+    	"active": active,
+      "url": event_url
   	}
     try {
       let res = await axios.post(url, {
@@ -40,11 +40,11 @@ const eventTemplates = {
       throw new Error('Failed to create event')
     }
   },
-  async updateTemplate(eventId, title, duration, desc, active, event_url) {
-    let url = `${api_endpoint}/event_templates`;
+  async updateTemplate(templateId, title, duration, desc, active, event_url) {
+    let url = `${api_endpoint}/event_templates/${templateId}`;
     try {
       let res = await axios.patch(url, {
-        "event_id": eventId,
+        "event_id": templateId,
         "event_templates": {
       		"title": title,
       		"duration": duration,
@@ -53,12 +53,13 @@ const eventTemplates = {
           "url": event_url
         }
       }, headers)
+      return res
     } catch {
       throw new Error('Failed to update event')
     }
   },
-  async deleteTemplate(eventId) {
-    let url = `${api_endpoint}/event_templates/${eventId}`;
+  async deleteTemplate(templateId) {
+    let url = `${api_endpoint}/event_templates/${templateId}`;
     try {
       let res = await axios.delete(url, headers)
       return res

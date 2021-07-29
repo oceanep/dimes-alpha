@@ -1,9 +1,9 @@
-import { Fragment } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import {
   useStyleConfig,
-    Box,
-    Flex,
-    Spacer,
+  Box,
+  Flex,
+  Spacer,
   Checkbox,
   Button,
   Text,
@@ -18,22 +18,123 @@ import {
   MenuIcon,
   MenuCommand,
   MenuDivider,
+  InputGroup,
+  Input,
+  Textarea,
+  Select,
+  InputLeftAddon,
+  Stack
 } from "@chakra-ui/react"
 import { MdSettings, MdContentCopy, MdModeEdit, MdDelete, MdExpandMore, MdExpandLess } from 'react-icons/md'
 
 import styles from './EventCard.module.scss'
 import QRCode from "react-qr-code";
 
-function EventCard(props) {
+import DatePicker from 'react-date-picker';
+import useToggle from "../../hooks/useToggle"
 
-  const { title, desc, variant, value, time, day, id, url, onDelete } = props
+//remove after implementing availability context
+import timeUtils from '../../utils/time_utils.js'
+
+function EventCard({ type, title, desc, duration, variant, value, time, day, id, url, onDelete, onEditSave }) {
+
+  //set up initial placeholders for inputs, mostly aesthetic
+  let initialTime = null
+  let intialTimePlaceholder = null
+  let initDurPh = null
+
+  if (type === "Event" && time) {
+    initialTime = [timeUtils.convertFromTime(time).beginCodec, timeUtils.convertFromTime(time).endCodec]
+    intialTimePlaceholder = `${time[0]} - ${time[1]}`
+    initDurPh = `${duration * 15} Minutes`
+    duration = duration * 15
+  }
+
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
   // const subtitle = `${ variant == "fifteen" ? '15 mins,' : ''}${ variant == "thirty" ? '30 mins,' : ''}${ variant == "sixty" ? '60 mins,' : ''} ${type}`
   const c_styles = useStyleConfig("EventCard", { variant })
 
+  const username = localStorage.username
+  const [editable: state, toggleEdit: toggle ] = useToggle()
+
+  const [newDuration, setDuration] = useState(duration)
+  const [newTime, setTime] = useState(initialTime)
+  const [newDesc, setDesc] = useState(desc)
+  const [newTitle, setTitle] = useState(title)
+  const [newUrl, setUrl] = useState(url)
+  const [newDate, setDate] = useState(day)
+
+  //delete after implementing availability context
+  const [matches, setMatches] = useState([])
+
+  let formatedDate = type === "Event" && newDate ? `${newDate.getMonth() + 1}/${newDate.getDate()}/${newDate.getFullYear()}` : null
+
+  useEffect(() => {
+    formatedDate = type === "Event" ? `${newDate.getMonth() + 1}/${newDate.getDate()}/${newDate.getFullYear()}` : null
+  }, [newDate])
+
+  useEffect(() => {
+    if (type === "Event") calculateTimes()
+  }, [newDuration])
 
   const deleteE = () => {
     onDelete(id)
+  }
+
+  const editE = () => {
+
+    toggleEdit()
+    // onEdit(id, )
+  }
+
+  const saveE = async () => {
+    let res = {};
+    if (type === "Template") {
+      res = await onEditSave(
+        id,
+        newTitle,
+        parseInt(newDuration),
+        newDesc,
+        true,
+        newUrl
+      )
+      toggleEdit()
+    }
+    if (type === "Event") {
+      res = await onEditSave(
+        id,
+        newTitle,
+        newDesc,
+        1,
+        newTime[0],
+        newTime[1],
+        newDate.toISOString(),
+        true
+      )
+      toggleEdit()
+    }
+  }
+
+  //delete after implementing availability context
+  const calculateTimes = ()=> {
+    const tFactor = newDuration/15
+    // console.log('duration and tfactor: ', duration, tFactor)
+
+    const t1a = Math.floor(Math.random() * 97)
+    const t2a = Math.floor(Math.random() * 97)
+    const t3a = Math.floor(Math.random() * 97)
+
+    const t1b = t1a + tFactor
+    const t2b = t2a + tFactor
+    const t3b = t3a + tFactor
+
+    // console.log("calculateTimes: ", t1a, t1b)
+    setMatches([
+      [t1a, t1b],
+      [t2a, t2b],
+      [t3a, t3b]
+    ])
+
   }
 
   return (
@@ -50,7 +151,7 @@ function EventCard(props) {
                 <MdSettings />
               </MenuButton>
               <MenuList>
-                <MenuItem icon={<MdModeEdit/>} >Edit</MenuItem>
+                <MenuItem icon={<MdModeEdit/>} onClick={ editE } >{!editable ? "Edit" : "Cancel"}</MenuItem>
                 <MenuItem icon={<MdDelete/>} onClick={ deleteE } >Delete</MenuItem>
               </MenuList>
             </Fragment>
@@ -59,19 +160,110 @@ function EventCard(props) {
       </Box>
       <Flex minW='40%' maxW='60%' justifyContent='center' alignItems="center" display="inline-flex">
       <Box __css={c_styles.body}>
-        <button className={styles.cardBody}>
-          <Text fontSize="md">{title}</Text>
-          <Text fontSize="sm" color="gray.400">{desc}</Text>
-          {
-            day && time ?
-              <Text fontSize="sm" color="gray.400">{`${days[day] ? days[day] : day} ${time}`}</Text>
-            :
-            ''
-          }
-          <Link fontSize="md" color="teal.500" href="#">View Booking Page</Link>
-        </button>
+        {
+          !editable ?
+            <button className={styles.cardBody}>
+              <Text fontSize="md">{title}</Text>
+              <Text fontSize="sm" color="gray.400">{desc}</Text>
+              {
+                type === "Event" ?
+                  <Text fontSize="sm" color="gray.400">{`${days[formatedDate] ? days[formatedDate] : formatedDate} ${time}`}</Text>
+                : type === "Template" ?
+                  <Link fontSize="md" color="teal.500" href={`dimes-app.com/${username}/${url}`}>View Booking Page</Link>
+                :
+                null
+              }
+            </button>
+          :
+            <Box className={styles.cardBody}>
+              <Stack spacing={1}>
+                <InputGroup size='sm'>
+                  <InputLeftAddon children="Title" maxW="54px"/>
+                  <Input
+                      placeholder={`${type} Name`}
+                      onChange={e => setTitle(e.target.value)}
+                      value={newTitle}
+                      isRequired
+                  />
+                </InputGroup>
+                <InputGroup size='sm'>
+                  <InputLeftAddon children="Dur." maxW="54px"/>
+                  <Select
+                      placeholder={type === "Event" ? initDurPh : newDuration}
+                      size='sm'
+                      onChange={e => setDuration(e.target.value)}
+                      value={newDuration}
+                      isRequired
+                  >
+                      <option value="15">15 Minutes</option>
+                      <option value="30">30 Minutes</option>
+                      <option value="60">60 Minutes</option>
+                  </Select>
+                </InputGroup>
+                <InputGroup size='sm'>
+                  <InputLeftAddon children="Desc" maxW="54px"/>
+                  <Input
+                      size="sm"
+                      placeholder={`${type} Description`}
+                      onChange={e => setDesc(e.target.value)}
+                      value={newDesc}
+                      isRequired
+                  />
+                </InputGroup>
+                {
+                  type === "Event" ?
+                    <InputGroup size='sm'>
+                      <InputLeftAddon children="Date" maxW="54px"/>
+                      <DatePicker
+                        onChange={setDate}
+                        value={newDate}
+                        className={styles.datePicker}
+                      />
+                    </InputGroup>
+                  : type === "Template" ?
+                    <InputGroup size='sm'>
+                      <InputLeftAddon children="URL/" maxW="54px"/>
+                      <Input
+                        size="sm"
+                        placeholder={`dimes-app.com/${username}/`}
+                        onChange={e => setUrl(e.target.value)}
+                        value={newUrl}
+                        isRequired
+                      />
+                    </InputGroup>
+                  :
+                  null
+                }
+                {
+                  type === "Event" ?
+                    <InputGroup size='sm'>
+                      <InputLeftAddon children="Time" maxW="54px"/>
+                      <Select
+                          placeholder={intialTimePlaceholder}
+                          size='sm'
+                          onChange={e => setTime([parseInt(e.target.value.split(",")[0]), parseInt(e.target.value.split(",")[1])])}
+                          value={newTime}
+                          isRequired
+                      >
+                          {
+                            matches.map((match, index) => {
+                              let cTime = timeUtils.convertToTime(match[0], match[1])
+                              return (
+                                <option key={index} value={match}>{`${cTime[0]} - ${cTime[1]}`}</option>
+                              )
+                            })
+                          }
+                      </Select>
+                    </InputGroup>
+                  :
+                    null
+                }
+              </Stack>
+            </Box>
+        }
+
       </Box>
-        <Box><QRCode size={50} value={value} /></Box>
+        { !editable ? <Box><QRCode size={50} value={value} /></Box> : null }
       </Flex>
       <Box __css={c_styles.foot}>
         <Box __css={c_styles.footCol1}>
@@ -80,9 +272,13 @@ function EventCard(props) {
           </Button>
         </Box>
         <Box __css={c_styles.footCol2}>
-          <Button variant="outline">
-            <Text fontSize="sm">Share</Text>
-          </Button>
+          { !editable ? <Button variant="outline" fontSize="sm">Share</Button>
+            :
+              <>
+                <Button variant="outline" fontSize="sm" onClick={toggleEdit}>Cancel</Button>
+                <Button fontSize="sm" ml="10px" onClick={ saveE }>Save</Button>
+              </>
+          }
         </Box>
       </Box>
     </Box>

@@ -66,6 +66,7 @@ function UseTemplatesProvider({children}) {
           variant: `${ template.duration == 15 ? 'fifteen' : ''}${ template.duration == 30 ? 'thirty' : ''}${ template.duration == 60 ? 'sixty' : ''}`,
           value: `${ template.duration == 15 ? 'www.google.com' : ''}${ template.duration == 30 ? 'www.facebook.com' : ''}${ template.duration == 60 ? 'www.apple.com' : ''}`,
           active: template.active,
+          duration: template.duration,
           // isPaid: template.is_paid,
           // location: template.location,
           // locationType: template.location_type,
@@ -74,7 +75,7 @@ function UseTemplatesProvider({children}) {
 
         }
       ))
-      console.log('before get templates dispatch: ', newTemplates)
+      // console.log('before get templates dispatch: ', newTemplates)
       dispatch({ payload: newTemplates, type: ACTIONS.FETCHED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
@@ -94,13 +95,14 @@ function UseTemplatesProvider({children}) {
         variant: `${ res.data.data.duration == 15 ? 'fifteen' : ''}${ res.data.data.duration == 30 ? 'thirty' : ''}${ res.data.data.duration == 60 ? 'sixty' : ''}`,
         value: `${ res.data.data.duration == 15 ? 'www.google.com' : ''}${ res.data.data.duration == 30 ? 'www.facebook.com' : ''}${ res.data.data.duration == 60 ? 'www.apple.com' : ''}`,
         active: res.data.data.active,
+        duration: res.data.data.duration,
         // isPaid: res.data.data.is_paid,
         // location: res.data.data.location,
         // locationType: res.data.data.location_type,
         // price: res.data.data.price,
         url: res.data.data.url
       }
-      console.log('before new event dispatch: ', newTemplate)
+      // console.log('before new event dispatch: ', newTemplate)
       dispatch({ payload: newTemplate, type: ACTIONS.CREATED })
       return newTemplate
     } catch (err) {
@@ -116,8 +118,40 @@ function UseTemplatesProvider({children}) {
       const res = await eventTemplates.deleteTemplate(templateId)
       const filteredTemplates = state.templates.filter(template => template.id !== templateId)
 
-      console.log('filtered templates: ', filteredTemplates)
+      // console.log('filtered templates: ', filteredTemplates)
       dispatch({ payload: filteredTemplates, type: ACTIONS.DELETED })
+    } catch (err) {
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      console.log(err)
+      alert(err)
+    }
+  }
+
+  const editTemplate = async (templateId, title, duration, desc, active, event_url) => {
+    dispatch({ type: ACTIONS.LOADING })
+    try {
+      // console.log('edit dispatch for template, id: ', templateId)
+      // console.log('all edit info: ', templateId, title, duration, desc, active, event_url)
+      const res = await eventTemplates.updateTemplate(templateId, title, duration, desc, active, event_url)
+      // console.log('res for edit: ', res)
+      const updatedTemplates = state.templates.map( template => res.data.data.id === template.id ?
+        {
+          id: res.data.data.id,
+          title: res.data.data.title,
+          desc: res.data.data.description,
+          variant: `${ res.data.data.duration == 15 ? 'fifteen' : ''}${ res.data.data.duration == 30 ? 'thirty' : ''}${ res.data.data.duration == 60 ? 'sixty' : ''}`,
+          value: `${ res.data.data.duration == 15 ? 'www.google.com' : ''}${ res.data.data.duration == 30 ? 'www.facebook.com' : ''}${ res.data.data.duration == 60 ? 'www.apple.com' : ''}`,
+          active: res.data.data.active,
+          duration: res.data.data.duration,
+          // isPaid: res.data.data.is_paid,
+          // location: res.data.data.location,
+          // locationType: res.data.data.location_type,
+          // price: res.data.data.price,
+          url: res.data.data.url
+        }
+        : template )
+      // console.log('updated template: ', updatedTemplates)
+      dispatch({ payload: updatedTemplates, type: ACTIONS.FETCHED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
       console.log(err)
@@ -131,11 +165,11 @@ function UseTemplatesProvider({children}) {
 
   return (
     <UseTemplatesContext.Provider value={state}>
-      <UseTemplatesDispatchContext.Provider value={{ createTemplate, deleteTemplate }}>
+      <UseTemplatesDispatchContext.Provider value={{ createTemplate, deleteTemplate, editTemplate }}>
         {children}
       </UseTemplatesDispatchContext.Provider>
     </UseTemplatesContext.Provider>
   )
 }
 
-export default UseTemplatesProvider
+export default UseTemplatesProvider;

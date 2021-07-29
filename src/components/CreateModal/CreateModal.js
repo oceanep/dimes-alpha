@@ -46,7 +46,7 @@ function CreateModal({ label, ...rest }) {
   const [value, onChange] = useState(new Date())
   const [duration, setDuration] = useState('')
   const [email, setEmail] = useState('')
-  const [url, setUrl] = useState('')
+  // const [url, setUrl] = useState('')
   // const [title, setTitle] = useState('')
   const [timesDisplayed, setTimesDisplay] = useState(false)
   const [formDisplayed, setFormDisplay] = useState(true)
@@ -185,7 +185,7 @@ function CreateModal({ label, ...rest }) {
               isRequired
             >
               {
-                templates.map( template => <option value="15">{template.title}</option>)
+                templates.map( template => <option value="15" key={template.id}>{template.title}</option>)
               }
 
             </Select>
@@ -201,6 +201,7 @@ function CreateModal({ label, ...rest }) {
               />
               <InputRightAddon children='Email' />
           </InputGroup>
+          {/*
           <InputGroup mb="20px">
             <Input
               placeholder='URL'
@@ -212,7 +213,7 @@ function CreateModal({ label, ...rest }) {
               />
               <InputRightAddon children='Url' />
           </InputGroup>
-            {/*
+
               <VStack>
                 <Textarea
                   placeholder='Description of event'

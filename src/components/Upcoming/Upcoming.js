@@ -21,7 +21,7 @@ import QRCode from "react-qr-code";
 function Upcoming({ vertical }) {
   const userId = localStorage.user_id
   const { events, loading, error } = useEventsState()
-  const { deleteEvent } = useEventsDispatch()
+  const { deleteEvent, editEvent } = useEventsDispatch()
 
   // useEffect( () => {
   //   if (events && events !== null){
@@ -57,18 +57,20 @@ function Upcoming({ vertical }) {
         {
           !loading ?
             events.map((event, index) => {
-              const formatedDate = `${event.date.getMonth() + 1}/${event.date.getDate()}/${event.date.getFullYear()}`
               return(
                 <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
                   <EventCard
+                    type="Event"
                     title={event.title}
                     desc={event.desc}
                     variant={event.variant}
                     value={event.value}
                     time={event.timeRange}
+                    duration={event.duration}
                     id={event.id}
-                    day={formatedDate}
+                    day={event.date}
                     onDelete={deleteEvent}
+                    onEditSave={editEvent}
                   />
                 </Box>
               );

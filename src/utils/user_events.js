@@ -45,15 +45,16 @@ const userEvents = {
       throw new Error('Failed to create event')
     }
   },
-  async updateEvent(eventId, ownerId, title, desc, status = 1, beginTime, endTime, dayOfWeek, active) {
-    let url = `${api_endpoint}/user_events`;
+  async updateEvent(eventId, ownerId, title, desc, status = 1, beginTime, endTime, date, active) {
+    let url = `${api_endpoint}/user_events/${eventId}`;
+    console.log('edit event: ', eventId, ownerId, title, desc, status, beginTime, endTime, date, active)
     try {
       let res = await axios.patch(url, {
         "event_id": eventId,
         "user_event": {
           "active": active,
           "begin_time_unit": beginTime,
-          "day_of_week": dayOfWeek,
+          "date": date,
           "description": desc,
           "end_time_unit": endTime,
           "owner_id": ownerId,
@@ -61,6 +62,7 @@ const userEvents = {
           "title": title,
         }
       }, headers)
+      return res
     } catch {
       throw new Error('Failed to update event')
     }

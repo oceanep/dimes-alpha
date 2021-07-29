@@ -44,6 +44,15 @@ const userApi = {
       } catch (err) {
         return err
       }
+    },
+    async getUserById(id) {
+      const url = `${api_endpoint}/users/data/${id}`
+      try {
+        const res = axios.get(url, headers)
+        return res
+      } catch (err) {
+        return err
+      }
     }
 }
 

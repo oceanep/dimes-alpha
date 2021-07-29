@@ -19,7 +19,7 @@ import QRCode from "react-qr-code";
 
 function EventTemplates({ vertical }) {
     const { templates, loading, error } = useTemplatesState()
-    const { deleteTemplate } = useTemplatesDispatch()
+    const { deleteTemplate, editTemplate } = useTemplatesDispatch()
 
     useEffect(() => {
     }, [])
@@ -53,13 +53,16 @@ function EventTemplates({ vertical }) {
                             return (
                                 <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">
                                     <EventCard
+                                        type="Template"
                                         title={template.title}
                                         id={template.id}
                                         desc={template.desc}
                                         url={template.url}
+                                        duration={template.duration}
                                         variant={template.variant}
                                         value={template.value}
                                         onDelete={deleteTemplate}
+                                        onEditSave={editTemplate}
                                     />
                                 </Box>
                             );

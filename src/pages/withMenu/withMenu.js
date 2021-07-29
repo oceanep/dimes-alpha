@@ -16,6 +16,7 @@ import {
 
 import SideMenu from '../../components/SideMenu/SideMenu'
 import LandingNav from '../../components/LandingNav/LandingNav.jsx'
+import UseContactsProvider from '../../hooks/useContacts'
 
 import './withMenu.scss'
 
@@ -36,7 +37,9 @@ const withMenu = Component => {
 
         </GridItem>
         <GridItem colStart={2} colEnd={3} rowSpan={1} className="mainComponentContainer">
-          <Component {...props} />
+          <UseContactsProvider>
+            <Component {...props} />
+          </UseContactsProvider>
         </GridItem>
       </Grid>
     );
