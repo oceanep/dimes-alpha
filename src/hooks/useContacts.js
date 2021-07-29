@@ -58,7 +58,10 @@ function UseContactsProvider({children}) {
         {
           contactId: contact.contact_id,
           id: contact.id,
-          name: contact.name,
+          firstName: contact.first_name,
+          lastName: contact.last_name,
+          email: contact.email,
+          phone: contact.phone,
           invited: contact.invited,
           relationType: contact.relation_type,
           status: contact.status,
@@ -96,13 +99,39 @@ function UseContactsProvider({children}) {
     }
   }
 
+  const editContact = async (id, contactId, firstName, lastName, relationType, phone, email) => {
+    dispatch({ type: ACTIONS.LOADING })
+    try {
+      const res = await userContacts.updateContact(id, userId, contactId, firstName, lastName, relationType, phone, email)
+
+      const updatedContacts = state.contacts.map( contact => res.data.data.id === contact.id ?
+        {
+          contactId: res.data.data.contact_id,
+          id: res.data.data.id,
+          firstName: res.data.data.first_name,
+          lastName: res.data.data.last_name,
+          email: res.data.data.email,
+          phone: res.data.data.phone,
+          invited: res.data.data.invited,
+          relationType: res.data.data.relation_type,
+          status: res.data.data.status,
+          userId: res.data.data.user_id
+        }
+        : contact )
+      dispatch({ payload: updatedContacts, type: ACTIONS.FETCHED })
+    } catch (err) {
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      alert(err)
+    }
+  }
+
   useEffect( () => {
     getContacts()
   },[])
 
   return (
     <UseContactsContext.Provider value={state}>
-      <UseContactsDispatchContext.Provider value={getContacts}>
+      <UseContactsDispatchContext.Provider value={{editContact}}>
         {children}
       </UseContactsDispatchContext.Provider>
     </UseContactsContext.Provider>

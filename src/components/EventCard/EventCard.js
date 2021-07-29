@@ -129,8 +129,6 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, id,
     const t3b = t3a + tFactor
 
     // console.log("calculateTimes: ", t1a, t1b)
-    console.log("duration: ", newDuration)
-    console.log("matches: ", t1a, t1b, t2a, t2b, t3a, t3b)
     setMatches([
       [t1a, t1b],
       [t2a, t2b],
