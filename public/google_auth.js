@@ -72,7 +72,7 @@ function updateSigninStatus(isSignedIn) {
         //want this to be a chain
         //signoutButton.style.display = 'block';
         listUpcomingEvents();
-        listConnectionNames();
+        listConnectionNames(true);
     } else {
         console.log("logged in");
         //authorizeButton.style.display = 'block';
@@ -154,13 +154,14 @@ function listUpcomingEvents(refresh=false, page="/home") {
         var events = response.result.items;
         //appendPre('Upcoming events:');
         localStorage.setItem('google_events', JSON.stringify(events));
+        console.log("Event refresh: ", refresh)
         if(refresh){
             window.location.href = page;
         }
     });
 }
 
-function listConnectionNames(refresh=true,page="/home") {
+function listConnectionNames(refresh=false,page="/home") {
     gapi.client.people.people.connections.list({
         'resourceName': 'people/me',
         'pageSize': 1000,
@@ -168,6 +169,7 @@ function listConnectionNames(refresh=true,page="/home") {
     }).then(function(response) {
         var connections = response.result.connections;
         localStorage.setItem('google_contacts', JSON.stringify(connections));
+        console.log("Connection refresh: ", refresh)
         if(refresh){
             window.location.href = page;
         }
