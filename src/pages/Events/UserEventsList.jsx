@@ -143,11 +143,13 @@ function UserEventsList({ match }) {
         goThirdPage()
     }, [])
 
+    const photo = localStorage.getItem('profilePhoto') || ''
+
     const first = () => (
         <>
             <Box>
                 <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                    <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
+                    <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src={photo} />
                     <Heading size="md">{user.username}</Heading>
                 </Flex>
                 <Text fontSize="sm" color="gray.500">{user.email}</Text>

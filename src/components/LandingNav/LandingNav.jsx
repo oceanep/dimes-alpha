@@ -25,7 +25,7 @@ function LandingNav() {
         localStorage.clear();
         history.push("/");
     };
-
+    const photo = localStorage.getItem('profilePhoto') || ''
     return (
         <nav>
             <Flex mx={"60px"} py="10px" alignItems="center" zindex="999" position="relative" >
@@ -34,14 +34,14 @@ function LandingNav() {
                 </Box>
                 <Spacer />
                 {localStorage.getItem("token") != null ?
-                    <Menu zindex="999" >
+                    < Menu zindex="999" >
                         <MenuButton
                             id="menubutton"
                             as="button"
                             transition="all 0.2s"
                             zindex="999"
                         >
-                            <Avatar size="md" src="profile_sample.jpg" id="menuavi">
+                            <Avatar size="md" src={photo} id="menuavi">
                                 <AvatarBadge boxSize="1.25em" bg="green.500">
                                     5
                                 </AvatarBadge>

@@ -122,6 +122,8 @@ function handleSigninSuccess(res) {
     localStorage.setItem('username', res.profileObj.givenName);
     //FIX THIS -- Implement API Side User Signup
     localStorage.setItem('userId', res.googleId.slice(0,3));
+    localStorage.setItem('profile', JSON.stringify(res.profileObj));
+    localStorage.setItem('profilePhoto', basicProfile.getImageUrl());
     google_auth_object = gapi;
 }
 
@@ -165,7 +167,7 @@ function listConnectionNames() {
     }).then(function(response) {
         var connections = response.result.connections;
         localStorage.setItem('google_contacts', JSON.stringify(connections));
-        window.location.reload();
+        window.location.href = "/home";
     });
 }
 
