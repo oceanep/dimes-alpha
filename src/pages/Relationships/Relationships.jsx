@@ -35,7 +35,7 @@ function Relationships() {
 
     const syncGoogleContacts = () => {
         if (window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
-            window.listConnectionNames(true, "/relationships")
+            window.listConnectionNames()
         }
         else {
             window.gapi.auth2.getAuthInstance().isSignedIn.get()

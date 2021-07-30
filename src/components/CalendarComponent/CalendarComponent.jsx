@@ -88,8 +88,10 @@ const CalendarComponent = ({ props }) => {
     };
 
     const syncGoogleCalendar = () => {
-        if (window.gapi.auth2.getAuthInstance().isSignedIn.get())
+        if (window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
             window.listUpcomingEvents(true, "/home")
+            window.location.reload()
+        }
         else {
             window.gapi.auth2.getAuthInstance().isSignedIn.get()
         }

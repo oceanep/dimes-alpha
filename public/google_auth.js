@@ -58,7 +58,6 @@ function initSignin() {
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
     // Handle the initial sign-in state.
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    //signoutButton.onclick = handleSignoutClick;
 }
 
 /**
@@ -66,13 +65,14 @@ function initSignin() {
  *  appropriately. After a sign-in, the API is called.
  */
 
+
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         //authorizeButton.style.display = 'none';
         //want this to be a chain
         //signoutButton.style.display = 'block';
         listUpcomingEvents();
-        listConnectionNames(true);
+        listConnectionNames();
     } else {
         console.log("logged in");
         //authorizeButton.style.display = 'block';
@@ -142,7 +142,7 @@ function handleSigninSuccess(res) {
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
-function listUpcomingEvents(refresh=false, page="/home") {
+function listUpcomingEvents() {
     gapi.client.calendar.events.list({
         'calendarId': 'primary',
         'timeMin': (new Date()).toISOString(),
@@ -154,14 +154,10 @@ function listUpcomingEvents(refresh=false, page="/home") {
         var events = response.result.items;
         //appendPre('Upcoming events:');
         localStorage.setItem('google_events', JSON.stringify(events));
-        console.log("Event refresh: ", refresh)
-        if(refresh){
-            window.location.href = page;
-        }
     });
 }
 
-function listConnectionNames(refresh=false,page="/home") {
+function listConnectionNames() {
     gapi.client.people.people.connections.list({
         'resourceName': 'people/me',
         'pageSize': 1000,
@@ -169,11 +165,7 @@ function listConnectionNames(refresh=false,page="/home") {
     }).then(function(response) {
         var connections = response.result.connections;
         localStorage.setItem('google_contacts', JSON.stringify(connections));
-        console.log("Connection refresh: ", refresh)
-        if(refresh){
-            window.location.href = page;
-        }
-        return response;       
+        window.location.reload();
     });
 }
 
