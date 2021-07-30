@@ -142,7 +142,7 @@ function handleSigninSuccess(res) {
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
-function listUpcomingEvents() {
+function listUpcomingEvents(refresh=false, page="/home") {
     gapi.client.calendar.events.list({
         'calendarId': 'primary',
         'timeMin': (new Date()).toISOString(),
@@ -154,10 +154,13 @@ function listUpcomingEvents() {
         var events = response.result.items;
         //appendPre('Upcoming events:');
         localStorage.setItem('google_events', JSON.stringify(events));
+        if(refresh){
+            window.location.href = page;
+        }
     });
 }
 
-function listConnectionNames() {
+function listConnectionNames(refresh=true,page="/home") {
     gapi.client.people.people.connections.list({
         'resourceName': 'people/me',
         'pageSize': 1000,
@@ -165,7 +168,9 @@ function listConnectionNames() {
     }).then(function(response) {
         var connections = response.result.connections;
         localStorage.setItem('google_contacts', JSON.stringify(connections));
-        window.location.href = "/home";
+        if(refresh){
+            window.location.href = page;
+        }
         return response;       
     });
 }
