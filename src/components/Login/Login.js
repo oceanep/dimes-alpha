@@ -23,6 +23,7 @@ import LandingFooter from '../LandingFooter/LandingFooter'
 import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import GoogleSignin from '../Google/GoogleSignin.jsx'
 
 function Login() {
     const [show, setShow] = useState(false)
@@ -122,7 +123,8 @@ function Login() {
                         </Button>
                         </Form>
                 )}
-            </Formik>
+            </Formik>             
+              <GoogleSignin display_text = "Login with Google"/>
             </VStack>
       </Center>
       <LandingFooter/>

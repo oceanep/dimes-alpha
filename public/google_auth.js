@@ -148,7 +148,7 @@ function listUpcomingEvents() {
         'timeMin': (new Date()).toISOString(),
         'showDeleted': false,
         'singleEvents': true,
-        'maxResults': 10,
+        'maxResults': 200,
         'orderBy': 'startTime'
     }).then(function(response) {
         var events = response.result.items;
@@ -164,7 +164,6 @@ function listConnectionNames() {
         'personFields': 'names,emailAddresses,photos,coverPhotos,phoneNumbers,birthdays',
     }).then(function(response) {
         var connections = response.result.connections;
-        //appendPre('Connections:');
         localStorage.setItem('google_contacts', JSON.stringify(connections));
         window.location.href = "/home";
         return response;       

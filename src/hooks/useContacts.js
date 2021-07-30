@@ -75,13 +75,13 @@ function UseContactsProvider({children}) {
           parsed_contacts = google_contacts.map( obj => {
               const email = obj.emailAddresses && (obj.emailAddresses.length >= 1) ? obj.emailAddresses[0].value : null
               const photo = obj.photos && (obj.photos.length >= 1) ? obj.photos[0].url : null
-              const phone = obj.phoneNumbers ? obj.phoneNumbers[0].canonicalForm : undefined
+              const phone = obj.phoneNumbers ? (obj.phoneNumbers[0] || {}).canonicalForm : undefined
               return (
                   {
                       id: obj.resourceName.slice(9,),
                       userId: obj.resourceName.slice(9,),
-                      firstName: obj.names[0].givenName,
-                      lastName: obj.names[0].familyName,
+                      firstName: ((obj.names[0] || {}).givenName) || '',
+                      lastName: ((obj.names[0] || {}).familyName) || '',
                       email: email,
                       body: null,
                       photo: photo,
