@@ -48,7 +48,7 @@ function LandingNav() {
                             </Avatar>
                             <MenuList>
                                 <MenuGroup title="Profile">
-                                    <MenuItem >My Account</MenuItem>
+                                    <MenuItem ><Link to='/settings'>Settings</Link></MenuItem>
                                     <MenuItem >Notifications (5)</MenuItem>
                                 </MenuGroup>
                                 <MenuDivider />

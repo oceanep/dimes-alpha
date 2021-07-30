@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
     Box,
-    Flex
+    Flex,
+    Tabs,
+    TabList,
+    TabPanels,
+    Tab,
+    TabPanel,
 } from "@chakra-ui/react"
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react"
 
 import { MdAddCircle } from 'react-icons/md'
 
@@ -30,9 +34,6 @@ function Home() {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [contactsPerPage] = useState(6);
-
-    // useEffect(() => {
-    // }, [])
 
     // Get current contacts
    const indexOfLastPost = currentPage * contactsPerPage;
