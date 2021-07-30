@@ -69,26 +69,28 @@ function UseContactsProvider({children}) {
         }
       ))
 
-      const google_contacts = JSON.parse(localStorage.getItem("google_contacts"))
-      let parsed_contacts = []
-      if (google_contacts) {
-        parsed_contacts = google_contacts.map( obj => {
-          const email = obj.emailAddresses && (obj.emailAddresses.length >= 1) ? obj.emailAddresses[0].value : null
-          const photo = obj.photos && (obj.photos.length >= 1) ? obj.photos[0].url : null
-
-          return (
-            {
-                id: obj.resourceName.slice(9,),
-                userId: obj.resourceName.slice(9,),
-                name: obj.names[0].displayName,
-                email: email,
-                body: null,
-                photo: photo
-            }
-          )
-        })
-      }
-
+        const google_contacts = JSON.parse(localStorage.getItem("google_contacts"))
+        let parsed_contacts = []
+        if (google_contacts) {
+          parsed_contacts = google_contacts.map( obj => {
+              const email = obj.emailAddresses && (obj.emailAddresses.length >= 1) ? obj.emailAddresses[0].value : null
+              const photo = obj.photos && (obj.photos.length >= 1) ? obj.photos[0].url : null
+              const phone = obj.phoneNumbers ? obj.phoneNumbers[0].canonicalForm : undefined
+              return (
+                  {
+                      id: obj.resourceName.slice(9,),
+                      userId: obj.resourceName.slice(9,),
+                      firstName: obj.names[0].givenName,
+                      lastName: obj.names[0].familyName,
+                      email: email,
+                      body: null,
+                      photo: photo,
+                      phone: phone
+                  }
+              )
+          })
+        }
+        
       const completeContacts = parsed_contacts.concat(newContacts)
 
       console.log('before get contacts dispatch: ', completeContacts)

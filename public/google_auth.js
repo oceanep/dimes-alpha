@@ -161,7 +161,7 @@ function listConnectionNames() {
     gapi.client.people.people.connections.list({
         'resourceName': 'people/me',
         'pageSize': 10,
-        'personFields': 'names,emailAddresses,photos,coverPhotos',
+        'personFields': 'names,emailAddresses,photos,coverPhotos,phoneNumbers,birthdays',
     }).then(function(response) {
         var connections = response.result.connections;
         //appendPre('Connections:');
