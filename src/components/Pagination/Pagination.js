@@ -49,11 +49,11 @@ const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage, min
         :
         pageNumbers.map((number,index) => (
           currentPage == (index+1) ?
-            <a onClick={() => pagination(number)} >
+            <a onClick={() => pagination(number)} key={index} >
               <Circle h='1em' w='1em' bgColor='blue.600' />
             </a>
           :
-            <a onClick={() => pagination(number)} >
+            <a onClick={() => pagination(number)} key={index} >
               <Circle h='1em' w='1em' border='1px' borderColor='blue.400'/>
             </a>
         ))

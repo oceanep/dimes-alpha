@@ -13,58 +13,21 @@ import withMenu from '../withMenu/withMenu'
 import Contacts from '../../components/Contacts/Contacts'
 import Pagination from '../../components/Pagination/Pagination'
 
+import { useContactsState } from '../../hooks/useContacts'
+
 import styles from './Relationships.module.scss'
-
-const google_contacts = JSON.parse(localStorage.getItem("google_contacts"))
-const parsed_contacts = []
-
-function parse_contacts(obj) {
-    var email = null;
-    var photo = null;
-    if (obj.emailAddresses && (obj.emailAddresses.length >= 1)) {
-        email = obj.emailAddresses[0].value;
-    }
-    if (obj.photos && (obj.photos.length >= 1)) {
-        photo = obj.photos[0].url;
-    }
-    parsed_contacts.push({
-        id: obj.resourceName.slice(9,),
-        userId: obj.resourceName.slice(9,),
-        title: obj.names[0].displayName,
-        email: email,
-        body: null,
-        photo: photo
-    })
-}
-
-if (google_contacts) {
-    google_contacts.forEach(parse_contacts);
-}
-
-
 
 function Relationships() {
 
-    const [contactItems, setContacts] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { contacts, loading, error } = useContactsState()
+
     const [currentPage, setCurrentPage] = useState(1);
     const [contactsPerPage] = useState(6);
-
-    useEffect(() => {
-        const fetchContacts = async () => {
-            setLoading(true)
-            //const res = await axios.get('https://jsonplaceholder.typicode.com/posts')
-            setContacts(parsed_contacts);
-            setLoading(false);
-        };
-
-        fetchContacts()
-    }, [])
 
     // Get current contacts
     const indexOfLastPost = currentPage * contactsPerPage;
     const indexOfFirstPost = indexOfLastPost - contactsPerPage;
-    const currentContacts = contactItems.slice(indexOfFirstPost, indexOfLastPost);
+    const currentContacts = contacts.slice(indexOfFirstPost, indexOfLastPost);
 
     //Change page
     const paginate = pageNumber => setCurrentPage(pageNumber)
@@ -80,7 +43,7 @@ function Relationships() {
                 <Contacts type="Relationships" contactItems={currentContacts} />
                 <Pagination
                     contactsPerPage={contactsPerPage}
-                    totalContacts={contactItems.length}
+                    totalContacts={contacts.length}
                     paginate={paginate}
                     currentPage={currentPage}
                 />

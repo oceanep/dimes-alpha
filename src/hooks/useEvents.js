@@ -54,11 +54,12 @@ function UseEventsProvider({children}) {
   const getEvents = async () => {
     dispatch({type: ACTIONS.LOADING})
     try {
-      console.log('in get event: ', userId)
+      // console.log('in get event: ', userId)
       const res = await userEvents.getEvents(userId)
       const newEvents = res.data.data.map( event => {
 
           let timeRange = timeUtils.convertToTime(event.begin_time_unit, event.end_time_unit)
+          let duration = Math.abs(event.end_time_unit - event.begin_time_unit)
           let diff = Math.abs(parseInt(event.begin_time_unit) - parseInt(event.end_time_unit))
           let date = new Date(event.date)
           return {
@@ -68,6 +69,7 @@ function UseEventsProvider({children}) {
             variant: `${ diff == 1 ? 'fifteen' : ''}${ diff == 2 ? 'thirty' : ''}${ diff == 4 ? 'sixty' : ''}`,
             value: `${ diff == 1 ? 'www.google.com' : ''}${ diff == 2 ? 'www.facebook.com' : ''}${ diff == 4 ? 'www.apple.com' : ''}`,
             timeRange: timeRange,
+            duration: duration,
             date: date,
             id: event.id,
             ownerId: event.owner_id,
@@ -76,7 +78,7 @@ function UseEventsProvider({children}) {
           }
         }
       )
-      console.log('before get events dispatch: ', newEvents)
+      // console.log('before get events dispatch: ', newEvents)
       dispatch({ payload: newEvents, type: ACTIONS.FETCHED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
@@ -92,6 +94,7 @@ function UseEventsProvider({children}) {
       const res = await userEvents.createEvent(userId, userId, title, desc, status, beginTime, endTime, date, active)
 
       const timeRange = timeUtils.convertToTime(res.data.data.begin_time_unit, res.data.data.end_time_unit)
+      const duration = Math.abs(res.data.data.end_time_unit - res.data.data.begin_time_unit)
       const diff = Math.abs(parseInt(res.data.data.begin_time_unit) - parseInt(res.data.data.end_time_unit))
       const formatedDate = new Date(res.data.data.date)
 
@@ -101,6 +104,7 @@ function UseEventsProvider({children}) {
         variant: `${ diff == 1 ? 'fifteen' : ''}${ diff == 2 ? 'thirty' : ''}${ diff == 4 ? 'sixty' : ''}`,
         value: `${ diff == 1 ? 'www.google.com' : ''}${ diff == 2 ? 'www.facebook.com' : ''}${ diff == 4 ? 'www.apple.com' : ''}`,
         timeRange: timeRange,
+        duration: duration,
         date: formatedDate,
         id: res.data.data.id,
         ownerId: res.data.data.owner_id,
@@ -108,7 +112,7 @@ function UseEventsProvider({children}) {
         userId: res.data.data.user_id
       }
 
-      console.log('before new event dispatch: ', newEvent)
+      // console.log('before new event dispatch: ', newEvent)
       dispatch({ payload: newEvent, type: ACTIONS.CREATED })
       return newEvent
     } catch (err) {
@@ -121,12 +125,47 @@ function UseEventsProvider({children}) {
   const deleteEvent = async (eventId) => {
     dispatch({type: ACTIONS.LOADING})
     try {
-      console.log('inside delete: ', eventId)
+      // console.log('inside delete: ', eventId)
       const res = await userEvents.deleteEvent(eventId)
       const filteredEvents = state.events.filter(event => event.id !== eventId)
 
-      console.log('filtered events: ', filteredEvents)
+      // console.log('filtered events: ', filteredEvents)
       dispatch({ payload: filteredEvents, type: ACTIONS.DELETED })
+    } catch (err) {
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      console.log(err)
+      alert(err)
+    }
+  }
+
+  const editEvent = async (eventId, title, desc, status = 1, beginTime, endTime, date, active = true) => {
+    dispatch({type: ACTIONS.LOADING})
+    try {
+      const res = await userEvents.updateEvent(eventId, userId, title, desc, status, beginTime, endTime, date, active)
+      console.log('res: ', res)
+      const timeRange = timeUtils.convertToTime(res.data.data.begin_time_unit, res.data.data.end_time_unit)
+      const duration = Math.abs(res.data.data.end_time_unit - res.data.data.begin_time_unit)
+      const diff = Math.abs(parseInt(res.data.data.begin_time_unit) - parseInt(res.data.data.end_time_unit))
+      const formatedDate = new Date(res.data.data.date)
+
+      const updatedEvents = state.events.map( event => res.data.data.id === event.id ?
+        {
+          title: res.data.data.title,
+          desc: res.data.data.description,
+          variant: `${ diff == 1 ? 'fifteen' : ''}${ diff == 2 ? 'thirty' : ''}${ diff == 4 ? 'sixty' : ''}`,
+          value: `${ diff == 1 ? 'www.google.com' : ''}${ diff == 2 ? 'www.facebook.com' : ''}${ diff == 4 ? 'www.apple.com' : ''}`,
+          timeRange: timeRange,
+          duration: duration,
+          date: formatedDate,
+          id: res.data.data.id,
+          ownerId: res.data.data.owner_id,
+          active: res.data.data.active,
+          userId: res.data.data.user_id
+        }
+        : event )
+      console.log('updated events: ', updatedEvents)
+      dispatch({ payload: updatedEvents, type: ACTIONS.FETCHED })
+
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
       console.log(err)
@@ -140,7 +179,7 @@ function UseEventsProvider({children}) {
 
   return (
     <UseEventsContext.Provider value={state}>
-      <UseEventsDispatchContext.Provider value={{ createEvent, deleteEvent }}>
+      <UseEventsDispatchContext.Provider value={{ createEvent, deleteEvent, editEvent }}>
         {children}
       </UseEventsDispatchContext.Provider>
     </UseEventsContext.Provider>
