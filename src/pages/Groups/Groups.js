@@ -10,51 +10,45 @@ import {
 import { MdAddCircle } from 'react-icons/md'
 
 import withMenu from '../withMenu/withMenu'
-import Contacts from '../../components/Contacts/Contacts'
+import GroupsDisplay from '../../components/GroupsDisplay/GroupsDisplay'
 import Pagination from '../../components/Pagination/Pagination'
+
+import { useGroupsState } from '../../hooks/useGroups'
 
 import styles from './Groups.module.scss'
 
 function Groups() {
 
-  const [contactItems, setContacts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { groups, loading, error } = useGroupsState()
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [contactsPerPage] = useState(6);
+  const [groupsPerPage] = useState(6);
 
-  useEffect(() => {
-    const fetchContacts = async () => {
-      setLoading(true)
-      const res = await axios.get('https://jsonplaceholder.typicode.com/posts')
-      setContacts(res.data);
-      setLoading(false);
-    };
 
-    fetchContacts()
-  }, [])
 
   // Get current contacts
- const indexOfLastPost = currentPage * contactsPerPage;
- const indexOfFirstPost = indexOfLastPost - contactsPerPage;
- const currentContacts = contactItems.slice(indexOfFirstPost, indexOfLastPost);
+ const indexOfLastPost = currentPage * groupsPerPage;
+ const indexOfFirstPost = indexOfLastPost - groupsPerPage;
+ const currentGroups = groups.slice(indexOfFirstPost, indexOfLastPost);
 
  //Change page
  const paginate = pageNumber => setCurrentPage(pageNumber)
 
   return (
-    <Flex className="Groups-container" px="30px" pt="15px" pb="60px" h="100%" w="100%" alignItems='center' justifyContent='center'>
-      <Box w="100%" h="100%" maxW="800px" maxH="600" position="relative">
-        <Circle size='40px' shadow='md' position="absolute" right="2%" top="10%">
-          <Icon as={MdAddCircle} />
+    <Flex className="Groups-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
+      <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" background="white" boxShadow="md">
+
+        <Circle size='40px' shadow='md' position="absolute" right="2%" top="2%">
+            <Icon as={MdAddCircle} />
         </Circle>
-        <Contacts type="Groups" contactItems={currentContacts} />
+        <GroupsDisplay type="Groups" groups={currentGroups} />
         <Pagination
-          contactsPerPage={contactsPerPage}
-          totalContacts={contactItems.length}
+          contactsPerPage={groupsPerPage}
+          totalContacts={groups.length}
           paginate={paginate}
           currentPage={currentPage}
         />
-      </Box>
+      </Flex>
     </Flex>
   );
 }

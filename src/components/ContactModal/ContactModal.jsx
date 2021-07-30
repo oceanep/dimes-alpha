@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -30,7 +30,7 @@ import { MdModeEdit } from 'react-icons/md'
 import useToggle from "../../hooks/useToggle"
 import { useContactsDispatch } from '../../hooks/useContacts'
 
-import './ContactModal.module.scss'
+import styles from './ContactModal.module.scss'
 
 function ContactModal({id, contactId, photo, firstName = '', lastName = '', relationType, phone, email}) {
 

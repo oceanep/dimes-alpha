@@ -62,6 +62,7 @@ function UseContactsProvider({children}) {
           lastName: contact.last_name,
           email: contact.email,
           phone: contact.phone,
+          photo: contact.photo,
           invited: contact.invited,
           relationType: contact.relation_type,
           status: contact.status,
@@ -90,7 +91,7 @@ function UseContactsProvider({children}) {
               )
           })
         }
-        
+
       const completeContacts = parsed_contacts.concat(newContacts)
 
       console.log('before get contacts dispatch: ', completeContacts)
@@ -105,7 +106,6 @@ function UseContactsProvider({children}) {
     dispatch({ type: ACTIONS.LOADING })
     try {
       const res = await userContacts.updateContact(id, userId, contactId, firstName, lastName, relationType, phone, email)
-
       const updatedContacts = state.contacts.map( contact => res.data.data.id === contact.id ?
         {
           contactId: res.data.data.contact_id,
@@ -114,6 +114,7 @@ function UseContactsProvider({children}) {
           lastName: res.data.data.last_name,
           email: res.data.data.email,
           phone: res.data.data.phone,
+          photo: contact.photo,
           invited: res.data.data.invited,
           relationType: res.data.data.relation_type,
           status: res.data.data.status,

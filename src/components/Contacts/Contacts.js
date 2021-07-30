@@ -1,4 +1,3 @@
-import {useState} from 'react';
 import {
   useStyleConfig,
   Center,
@@ -13,14 +12,13 @@ import {
   Input,
   HStack
 } from "@chakra-ui/react"
-import { MdArrowForward, MdArrowBack, MdPerson, MdGroup, MdModeEdit, MdMoreVert, MdStarBorder, MdPhone } from 'react-icons/md'
+import { MdArroMdPerson, MdModeEdit, MdMoreVert, MdStarBorder, MdPhone } from 'react-icons/md'
 
 import ContactModal from '../ContactModal/ContactModal'
 
 import styles from './Contacts.module.scss'
 
-function Contacts(props) {
-  const { variant, children, type, contactItems, mini, ...rest } = props
+function Contacts({ variant, children, type, contactItems, mini, ...rest }) {
   const c_styles = useStyleConfig("Contacts", { variant })
 
   return (
@@ -33,11 +31,7 @@ function Contacts(props) {
             return (
               <Flex w={mini ? '' : "100%"} py="10px" direction={ mini ? "column" : "row"} align="center" justifyContent="space-around" key={contact.id}  borderBottom={mini ? '' : "1px"} borderColor="gray.100">
                 <Circle w="75px" overflow="hidden">
-                {type === "Relationships" ?
-                    <img src={ contact.photo ? contact.photo : "http://www.gravatar.com/avatar"} overflow="hidden"/>
-                  :
-                    <Icon as={ MdGroup } boxSize="100px" />
-                }
+                  <img src={ contact.photo ? contact.photo : "http://www.gravatar.com/avatar"} overflow="hidden"/>
                 </Circle>
                 {
                   mini ?
