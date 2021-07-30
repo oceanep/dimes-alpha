@@ -44,13 +44,13 @@ const Settings = () => {
                             <FormControl id="first-name" >
                                 <InputGroup>
                                     <InputLeftAddon children="First Name" />
-                                    <Input placeholder="phone number" />
+                                    <Input placeholder="" />
                                 </InputGroup>
                             </FormControl>
                             <FormControl id="last-name" >
                                 <InputGroup>
                                     <InputLeftAddon children="Last Name" />
-                                    <Input placeholder="phone number" />
+                                    <Input placeholder="" />
                                 </InputGroup>
                             </FormControl>
                         </Stack>

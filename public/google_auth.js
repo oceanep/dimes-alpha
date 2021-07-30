@@ -160,7 +160,7 @@ function listUpcomingEvents() {
 function listConnectionNames() {
     gapi.client.people.people.connections.list({
         'resourceName': 'people/me',
-        'pageSize': 10,
+        'pageSize': 1000,
         'personFields': 'names,emailAddresses,photos,coverPhotos,phoneNumbers,birthdays',
     }).then(function(response) {
         var connections = response.result.connections;
