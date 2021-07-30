@@ -5,7 +5,8 @@ import {
     Box,
     Flex,
     Circle,
-    Icon
+    Icon,
+    Button
 } from "@chakra-ui/react"
 import { MdAddCircle } from 'react-icons/md'
 
@@ -32,6 +33,15 @@ function Relationships() {
     //Change page
     const paginate = pageNumber => setCurrentPage(pageNumber)
 
+    const syncGoogleContacts = () => {
+        if (window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
+            window.listConnectionNames()
+        }
+        else {
+            window.gapi.auth2.getAuthInstance().isSignedIn.get()
+        }
+    }
+
     return (
         <Flex className="relationships-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
             <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" background="white" boxShadow="md">
@@ -47,6 +57,7 @@ function Relationships() {
                     paginate={paginate}
                     currentPage={currentPage}
                 />
+                <Button onClick={syncGoogleContacts}>Sync Google Contacts</Button>
             </Flex>
         </Flex>
     );

@@ -39,6 +39,7 @@ import LinkGcal from './pages/LinkGcal/LinkGcal.jsx'
 import CalendarTest from './pages/CalendarTest/CalendarTest.jsx'
 import PrivacyPage from './pages/Static/PrivacyPage.jsx'
 import TermsPage from './pages/Static/TermsPage.jsx'
+import Settings from './pages/User/Settings.jsx'
 import './App.scss'
 
 function App() {
@@ -62,7 +63,8 @@ function App() {
 
                 <Route exact path="/" component={LandingPage}/>
                 <Route path="/login" component={localStorage.getItem("token") ? Home : Login}></Route>
-                <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
+              <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
+              <Route path="/settings" component={localStorage.getItem("token") ? Settings : Login}></Route>
               <Route path="/:user_id/:event_template_url?" component={UserEventsList}></Route>
 
           </Switch>

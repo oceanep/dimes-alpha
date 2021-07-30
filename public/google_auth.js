@@ -58,13 +58,13 @@ function initSignin() {
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
     // Handle the initial sign-in state.
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    //signoutButton.onclick = handleSignoutClick;
 }
 
 /**
  *  Called when the signed in status changes, to update the UI
  *  appropriately. After a sign-in, the API is called.
  */
+
 
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
@@ -148,7 +148,7 @@ function listUpcomingEvents() {
         'timeMin': (new Date()).toISOString(),
         'showDeleted': false,
         'singleEvents': true,
-        'maxResults': 10,
+        'maxResults': 200,
         'orderBy': 'startTime'
     }).then(function(response) {
         var events = response.result.items;
@@ -160,14 +160,12 @@ function listUpcomingEvents() {
 function listConnectionNames() {
     gapi.client.people.people.connections.list({
         'resourceName': 'people/me',
-        'pageSize': 10,
-        'personFields': 'names,emailAddresses,photos,coverPhotos',
+        'pageSize': 1000,
+        'personFields': 'names,emailAddresses,photos,coverPhotos,phoneNumbers,birthdays',
     }).then(function(response) {
         var connections = response.result.connections;
-        //appendPre('Connections:');
         localStorage.setItem('google_contacts', JSON.stringify(connections));
-        window.location.href = "/home";
-        return response;       
+        window.location.reload();
     });
 }
 

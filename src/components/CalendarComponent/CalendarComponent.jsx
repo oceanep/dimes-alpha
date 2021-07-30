@@ -1,5 +1,12 @@
 import { Calendar, momentLocalizer } from 'react-big-calendar'
-import { Spinner, Flex } from "@chakra-ui/react"
+import {
+    Spinner,
+    Flex,
+    Button,
+    Box,
+    VStack,
+    StackDivider
+} from "@chakra-ui/react"
 import moment from 'moment'
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
@@ -80,26 +87,43 @@ const CalendarComponent = ({ props }) => {
             ))
     };
 
+    const syncGoogleCalendar = () => {
+        if (window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
+            window.listUpcomingEvents(true, "/home")
+            window.location.reload()
+        }
+        else {
+            window.gapi.auth2.getAuthInstance().isSignedIn.get()
+        }
+    }
+
     return (
-        <div>
-            {
-                loading ?
-                    <Flex w="100%" justifyContent="center" align="center">
-                        <Spinner size="xl" color="teal.500" />
-                    </Flex>
-                    :
-                    <DnDCalendar
-                        defaultDate={moment().toDate()}
-                        defaultView="month"
-                        events={calEvents}
-                        localizer={localizer}
-                        onEventDrop={onEventDrop}
-                        onEventResize={onEventResize}
-                        resizable
-                        style={{ height: "650px", width: "800px" }}
-                    />
-            }
-        </div>
+        <VStack
+            divider={<StackDivider borderColor="gray.200" />}
+            spacing={4}
+            align="stretch"
+        >
+            <div>
+                {
+                    loading ?
+                        <Flex w="100%" justifyContent="center" align="center">
+                            <Spinner size="xl" color="teal.500" />
+                        </Flex>
+                        :
+                        <DnDCalendar
+                            defaultDate={moment().toDate()}
+                            defaultView="month"
+                            events={calEvents}
+                            localizer={localizer}
+                            onEventDrop={onEventDrop}
+                            onEventResize={onEventResize}
+                            resizable
+                            style={{ height: "650px", width: "800px" }}
+                        />
+                }
+            </div>
+            <Button onClick={syncGoogleCalendar}>Sync Google Calendar</Button>
+        </VStack>
     );
 };
 

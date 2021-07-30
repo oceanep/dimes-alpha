@@ -45,14 +45,14 @@ function Contacts({ variant, children, type, contactItems, mini, ...rest }) {
                         <Flex align="center" w="60%" justifyContent="flex-start" justifyContent="space-between">
                           <Flex direction="column" textAlign="left" pr="30px">
                             <Text fontSize="md">{`${contact.firstName ? contact.firstName : ''} ${contact.lastName ? contact.lastName : ''}`}</Text>
-                            <Text fontSize="sm">{`Email: ${contact.email ? contact.email : ''}`}</Text>
+                            <Text minW="200px" fontSize="sm">{`Email: ${contact.email ? contact.email : ''}`}</Text>
                           </Flex>
                           <Box textAlign="left">
-                            <Text fontSize="sm">{`Relationships: ${contact.relationType}`}</Text>
+                            <Text minW="200px" fontSize="sm">{`Relationships: ${contact.relationType ? (contact.relationType.charAt(0).toUpperCase() + contact.relationType.slice(1)) : ''}`}</Text>
                           </Box>
                           <Box textAlign="left">
                             <Icon as={ MdPhone } /><Text display="inline-block" fontSize="xs">{contact.phone}</Text>
-                            <Text fontSize="sm">Groups: </Text>
+                            <Text minW="200px" fontSize="sm">Groups: </Text>
                           </Box>
                         </Flex>
                       // :

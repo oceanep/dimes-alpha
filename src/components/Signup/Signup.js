@@ -20,6 +20,7 @@ import { FaGoogle } from "react-icons/fa"
 
 import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
+import GoogleSignin from '../Google/GoogleSignin.jsx'
 
 function Signup() {
     const [showPassword, setShowPassword] = useState(false)
@@ -190,11 +191,8 @@ function Signup() {
                         <Button mt={6} colorScheme="teal" type="submit" variant="ghost">{`${t('header.register')}`}</Button>
                         </Form>
                 )}
-            </Formik>
-            
-            <Button onClick={initSignin} leftIcon={<FaGoogle/>} id="authorize_button">Login with Google</Button>
-            <Button id="signout_button" style={{display:'none'}}>Log Out</Button>
-            <div id='cal'></div>                      
+            </Formik>            
+            <GoogleSignin display_text = "Signup with Google"/>
           </VStack>
       </Center>
       <LandingFooter/>
