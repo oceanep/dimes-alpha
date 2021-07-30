@@ -62,6 +62,7 @@ function UseContactsProvider({children}) {
           lastName: contact.last_name,
           email: contact.email,
           phone: contact.phone,
+          photo: contact.photo,
           invited: contact.invited,
           relationType: contact.relation_type,
           status: contact.status,
@@ -69,30 +70,30 @@ function UseContactsProvider({children}) {
         }
       ))
 
-      const google_contacts = JSON.parse(localStorage.getItem("google_contacts"))
-      let parsed_contacts = []
-      if (google_contacts) {
-        parsed_contacts = google_contacts.map( obj => {
-          const email = obj.emailAddresses && (obj.emailAddresses.length >= 1) ? obj.emailAddresses[0].value : null
-          const photo = obj.photos && (obj.photos.length >= 1) ? obj.photos[0].url : null
+      // const google_contacts = JSON.parse(localStorage.getItem("google_contacts"))
+      // let parsed_contacts = []
+      // if (google_contacts) {
+      //   parsed_contacts = google_contacts.map( obj => {
+      //     const email = obj.emailAddresses && (obj.emailAddresses.length >= 1) ? obj.emailAddresses[0].value : null
+      //     const photo = obj.photos && (obj.photos.length >= 1) ? obj.photos[0].url : null
+      //
+      //     return (
+      //       {
+      //           id: obj.resourceName.slice(9,),
+      //           userId: obj.resourceName.slice(9,),
+      //           name: obj.names[0].displayName,
+      //           email: email,
+      //           body: null,
+      //           photo: photo
+      //       }
+      //     )
+      //   })
+      // }
+      //
+      // const completeContacts = parsed_contacts.concat(newContacts)
 
-          return (
-            {
-                id: obj.resourceName.slice(9,),
-                userId: obj.resourceName.slice(9,),
-                name: obj.names[0].displayName,
-                email: email,
-                body: null,
-                photo: photo
-            }
-          )
-        })
-      }
-
-      const completeContacts = parsed_contacts.concat(newContacts)
-
-      console.log('before get contacts dispatch: ', completeContacts)
-      dispatch({ payload: completeContacts, type: ACTIONS.FETCHED })
+      console.log('before get contacts dispatch: ', newContacts)
+      dispatch({ payload: newContacts, type: ACTIONS.FETCHED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
       alert(err)
@@ -103,7 +104,6 @@ function UseContactsProvider({children}) {
     dispatch({ type: ACTIONS.LOADING })
     try {
       const res = await userContacts.updateContact(id, userId, contactId, firstName, lastName, relationType, phone, email)
-
       const updatedContacts = state.contacts.map( contact => res.data.data.id === contact.id ?
         {
           contactId: res.data.data.contact_id,
@@ -112,6 +112,7 @@ function UseContactsProvider({children}) {
           lastName: res.data.data.last_name,
           email: res.data.data.email,
           phone: res.data.data.phone,
+          photo: contact.photo,
           invited: res.data.data.invited,
           relationType: res.data.data.relation_type,
           status: res.data.data.status,
