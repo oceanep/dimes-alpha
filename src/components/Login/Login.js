@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Center,
     Input,
@@ -26,6 +26,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import GoogleSignin from '../Google/GoogleSignin.jsx'
 
 function Login() {
+
+    useEffect(() => {
+        window.addEventListener('dataLoaded', () => {window.location.href="/home"})        
+    },[])
+    
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)
     let history = useHistory()

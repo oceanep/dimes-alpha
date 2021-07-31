@@ -15,7 +15,6 @@ var signoutButton ; //= document.getElementById('signout_button');
 
 var auth_response;
 
-
 window.google_obj = undefined;
 
 /**
@@ -39,7 +38,7 @@ function initClient() {
         scope: SCOPES
     }).then(function() {
         // Listen for sign-in state changes.
-        //gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
         // Handle the initial sign-in state.
         //updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
         //
@@ -55,7 +54,7 @@ function initSignin() {
     //signoutButton = document.getElementById('signout_button');
     authorizeButton.onclick = handleAuthClick;
 
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+    //gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
     // Handle the initial sign-in state.
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 }
@@ -65,7 +64,6 @@ function initSignin() {
  *  appropriately. After a sign-in, the API is called.
  */
 
-
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         //authorizeButton.style.display = 'none';
@@ -74,7 +72,7 @@ function updateSigninStatus(isSignedIn) {
         listUpcomingEvents();
         listConnectionNames();
     } else {
-        console.log("logged in");
+        console.log("not logged in");
         //authorizeButton.style.display = 'block';
         //signoutButton.style.display = 'none';
     }
@@ -159,6 +157,12 @@ function listUpcomingEvents() {
     });
 }
 
+var loadEvent = new CustomEvent('dataLoaded', {
+    data: {
+        loaded: true
+    }
+});
+
 function listConnectionNames() {
     gapi.client.people.people.connections.list({
         'resourceName': 'people/me',
@@ -166,9 +170,11 @@ function listConnectionNames() {
         'personFields': 'names,emailAddresses,photos,coverPhotos,phoneNumbers,birthdays',
     }).then(function(response) {
         var connections = response.result.connections;
-        localStorage.setItem('google_contacts', JSON.stringify(connections));
-        window.location.href = "/home";
-    });
+        localStorage.setItem('google_contacts', JSON.stringify(connections))
+        console.log("getting your data!", connections);
+    }).then(() => {     
+        window.dispatchEvent(loadEvent)
+    })
 }
 
 const asyncLocalStorage = {

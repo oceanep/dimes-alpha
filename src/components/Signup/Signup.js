@@ -23,6 +23,11 @@ import LandingFooter from '../LandingFooter/LandingFooter'
 import GoogleSignin from '../Google/GoogleSignin.jsx'
 
 function Signup() {
+
+    useEffect(() => {
+        window.addEventListener('dataLoaded', () => {window.location.href="/home"})        
+    },[])
+    
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
     const handlePasswordClick = () => setShowPassword(!showPassword)
