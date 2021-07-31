@@ -87,6 +87,24 @@ const CalendarComponent = ({ props }) => {
             ))
     };
 
+    const today = new Date()
+    const min = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        8
+    )
+
+    // end time 5:00pm
+    const max = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        23
+    )
+
+
+
     const syncGoogleCalendar = () => {
         if (window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
             window.listUpcomingEvents(true, "/home")
@@ -107,18 +125,20 @@ const CalendarComponent = ({ props }) => {
                 {
                     loading ?
                         <Flex w="100%" justifyContent="center" align="center">
-                            <Spinner size="xl" color="teal.500" />
+                            <Spinner size="xl" color="#4F9594" />
                         </Flex>
                         :
                         <DnDCalendar
                             defaultDate={moment().toDate()}
-                            defaultView="month"
+                            defaultView="week"
                             events={calEvents}
                             localizer={localizer}
                             onEventDrop={onEventDrop}
                             onEventResize={onEventResize}
+                            min={min}
+                            max={max}
                             resizable
-                            style={{ height: "650px", width: "800px" }}
+                            style={{ height: "750px", width: "850px" }}
                         />
                 }
             </div>
