@@ -36,7 +36,7 @@ function Groups() {
 
   return (
     <Flex className="Groups-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
-      <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" background="white" boxShadow="md">
+      <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mb="60px" py="30px" background="white" boxShadow="md">
 
         <Circle size='40px' shadow='md' position="absolute" right="2%" top="2%">
             <Icon as={MdAddCircle} />

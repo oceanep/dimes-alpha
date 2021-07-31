@@ -34,7 +34,7 @@ const Settings = () => {
     return (
         <Box>
             <Flex className="home-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
-                <Flex minW='800px' w="1200px" flexDirection="column" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
+                <Flex minW='800px' w="1200px" flexDirection="column" justifyContent="space-between" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
                     <VStack
                         divider={<StackDivider borderColor="gray.200" />}
                         spacing={4}

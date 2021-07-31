@@ -43,14 +43,14 @@ function LandingNav() {
                             zindex="999"
                         >
                             <Avatar size="md" src={photo} id="menuavi">
-                                <AvatarBadge boxSize="1.25em" bg="green.500">
+                                {/* <AvatarBadge boxSize="1.25em" bg="green.500">
                                     5
-                                </AvatarBadge>
+                                    </AvatarBadge> */}
                             </Avatar>
                             <MenuList>
                                 <MenuGroup title="Profile">
                                     <MenuItem ><Link to='/settings'>Settings</Link></MenuItem>
-                                    <MenuItem >Notifications (5)</MenuItem>
+                                    <MenuItem ><Link to='/notifications'>Notifications</Link></MenuItem>
                                 </MenuGroup>
                                 <MenuDivider />
                                 <MenuGroup title="Help">
