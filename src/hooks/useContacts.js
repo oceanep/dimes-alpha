@@ -74,8 +74,8 @@ function UseContactsProvider({children}) {
         let parsed_contacts = []
         if (google_contacts) {
           parsed_contacts = google_contacts.map( obj => {
-              const email = obj.emailAddresses && (obj.emailAddresses.length >= 1) ? obj.emailAddresses[0].value : null
-              const photo = obj.photos && (obj.photos.length >= 1) ? obj.photos[0].url : null
+              const email = obj.emailAddresses && (obj.emailAddresses.length >= 1) ? (obj.emailAddresses[0] || {}).value : null
+              const photo = obj.photos && (obj.photos.length >= 1) ? (obj.photos[0] || {}).url : null
               const phone = obj.phoneNumbers ? (obj.phoneNumbers[0] || {}).canonicalForm : undefined
               return (
                   {

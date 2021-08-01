@@ -49,7 +49,6 @@ function App() {
     <ChakraProvider theme={theme}>
       <Box textAlign="center" fontSize="xl">
         <Grid minH="100vh" minW="10vh" >
-            <ColorModeSwitcher justifySelf="flex-end" pos="absolute" top="15px" right="0"/>
             <Switch>
               <Route path="/home" component={localStorage.getItem("token") ? Home : LandingPage}></Route>
               <Route path="/calendar" component={localStorage.getItem("token") ? Home : CalendarTest}></Route>
