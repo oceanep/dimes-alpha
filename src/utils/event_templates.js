@@ -7,11 +7,10 @@ let headers = {
 
 const eventTemplates = {
   async getTemplates(id) {
-    let url = `${api_endpoint}/event_templates`;
+    let url = `${api_endpoint}/users/event_templates/${id}`;
     try {
       let res = await axios.get(url, {
         params: {
-          id: id
         }
       }, headers)
       return res
