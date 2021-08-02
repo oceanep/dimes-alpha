@@ -67,7 +67,7 @@ function UseGroupsProvider({children}) {
           members: []
         }
       ))
-      console.log('before get groups dispatch: ', newGroups)
+      // console.log('before get groups dispatch: ', newGroups)
       dispatch({ payload: newGroups, type: ACTIONS.FETCHED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
@@ -90,6 +90,7 @@ function UseGroupsProvider({children}) {
             memberId: member.user_id,
             firstName: firstName,
             lastName: lastName,
+            email: email,
             photo: photo,
             relationType: relationType
           }
@@ -106,13 +107,67 @@ function UseGroupsProvider({children}) {
     }
   }
 
+  const updateGroup = async (groupId, name, photo, newMembers, deletedMembers, contacts) => {
+    dispatch({ type: ACTIONS.LOADING })
+    try {
+      const groupRes = await userGroups.editGroup(groupId, name, photo)
+      console.log('group update res: ', groupRes)
+      const newMemRes = newMembers.length > 0 ? await Promise.all(newMembers.map( async (member) => {
+        let res = await userGroups.createGroupMember(groupId, member)
+        return res.data.data
+      } )) : []
+      console.log('new members res: ', newMemRes)
+      const deletedMemRes = deletedMembers.length > 0 ? await Promise.all(deletedMembers.map( async (member) => {
+        let res = await userGroups.deleteGroupMember(member)
+        return res.data
+      } )) : []
+      console.log('deleteMemRes: ', deletedMemRes)
+
+      const oldMembers = state.groups.find( group => group.id === groupId ).members
+      const filteredMembers = oldMembers.filter( member => !deletedMemRes.includes(member.id) )
+      console.log('filtered deleted members: ', filteredMembers)
+      const mappedNewMembers = newMemRes.map( member => {
+        const {firstName, lastName, email, photo, relationType} = contacts.find( contact => contact.contactId === member.user_id) || {}
+        return (
+          {
+            id: member.id,
+            groupId: member.user_group_id,
+            memberId: member.user_id,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            photo: photo,
+            relationType: relationType
+          }
+        )
+      })
+      const updatedMembers = filteredMembers.concat(mappedNewMembers)
+
+      const updatedGroups = state.groups.map( group => groupRes.data.data.id === group.id ?
+        {
+          id: groupRes.data.data.id,
+          name: groupRes.data.data.name,
+          userId: groupRes.data.data.user_id,
+          members: updatedMembers
+        }
+        : group )
+
+      console.log('updated groups: ', updatedGroups)
+      dispatch({ payload: updatedGroups, type: ACTIONS.FETCHED })
+    } catch (err) {
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      throw err
+      alert(err)
+    }
+  }
+
   useEffect( () => {
     getGroups()
   },[])
 
   return (
     <UseGroupsContext.Provider value={state}>
-      <UseGroupsDispatchContext.Provider value={{setGroupMembers}}>
+      <UseGroupsDispatchContext.Provider value={{setGroupMembers, updateGroup}}>
         {children}
       </UseGroupsDispatchContext.Provider>
     </UseGroupsContext.Provider>

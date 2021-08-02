@@ -22,7 +22,6 @@ import styles from './GroupsDisplay.module.scss'
 function GroupsDisplay({groups}) {
 
   const { contacts } = useContactsState()
-  console.log('contacts in groups: ', contacts)
 
   return (
     <>
