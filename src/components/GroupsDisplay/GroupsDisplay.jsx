@@ -29,12 +29,14 @@ function GroupsDisplay({groups}) {
       <Box background="white" w="100%" pb="20px">
         <Flex direction="row" justifyContent="flex-start" align="center" flexWrap="wrap">
           {
-            groups.map((group, index) => (
+            groups.map((group, index) => {
+              // console.log("group id in display: ", group.id)
+              return (
               <Flex key={group.id} direction="column" justifyContent="center" align="center" w="33%" mt="25px">
                 <GroupModal groupName={group.name} groupId={group.id} members={group.members} contacts={contacts}/>
                 <Text fontSize="md" color="gray.600" mt="5px">{group.name}</Text>
               </Flex>
-            ))
+            )})
           }
         </Flex>
       </Box>

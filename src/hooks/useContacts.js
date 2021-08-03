@@ -102,6 +102,33 @@ function UseContactsProvider({children}) {
     }
   }
 
+  const createContact = async (contactId, firstName, lastName, relationType, phone, email) => {
+    dispatch({ type: ACTIONS.LOADING })
+    try {
+      const res = await userContacts.createContact(contactId, userId, firstName, lastName, relationType, phone, email)
+
+      const newContact = {
+        contactId: res.data.data.contact_id,
+        id: res.data.data.id,
+        firstName: res.data.data.first_name,
+        lastName: res.data.data.last_name,
+        email: res.data.data.email,
+        phone: res.data.data.phone,
+        photo: res.data.data.photo || '',
+        invited: res.data.data.invited,
+        relationType: res.data.data.relation_type,
+        status: res.data.data.status,
+        userId: res.data.data.user_id
+      }
+
+      dispatch({ payload: newContact, type: ACTIONS.CREATED })
+      return newContact
+    } catch (err) {
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      alert(err)
+    }
+  }
+
   const editContact = async (id, contactId, firstName, lastName, relationType, phone, email) => {
     dispatch({ type: ACTIONS.LOADING })
     try {
@@ -128,13 +155,26 @@ function UseContactsProvider({children}) {
     }
   }
 
+  const deleteContact = async(id) => {
+    dispatch({ type: ACTIONS.LOADING })
+    try {
+      const deletedId = await userContacts.deleteContact(id)
+      const filteredContacts = state.contacts.filter( contact => contact.id !== deletedId.data )
+
+      dispatch({ payload: filteredContacts, type: ACTIONS.DELETED })
+    } catch (err) {
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      alert(err)
+    }
+  }
+
   useEffect( () => {
     getContacts()
   },[])
 
   return (
     <UseContactsContext.Provider value={state}>
-      <UseContactsDispatchContext.Provider value={{editContact}}>
+      <UseContactsDispatchContext.Provider value={{editContact, createContact, deleteContact}}>
         {children}
       </UseContactsDispatchContext.Provider>
     </UseContactsContext.Provider>
