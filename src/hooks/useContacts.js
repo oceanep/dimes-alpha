@@ -62,7 +62,7 @@ function UseContactsProvider({children}) {
           lastName: contact.last_name,
           email: contact.email,
           phone: contact.phone,
-          photo: contact.photo,
+          photo: contact.photo || '',
           invited: contact.invited,
           relationType: contact.relation_type,
           status: contact.status,
@@ -96,7 +96,7 @@ function UseContactsProvider({children}) {
 
       const completeContacts = parsed_contacts.concat(newContacts)
 
-      console.log('before get contacts dispatch: ', completeContacts)
+      // console.log('before get contacts dispatch: ', completeContacts)
       dispatch({ payload: completeContacts, type: ACTIONS.FETCHED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
@@ -116,7 +116,7 @@ function UseContactsProvider({children}) {
           lastName: res.data.data.last_name,
           email: res.data.data.email,
           phone: res.data.data.phone,
-          photo: contact.photo,
+          photo: contact.photo || '',
           invited: res.data.data.invited,
           relationType: res.data.data.relation_type,
           status: res.data.data.status,

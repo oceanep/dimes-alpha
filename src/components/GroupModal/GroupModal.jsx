@@ -10,7 +10,6 @@ import {
     useDisclosure,
     Flex,
     HStack,
-    VStack,
     Spacer,
     Text,
     Textarea,
@@ -27,25 +26,106 @@ import {
     Heading,
     Circle
 } from "@chakra-ui/react"
-import { MdGroup } from 'react-icons/md'
+import { MdGroup, MdModeEdit, MdDeleteForever, MdAddCircle, MdUndo } from 'react-icons/md'
 
 import useToggle from "../../hooks/useToggle"
 import { useGroupsDispatch } from "../../hooks/useGroups"
 
 import styles from './GroupModal.module.scss'
 
-function GroupModal({groupName, groupId, photo, members, contacts, icon}) {
+function GroupModal({groupName, groupId, photo, members, contacts}) {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [editable: state, toggleEdit: toggle ] = useToggle()
+  const { setGroupMembers, updateGroup } = useGroupsDispatch()
 
-  const { setGroupMembers } = useGroupsDispatch()
+  const [newGroupName, setGroupName] = useState(groupName)
+  const [newPhoto, setPhoto] = useState(photo)
+  const [newMembers, setNewMembers] =  useState([])
+  const [deleteMembers, setDeleteMembers] = useState([])
+  const [select, setSelect] = useState(null)
 
   const openModal = () => {
     setGroupMembers(groupId, contacts)
     onOpen()
   }
 
+  const savable = () => (newGroupName != groupName || newPhoto != photo || newMembers.length > 0 || deleteMembers.length > 0)
+
+  const cancelNewMember = (id) => {
+    const newArr = newMembers.filter( member => !(member === id))
+    setNewMembers(newArr)
+  }
+
+  const deleteMember = (id) => {
+    if ( !deleteMembers.includes(id) ) {
+      const newArr = [...deleteMembers, parseInt(id)]
+      setDeleteMembers(newArr)
+    }
+  }
+
+  const undoDelete = (id) => {
+    console.log('undo delete id: ', id)
+    const newArr = deleteMembers.filter( member => !(member === id))
+    console.log('undo delete new arr: ', newArr)
+    setDeleteMembers(newArr)
+  }
+
+  const onSave = async () => {
+    const res = await updateGroup(groupId, newGroupName, newPhoto, newMembers, deleteMembers, contacts)
+    setNewMembers([])
+    setDeleteMembers([])
+    toggleEdit()
+  }
+
+  const membersItem = (member, index, newM = false) => (
+    <Flex key={member.memberId || member.contactId} px="30px" py="10px" align="center" w="100%" justifyContent="space-between" align="center" borderTop={index === 0 ? "1px solid" : "none"} borderBottom="1px solid" borderColor="gray.100" background={ newM ? "green.100" : deleteMembers.includes(+member.id) ? "red.50" : "none"}>
+        <Circle w="36px" mx="5px" overflow="hidden">
+          <img src={ member.photo ? member.photo : "http://www.gravatar.com/avatar"} overflow="hidden"/>
+        </Circle>
+        <Box minW="140px">
+          <Text fontSize="md">{`${member.firstName ? member.firstName : ''} ${member.lastName ? member.lastName : ''}`}</Text>
+        </Box>
+        <Box minW="120px">
+          <Text fontSize="sm">{`${member.email ? member.email : ''}`}</Text>
+        </Box>
+        <Box minW="80px">
+          <Text fontSize="sm">{`${member.relationType}`}</Text>
+        </Box>
+    </Flex>
+  )
+
+  const editMembersItem = (member, index, onMemberDelete) => (
+    <Flex key={member.memberId || member.contactId} px="30px" py="10px" align="center" w="100%" justifyContent="space-between" align="center" borderTop={index === 0 ? "1px solid" : "none"} borderBottom="1px solid" borderColor="gray.100">
+        <Circle w="36px" mx="5px" overflow="hidden">
+          <img src={ member.photo ? member.photo : "http://www.gravatar.com/avatar"} overflow="hidden"/>
+        </Circle>
+        <Box minW="120px">
+          <Text fontSize="md">{`${member.firstName ? member.firstName : ''} ${member.lastName ? member.lastName : ''}`}</Text>
+        </Box>
+        <Box minW="100px">
+          <Text fontSize="sm">{`${member.email ? member.email : ''}`}</Text>
+        </Box>
+        <Box minW="80px" textAlign="center">
+          <Text fontSize="sm">{`${member.relationType}`}</Text>
+        </Box>
+        <Box minW="40px">
+          {
+            deleteMembers.includes(+member.id) ?
+              <IconButton onClick={ () => undoDelete(member.id)} colorScheme="green" variant="ghost" icon={<MdUndo/>} />
+            :
+              <IconButton onClick={ () => onMemberDelete(member.id || member.contactId)} colorScheme="red" variant="ghost" icon={<MdDeleteForever/>} />
+          }
+        </Box>
+    </Flex>
+  )
+
+  const filteredContacts = () => {
+    const currentMembers = members.map( member => member.memberId)
+    return contacts.filter( c => !newMembers.includes(c.contactId) && !currentMembers.includes(c.contactId)).map( contact => (
+      <option key={contact.contactId} value={contact.contactId} >{`${contact.firstName} ${contact.lastName}`}</option>
+    ))
+  }
 
   return (
     <>
@@ -78,36 +158,87 @@ function GroupModal({groupName, groupId, photo, members, contacts, icon}) {
                       </Circle>
                     </Flex>
                   </Box>
-                  <Heading size="md">{groupName}</Heading>
+                  {
+                    !editable ?
+                      <Heading my="15px" size="md">{newGroupName}</Heading>
+                    :
+                      <Input
+                        size="md"
+                        my="15px"
+                        maxW="200px"
+                        placeholder={'First Name'}
+                        value={newGroupName}
+                        onChange={ e => setGroupName(e.target.value)}
+                        isRequired
+                      />
+                  }
                   <Flex w="100%" direction="column" justifyContent="space-around" align="center">
                     {
-                      members.length > 0 ?
-                        members.map( member => (
-                          <Flex mb="15px" px="30px" align="center" w="100%" justifyContent="space-between" align="center" borderBottom="1px solid" borderColor="gray.100">
-                              <Circle w="36px" overflow="hidden">
-                                <img src={ member.photo ? member.photo : "http://www.gravatar.com/avatar"} overflow="hidden"/>
-                              </Circle>
-                              <Box minW="120px">
-<Text fontSize="md">{`${member.firstName ? member.firstName : ''} ${member.lastName ? member.lastName : ''}`}</Text>
-                              </Box>
-                              <Box minW="100px">
-<Text fontSize="sm">{`Email: ${member.email ? member.email : ''}`}</Text>
-                              </Box>
-                              <Box minW="180px">
-<Text fontSize="sm">{`Relationships: ${member.relationType}`}</Text>
-                              </Box>
-
-                          </Flex>
-                        ))
+                      !editable ?
+                        members.length > 0 ?
+                          members.map( (member, index) => (
+                            membersItem(member, index)
+                          ))
+                        :
+                          null
                       :
+                        members.length > 0 ?
+                          members.map( (member, index) => (
+                            editMembersItem(member, index, deleteMember)
+                          ))
+                        :
+                          null
+                    }
+                    {
+                      !editable ?
+                        newMembers.map( (member, index) => {
+                          const c_obj = contacts.find( contact => member === contact.contactId )
+                          return (
+                            membersItem( c_obj, index+1, true)
+                          )
+                        })
+                      :
+                        newMembers.map( (member, index) => {
+                          const c_obj = contacts.find( contact => member === contact.contactId )
+                          return (
+                            editMembersItem( c_obj, index+1, cancelNewMember)
+                          )
+                        })
+                    }
+                    {
+                      !editable ?
                         null
+                      :
+                        <Flex px="30px" py="10px" align="center" w="100%" justifyContent="space-between" align="center" borderBottom="1px solid" borderColor="gray.100">
+                          <Select
+                            mr="30px"
+                            placeholder="Contacts"
+                            onChange={ e => setSelect(e.target.value)}
+                          >
+                            {filteredContacts()}
+                          </Select>
+                          <Button variant="outline" leftIcon={<MdAddCircle/>} onClick={ () => setNewMembers([...newMembers, parseInt(select)])}>Add</Button>
+                        </Flex>
                     }
                   </Flex>
                 </Flex>
               </ModalBody>
 
               <ModalFooter>
-                  <Button colorScheme="blue" onClick={() => console.log()}>Save</Button>
+                {
+                  !editable ?
+                    <HStack spacing="6">
+                      <Button leftIcon={<MdModeEdit/>} colorScheme="blue" onClick={toggleEdit}>Edit</Button>
+                      { savable() ? <Button variant="outline" onClick={onSave}>Save</Button> : null }
+                    </HStack>
+                  :
+                    <HStack spacing="6" w="100%">
+                      <Button colorScheme="red" onClick={() => console.log()}>Delete Group</Button>
+                      <Spacer/>
+                      <Button variant="outline" colorScheme="red" onClick={toggleEdit}>Cancel</Button>
+                      <Button variant="outline" onClick={onSave}>Save</Button>
+                    </HStack>
+                }
               </ModalFooter>
           </ModalContent>
       </Modal>
