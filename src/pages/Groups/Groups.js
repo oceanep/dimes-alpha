@@ -12,14 +12,17 @@ import { MdAddCircle } from 'react-icons/md'
 import withMenu from '../withMenu/withMenu'
 import GroupsDisplay from '../../components/GroupsDisplay/GroupsDisplay'
 import Pagination from '../../components/Pagination/Pagination'
+import GroupModal from "../../components/GroupModal/GroupModal"
 
 import { useGroupsState } from '../../hooks/useGroups'
+import { useContactsState } from "../../hooks/useContacts"
 
 import styles from './Groups.module.scss'
 
 function Groups() {
 
   const { groups, loading, error } = useGroupsState()
+  const { contacts } = useContactsState()
 
   const [currentPage, setCurrentPage] = useState(1);
   const [groupsPerPage] = useState(6);
@@ -37,10 +40,9 @@ function Groups() {
   return (
     <Flex className="Groups-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
       <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mb="60px" py="30px" background="white" boxShadow="md">
-
-        <Circle size='40px' shadow='md' position="absolute" right="2%" top="2%">
-            <Icon as={MdAddCircle} />
-        </Circle>
+        <Box position="absolute" right="2%" top="2%">
+          <GroupModal type='create' contacts={contacts}/>
+        </Box>
         <GroupsDisplay type="Groups" groups={currentGroups} />
         <Pagination
           contactsPerPage={groupsPerPage}

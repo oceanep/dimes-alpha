@@ -107,25 +107,67 @@ function UseGroupsProvider({children}) {
     }
   }
 
-  const updateGroup = async (groupId, name, photo, newMembers, deletedMembers, contacts) => {
+  const createGroup = async (name, photo, newMembers, contacts) => {
     dispatch({ type: ACTIONS.LOADING })
     try {
-      const groupRes = await userGroups.editGroup(groupId, name, photo)
-      console.log('group update res: ', groupRes)
+      const groupRes = await userGroups.createGroup(name, userId)
+      const groupId = groupRes.data.data.id
       const newMemRes = newMembers.length > 0 ? await Promise.all(newMembers.map( async (member) => {
         let res = await userGroups.createGroupMember(groupId, member)
         return res.data.data
       } )) : []
-      console.log('new members res: ', newMemRes)
+
+      const mappedNewMembers = newMemRes.map( member => {
+        const {firstName, lastName, email, photo, relationType} = contacts.find( contact => contact.contactId === member.user_id) || {}
+        return (
+          {
+            id: member.id,
+            groupId: member.user_group_id,
+            memberId: member.user_id,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            photo: photo,
+            relationType: relationType
+          }
+        )
+      })
+
+      const newGroup = {
+        id: groupRes.data.data.id,
+        name: groupRes.data.data.name,
+        userId: groupRes.data.data.user_id,
+        members: mappedNewMembers
+      }
+
+      dispatch({ payload: newGroup, type: ACTIONS.CREATED })
+      return newGroup
+    } catch (err){
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      // throw err
+      alert(err)
+    }
+  }
+
+  const updateGroup = async (groupId, name, photo, newMembers, deletedMembers, contacts) => {
+    dispatch({ type: ACTIONS.LOADING })
+    try {
+      const groupRes = await userGroups.editGroup(groupId, name, photo)
+      // console.log('group update res: ', groupRes)
+      const newMemRes = newMembers.length > 0 ? await Promise.all(newMembers.map( async (member) => {
+        let res = await userGroups.createGroupMember(groupId, member)
+        return res.data.data
+      } )) : []
+      // console.log('new members res: ', newMemRes)
       const deletedMemRes = deletedMembers.length > 0 ? await Promise.all(deletedMembers.map( async (member) => {
         let res = await userGroups.deleteGroupMember(member)
         return res.data
       } )) : []
-      console.log('deleteMemRes: ', deletedMemRes)
+      // console.log('deleteMemRes: ', deletedMemRes)
 
       const oldMembers = state.groups.find( group => group.id === groupId ).members
       const filteredMembers = oldMembers.filter( member => !deletedMemRes.includes(member.id) )
-      console.log('filtered deleted members: ', filteredMembers)
+      // console.log('filtered deleted members: ', filteredMembers)
       const mappedNewMembers = newMemRes.map( member => {
         const {firstName, lastName, email, photo, relationType} = contacts.find( contact => contact.contactId === member.user_id) || {}
         return (
@@ -152,8 +194,21 @@ function UseGroupsProvider({children}) {
         }
         : group )
 
-      console.log('updated groups: ', updatedGroups)
       dispatch({ payload: updatedGroups, type: ACTIONS.FETCHED })
+    } catch (err) {
+      dispatch({ payload: err, type: ACTIONS.ERROR })
+      throw err
+      alert(err)
+    }
+  }
+
+  const deleteGroup = async (groupId) => {
+    dispatch({type: ACTIONS.LOADING})
+    try {
+      const deletedId = await userGroups.deleteGroup(groupId)
+      const filteredGroups = state.groups.filter(group => group.id !== deletedId.data)
+
+      dispatch({ payload: filteredGroups, type: ACTIONS.DELETED})
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
       throw err
@@ -167,7 +222,7 @@ function UseGroupsProvider({children}) {
 
   return (
     <UseGroupsContext.Provider value={state}>
-      <UseGroupsDispatchContext.Provider value={{setGroupMembers, updateGroup}}>
+      <UseGroupsDispatchContext.Provider value={{setGroupMembers, updateGroup, createGroup, deleteGroup}}>
         {children}
       </UseGroupsDispatchContext.Provider>
     </UseGroupsContext.Provider>

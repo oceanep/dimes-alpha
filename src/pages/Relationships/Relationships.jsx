@@ -13,6 +13,7 @@ import { MdAddCircle } from 'react-icons/md'
 import withMenu from '../withMenu/withMenu'
 import Contacts from '../../components/Contacts/Contacts'
 import Pagination from '../../components/Pagination/Pagination'
+import ContactModal from '../../components/ContactModal/ContactModal'
 
 import { useContactsState } from '../../hooks/useContacts'
 
@@ -46,9 +47,9 @@ function Relationships() {
         <Flex className="relationships-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
             <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mb="60px" py="30px" background="white" boxShadow="md">
 
-                <Circle size='40px' shadow='md' position="absolute" right="2%" top="2%">
-                    <Icon as={MdAddCircle} />
-                </Circle>
+                <Box position="absolute" right="2%" top="2%">
+                  <ContactModal type="create"/>
+                </Box>
 
                 <Contacts type="Relationships" contactItems={currentContacts} />
                 <Pagination

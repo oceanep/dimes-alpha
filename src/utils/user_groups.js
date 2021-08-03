@@ -37,8 +37,36 @@ const userGroups = {
     }
   },
 
+  async createGroup(name, userId) {
+    let url = `${api_endpoint}/user_groups`
+    try {
+      let res = await axios.post(url, {
+        "user_groups": {
+          "name": name,
+          "user_id": userId
+        }
+      }, headers)
+      return res
+    } catch (err){
+      alert('Group Creation Failed')
+      return err
+    }
+  },
+
+  async deleteGroup(groupId) {
+    let url = `${api_endpoint}/user_groups/${groupId}`
+    try {
+      let res = await axios.delete(url, headers)
+      return res
+    } catch (err){
+      alert('Group Delete Failed')
+      return err
+    }
+  },
+
   async getGroupMembers(groupId) {
-    let url = `${api_endpoint}/user_group_members`;
+    // /user_groups/members/:id
+    let url = `${api_endpoint}/user_groups/members/${groupId}`;
     try {
       let res = await axios.get(url, {
         params: {

@@ -33,19 +33,22 @@ import { useGroupsDispatch } from "../../hooks/useGroups"
 
 import styles from './GroupModal.module.scss'
 
-function GroupModal({groupName, groupId, photo, members, contacts}) {
+function GroupModal({type, groupName, groupId, photo, members, contacts}) {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [editable: state, toggleEdit: toggle ] = useToggle()
-  const { setGroupMembers, updateGroup } = useGroupsDispatch()
+  const [editable: state, toggleEdit: toggle ] = useToggle(type !== 'edit')
+  const { setGroupMembers, updateGroup, createGroup, deleteGroup } = useGroupsDispatch()
 
   const [newGroupName, setGroupName] = useState(groupName)
   const [newPhoto, setPhoto] = useState(photo)
+  // const [members, setMembers] = useState(groupMembers)
   const [newMembers, setNewMembers] =  useState([])
   const [deleteMembers, setDeleteMembers] = useState([])
   const [select, setSelect] = useState(null)
+  const [saved, setSaved] = useState(false)
 
-  const openModal = () => {
+  const openEditModal = () => {
+    // console.log("group id: ", groupId)
     setGroupMembers(groupId, contacts)
     onOpen()
   }
@@ -65,17 +68,27 @@ function GroupModal({groupName, groupId, photo, members, contacts}) {
   }
 
   const undoDelete = (id) => {
-    console.log('undo delete id: ', id)
+    // console.log('undo delete id: ', id)
     const newArr = deleteMembers.filter( member => !(member === id))
-    console.log('undo delete new arr: ', newArr)
+    // console.log('undo delete new arr: ', newArr)
     setDeleteMembers(newArr)
   }
 
   const onSave = async () => {
-    const res = await updateGroup(groupId, newGroupName, newPhoto, newMembers, deleteMembers, contacts)
-    setNewMembers([])
-    setDeleteMembers([])
+
+    if (type === 'edit') {
+      const res = await updateGroup(groupId, newGroupName, newPhoto, newMembers, deleteMembers, contacts)
+      setNewMembers([])
+      setDeleteMembers([])
+    } else {
+      const res = await createGroup(newGroupName, newPhoto, newMembers, contacts)
+      setSaved(true)
+    }
     toggleEdit()
+  }
+
+  const onDelete = async () => {
+    const res = await deleteGroup(groupId)
   }
 
   const membersItem = (member, index, newM = false) => (
@@ -114,7 +127,7 @@ function GroupModal({groupName, groupId, photo, members, contacts}) {
             deleteMembers.includes(+member.id) ?
               <IconButton onClick={ () => undoDelete(member.id)} colorScheme="green" variant="ghost" icon={<MdUndo/>} />
             :
-              <IconButton onClick={ () => onMemberDelete(member.id || member.contactId)} colorScheme="red" variant="ghost" icon={<MdDeleteForever/>} />
+              <IconButton onClick={ () => onMemberDelete(member.contactId || member.id )} colorScheme="red" variant="ghost" icon={<MdDeleteForever/>} />
           }
         </Box>
     </Flex>
@@ -129,11 +142,20 @@ function GroupModal({groupName, groupId, photo, members, contacts}) {
 
   return (
     <>
-      <button onClick={openModal}>
-        <Circle w="200px" overflow="hidden" border="1px solid" borderColor="gray.100">
-          <Icon as={ MdGroup } boxSize="200px" background="gray.50"/>
-        </Circle>
-      </button>
+      {
+        type === 'edit' ?
+          <button onClick={openEditModal}>
+            <Circle w="200px" overflow="hidden" border="1px solid" borderColor="gray.100">
+              <Icon as={ MdGroup } boxSize="200px" background="gray.50"/>
+            </Circle>
+          </button>
+        :
+          <button onClick={onOpen}>
+            <Circle size='40px' shadow='md'>
+                <Icon as={MdAddCircle} />
+            </Circle>
+          </button>
+      }
 
       <Modal isOpen={isOpen} onClose={onClose} size='lg'>
           <ModalOverlay />
@@ -200,6 +222,7 @@ function GroupModal({groupName, groupId, photo, members, contacts}) {
                       :
                         newMembers.map( (member, index) => {
                           const c_obj = contacts.find( contact => member === contact.contactId )
+                          // console.log('mapping new contacts: ', c_obj)
                           return (
                             editMembersItem( c_obj, index+1, cancelNewMember)
                           )
@@ -229,14 +252,19 @@ function GroupModal({groupName, groupId, photo, members, contacts}) {
                   !editable ?
                     <HStack spacing="6">
                       <Button leftIcon={<MdModeEdit/>} colorScheme="blue" onClick={toggleEdit}>Edit</Button>
-                      { savable() ? <Button variant="outline" onClick={onSave}>Save</Button> : null }
+                      { savable() ? <Button variant="outline" onClick={onSave} disabled={saved && type !== 'edit'}>Save</Button> : null }
                     </HStack>
                   :
                     <HStack spacing="6" w="100%">
-                      <Button colorScheme="red" onClick={() => console.log()}>Delete Group</Button>
+                      {
+                        type === 'edit' ?
+                          <Button colorScheme="red" onClick={onDelete}>Delete Group</Button>
+                        :
+                          null
+                      }
                       <Spacer/>
                       <Button variant="outline" colorScheme="red" onClick={toggleEdit}>Cancel</Button>
-                      <Button variant="outline" onClick={onSave}>Save</Button>
+                      <Button variant="outline" onClick={onSave} disabled={saved && type !== 'edit'}>Save</Button>
                     </HStack>
                 }
               </ModalFooter>
@@ -244,6 +272,15 @@ function GroupModal({groupName, groupId, photo, members, contacts}) {
       </Modal>
     </>
   )
+}
+
+GroupModal.defaultProps = {
+  type: 'edit',
+  groupName: '',
+  groupId: '',
+  photo: '',
+  members: [],
+  contacts: []
 }
 
 GroupModal.displayName = "GroupModal"
