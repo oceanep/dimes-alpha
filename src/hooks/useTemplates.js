@@ -57,6 +57,7 @@ function UseTemplatesProvider({children}) {
     dispatch({ type: ACTIONS.LOADING })
     try {
       const res = await eventTemplates.getTemplates(userId)
+      console.log(userId)
       const newTemplates = res.data.data.map( template => (
         {
           //write catch for UI based failing later
@@ -75,7 +76,7 @@ function UseTemplatesProvider({children}) {
 
         }
       ))
-      // console.log('before get templates dispatch: ', newTemplates)
+      console.log('before get templates dispatch: ', newTemplates)
       dispatch({ payload: newTemplates, type: ACTIONS.FETCHED })
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })

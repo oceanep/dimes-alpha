@@ -27,27 +27,35 @@ import DatePicker from 'react-date-picker';
 
 import TimeMatches from '../TimeMatches/TimeMatches'
 import Card from '../Card/Card'
+import Invitees from '../Invitees/Invitees'
+
+//utils
 import timeUtils from '../../utils/time_utils.js'
-import userEvents from '../../utils/user_events.js'
-import { useTemplatesState } from '../../hooks/useTemplates'
-import { useEventsDispatch } from '../../hooks/useEvents'
+
+//hooks
 import usePages from '../../hooks/usePages'
 import useTemplates from '../../hooks/useTemplates'
-import eventTemplates from '../../utils/event_templates'
-import eventInvites from '../../utils/event_invites'
+import { useTemplatesState } from '../../hooks/useTemplates'
+import { useEventsDispatch } from '../../hooks/useEvents'
+import { useContactsState } from '../../hooks/useContacts'
+import { useGroupsState } from '../../hooks/useGroups'
 
 import './CreateModal.scss'
 
 function CreateModal({ label, ...rest }) {
 
-  const userId = localStorage.userId
+  //Hooks + context/reducers
+  const { contacts } = useContactsState()
+  const { groups } = useGroupsState()
+  const { templates } = useTemplatesState()
+  const { createEvent } = useEventsDispatch()
+  const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = usePages()
 
+  //Modal State
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [value, onChange] = useState(new Date())
   const [duration, setDuration] = useState('')
   const [email, setEmail] = useState('')
-  // const [url, setUrl] = useState('')
-  // const [title, setTitle] = useState('')
   const [timesDisplayed, setTimesDisplay] = useState(false)
   const [formDisplayed, setFormDisplay] = useState(true)
   const [eventDisplayed, setEventDisplay] = useState(false)
@@ -59,10 +67,25 @@ function CreateModal({ label, ...rest }) {
     endTime: null,
     date: null,
   });
+  const [invitees, setInvitees] = useState({
+    groups: [],
+    contacts: [],
+    emails: []
+  })
 
-  const { createEvent } = useEventsDispatch()
-  const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage] = usePages()
-  const { templates } = useTemplatesState()
+  const setInvitee = (type, info) => {
+    // console.log('setInvitee',type,info)
+    if (type === 'contacts') setInvitees({...invitees, contacts: [...invitees.contacts, JSON.parse(info)]} )
+    if (type === 'groups') setInvitees({...invitees, groups: [...invitees.groups, JSON.parse(info)]} )
+    if (type === 'emails') setInvitees({...invitees, emails: [...invitees.emails, info]} )
+  }
+
+  const cancelInvite = (type, info) => {
+    // console.log('cancelInvitee',type,info)
+    if (type === 'contacts') setInvitees({...invitees, contacts : invitees.contacts.filter( contact => +contact.contactId != +info )})
+    if (type === 'groups') setInvitees({...invitees, groups: invitees.groups.filter( group => +group.groupId != +info )})
+    if (type === 'emails') setInvitees({...invitees, emails: invitees.emails.filter( email => email != info )})
+  }
 
   const setEventTitle = (title) => {
     setMeet({...meet, title})
@@ -134,9 +157,9 @@ function CreateModal({ label, ...rest }) {
     const date = new Date(meet.date).toISOString()
     const eventRes = await createEvent(meet.title, meet.desc, 1, meet.beginTime, meet.endTime, date)
     console.log('eventRes: ', eventRes)
-    const eventId = eventRes.id
-    const inviteRes = await eventInvites.createInvite(10, eventId, email, 0)
-    console.log("schedule result?: ", inviteRes)
+    // const eventId = eventRes.id
+    // const inviteRes = await eventInvites.createInvite(10, eventId, email, 0)
+    // console.log("schedule result?: ", inviteRes)
     closeModal()
 
   }
@@ -162,17 +185,12 @@ function CreateModal({ label, ...rest }) {
           <Input
             placeholder='Title'
             size='md'
+            fontSize="sm"
             value={meet.title}
             onChange={e => setEventTitle(e.target.value) }
             isRequired
             mb="20px"
             />
-          <HStack w="100%">
-            {/*
-              <Text w="50%" align="left">Between:</Text>
-              <Text w="50%" align="left">And:</Text>
-            */}
-          </HStack>
           <DatePicker
             onChange={onChange}
             value={value}
@@ -180,49 +198,25 @@ function CreateModal({ label, ...rest }) {
           <InputGroup my="20px">
             <Select
               placeholder={label.placeholder}
+              fontSize="sm"
               size='md'
               onChange={ e => setDuration(e.target.value) }
               isRequired
             >
               {
-                templates.map( template => <option value="15" key={template.id}>{template.title}</option>)
+                templates.map( template => <option value={template.duration} key={template.id}>{template.title}</option>)
               }
 
             </Select>
-            <InputRightAddon children='Meeting' />
+            <InputRightAddon children='Meeting' fontSize="sm"/>
           </InputGroup>
-          <InputGroup mb="20px">
-            <Input
-              placeholder='Email'
-              size='md'
-              value={email}
-              onChange={e => setEmail(e.target.value) }
-              isRequired
-              />
-              <InputRightAddon children='Email' />
-          </InputGroup>
-          {/*
-          <InputGroup mb="20px">
-            <Input
-              placeholder='URL'
-              size='md'
-              value={url}
-              onChange={e => setUrl(e.target.value) }
-              isRequired
-              mb="20px"
-              />
-              <InputRightAddon children='Url' />
-          </InputGroup>
-
-              <VStack>
-                <Textarea
-                  placeholder='Description of event'
-                  size='md'
-                  value={meet.desc}
-                  onChange={setEventDesc}
-                />
-              </VStack>
-            */}
+          <Invitees
+            contacts={contacts}
+            groups={groups}
+            invitees={invitees}
+            setInvitee={setInvitee}
+            cancelInvite={cancelInvite}
+          />
         </Flex>
       </ModalBody>
     </>
@@ -272,7 +266,7 @@ function CreateModal({ label, ...rest }) {
     <>
       <Button onClick={onOpen} leftIcon={label.icon} fontSize="sm" variant="outline">{label.button}</Button>
 
-      <Modal isOpen={isOpen} onClose={closeModal} size={timesDisplayed ? 'xl' : 'sm'}>
+      <Modal isOpen={isOpen} onClose={closeModal} size="md">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{label.title}</ModalHeader>

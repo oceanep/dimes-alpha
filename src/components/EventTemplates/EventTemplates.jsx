@@ -48,7 +48,7 @@ function EventTemplates({ vertical }) {
             </Flex>
             <Flex w="100%" flexDirection={vertical ? "column" : 'row'} flexWrap={vertical ? "nowrap" : "wrap"} justifyContent="flex-start" alignItems={vertical ? 'flex-start' : 'center'}>
                 {
-                    !loading && templates.length > 0 ?
+                    !loading ?
                         templates.map((template, index) => {
                             return (
                                 <Box key={index} p="12px" w="33.3333%" boxSizing="border-box">

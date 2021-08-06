@@ -12,7 +12,7 @@ import {
   Input,
   HStack
 } from "@chakra-ui/react"
-import { MdArroMdPerson, MdModeEdit, MdMoreVert, MdStarBorder, MdPhone } from 'react-icons/md'
+import { MdPerson, MdModeEdit, MdMoreVert, MdStarBorder, MdPhone } from 'react-icons/md'
 
 import ContactModal from '../ContactModal/ContactModal'
 
