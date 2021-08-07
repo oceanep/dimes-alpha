@@ -16,8 +16,11 @@ import {
 
 import SideMenu from '../../components/SideMenu/SideMenu'
 import LandingNav from '../../components/LandingNav/LandingNav.jsx'
+
 import UseContactsProvider from '../../hooks/useContacts'
 import UseGroupsProvider from '../../hooks/useGroups'
+import UseEventsProvider from '../../hooks/useEvents'
+import UseTemplatesProvider from '../../hooks/useTemplates'
 
 import './withMenu.scss'
 
@@ -40,7 +43,11 @@ const withMenu = Component => {
         <GridItem colStart={2} colEnd={3} rowSpan={1} className="mainComponentContainer">
           <UseContactsProvider>
           <UseGroupsProvider>
+          <UseEventsProvider>
+          <UseTemplatesProvider>
             <Component {...props} />
+          </UseTemplatesProvider>
+          </UseEventsProvider>
           </UseGroupsProvider>
           </UseContactsProvider>
         </GridItem>

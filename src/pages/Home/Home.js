@@ -23,9 +23,6 @@ import LandingNav from '../../components/LandingNav/LandingNav.jsx'
 import Contacts from '../../components/Contacts/Contacts'
 import Pagination from '../../components/Pagination/Pagination'
 
-import UseEventsProvider from '../../hooks/useEvents'
-import UseTemplatesProvider from '../../hooks/useTemplates'
-
 import styles from './Home.module.scss'
 
 function Home() {
@@ -44,38 +41,34 @@ function Home() {
    const paginate = pageNumber => setCurrentPage(pageNumber)
 
     return (
-        <UseEventsProvider>
-        <UseTemplatesProvider>
-          <Box>
-            <Flex className="home-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
-              <Flex minW='800px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
-                <Tabs w="100%" variant="enclosed">
-              <TabList>
-                <Tab>Calendar</Tab>
-                <Tab>Events</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel>
-                  <Flex w="100%" justifyContent="space-around">
-                    <Upcoming vertical />
-                    <CalendarComponent />
-                  </Flex>
-                </TabPanel>
-                <TabPanel>
-                  <Box w="100%">
-                    <EventTemplates />
-                    <Box pt="30px">
-                      <Upcoming />
-                    </Box>
+        <Box>
+          <Flex className="home-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
+            <Flex minW='800px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="15px" background="white" boxShadow="md">
+              <Tabs w="100%" variant="enclosed">
+            <TabList>
+              <Tab>Calendar</Tab>
+              <Tab>Events</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Flex w="100%" justifyContent="space-around">
+                  <Upcoming vertical />
+                  <CalendarComponent />
+                </Flex>
+              </TabPanel>
+              <TabPanel>
+                <Box w="100%">
+                  <EventTemplates />
+                  <Box pt="30px">
+                    <Upcoming />
                   </Box>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </Flex>
+                </Box>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Flex>
-      </Box>
-    </UseTemplatesProvider>
-    </UseEventsProvider>
+      </Flex>
+    </Box>
   );
 }
 

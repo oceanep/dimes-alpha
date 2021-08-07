@@ -20,29 +20,29 @@ const userApi = {
         }
     },
     async signupUser(email, username, firstName, lastName, password) {
-        const url = `${api_endpoint}/register`
-        try {
-            var res = await axios.post(url, {
-                "user": {
-                    "email": email,
-                    "first_name": firstName,
-                    "last_name": lastName,
-                    "password": password,
-                    "username": username
-                }
-            }, headers)
-            return res
-        } catch {
-            throw new Error('Signup Failed')
-        }
+      const url = `${api_endpoint}/register`
+      try {
+          var res = await axios.post(url, {
+              "user": {
+                  "email": email,
+                  "first_name": firstName,
+                  "last_name": lastName,
+                  "password": password,
+                  "username": username
+              }
+          }, headers)
+          return res
+      } catch {
+          throw new Error('Signup Failed')
+      }
     },
-    async getUser(username) {
+    async getUserByUsername(username) {
       const url = `${api_endpoint}/users/${username}`
       try {
         const res = axios.get(url, headers)
         return res
       } catch (err) {
-        return err
+        throw err
       }
     },
     async getUserById(id) {
@@ -51,7 +51,26 @@ const userApi = {
         const res = axios.get(url, headers)
         return res
       } catch (err) {
-        return err
+        throw err
+      }
+    },
+    async updateUser(id, firstName, lastName, username, email, blurb, photo) {
+      const url = `${api_endpoint}/users/${id}`
+      try {
+        const user = {
+          "blurb": blurb,
+          "email": email,
+          "first_name": firstName,
+          "last_name": lastName,
+          "photo_url": photo,
+          "username": username
+        }
+        const res = axios.patch(url, {
+          "user": user
+        }, headers)
+        return res
+      } catch (err) {
+        throw err
       }
     }
 }

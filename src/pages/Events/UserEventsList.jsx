@@ -37,7 +37,7 @@ import Cal from '../../components/Cal/Cal'
 function UserEventsList({ match }) {
     const { convertToTime, convertFromTime } = timeUtils
     const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage, fourthPage, goFourthPage] = usePages()
-    const user = useUsers(match.params.user_id)
+    const [ user ] = useUsers({id: match.params.user_id})
     const template_name = match.params.event_template_url
     const [availability, fetchAvailability] = useAvailability(match.params.user_id)
 
@@ -60,7 +60,7 @@ function UserEventsList({ match }) {
     const loadTemplates = async () => {
         try {
             const res = await eventTemplates.getTemplates(match.params.user_id)
-            console.log("Templates: ", res.data.data)
+            // console.log("Templates: ", res.data.data)
             setTemplates(res.data.data)
             setLoading(!loading)
         } catch (err) {
@@ -149,7 +149,7 @@ function UserEventsList({ match }) {
         <>
             <Box>
                 <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                    <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src={photo} />
+                    <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src={user.photo || "./sample_avi.png"} />
                     <Heading size="md">{user.username}</Heading>
                 </Flex>
                 <Text fontSize="sm" color="gray.500">{user.email}</Text>
@@ -187,7 +187,7 @@ function UserEventsList({ match }) {
             <Flex px="15px" w="35%">
                 <Box>
                     <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                        <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
+                        <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src={user.photo || "./sample_avi.png"} />
                         <Heading size="md">{user.username}</Heading>
                     </Flex>
                     <Text fontSize="sm" color="gray.500">{user.email}</Text>
@@ -228,7 +228,7 @@ function UserEventsList({ match }) {
             <Flex px="15px" w="45%">
                 <Box>
                     <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                        <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
+                        <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src={user.photo || "./sample_avi.png"} />
                         <Heading size="sm">{user.username}</Heading>
                     </Flex>
                     <Text fontSize="sm" color="gray.500">{user.email}</Text>

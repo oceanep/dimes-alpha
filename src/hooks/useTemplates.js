@@ -128,12 +128,12 @@ function UseTemplatesProvider({children}) {
     }
   }
 
-  const editTemplate = async (templateId, title, duration, desc, active, event_url) => {
+  const editTemplate = async (templateId, title, duration, desc, active, templateUrl) => {
     dispatch({ type: ACTIONS.LOADING })
     try {
       // console.log('edit dispatch for template, id: ', templateId)
       // console.log('all edit info: ', templateId, title, duration, desc, active, event_url)
-      const res = await eventTemplates.updateTemplate(templateId, title, duration, desc, active, event_url)
+      const res = await eventTemplates.updateTemplate(templateId, title, duration, desc, active, templateUrl)
       // console.log('res for edit: ', res)
       const updatedTemplates = state.templates.map( template => res.data.data.id === template.id ?
         {
@@ -153,6 +153,7 @@ function UseTemplatesProvider({children}) {
         : template )
       // console.log('updated template: ', updatedTemplates)
       dispatch({ payload: updatedTemplates, type: ACTIONS.FETCHED })
+      return updatedTemplates
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
       console.log(err)
