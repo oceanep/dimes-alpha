@@ -172,6 +172,11 @@ const EventCard = {
         // backgroundColor: "purple.400",
         backgroundColor: "teal.500"
       }
+    },
+    inactive: {
+      topbar: {
+        backgroundColor: "gray.500"
+      }
     }
   }
 }

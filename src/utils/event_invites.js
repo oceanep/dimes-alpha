@@ -7,7 +7,7 @@ let headers = {
 
 const eventInvites = {
   async getInvites(eventId) {
-    let url = `${api_endpoint}/event_invites/${eventId}`;
+    let url = `${api_endpoint}/user_events/invites/${eventId}`;
     try {
       const res = await axios.get(url, headers)
       return res
@@ -19,10 +19,11 @@ const eventInvites = {
 
   async createInvite(userId, eventId, email = '', inviteeId = null, groupId = null, status = 0) {
     let url = `${api_endpoint}/event_invites`;
+    console.log('event id: ', eventId)
     const event_invite = {
       "status": status,
       "user_id": userId,
-      "event_id": eventId,
+      "user_events_id": eventId,
       "invitee_email": email,
       "user_invite_id": inviteeId,
       "user_group_id": groupId

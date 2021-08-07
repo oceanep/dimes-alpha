@@ -155,11 +155,21 @@ function CreateModal({ label, ...rest }) {
   const saveEvent = async () => {
 
     const date = new Date(meet.date).toISOString()
-    const eventRes = await createEvent(meet.title, meet.desc, 1, meet.beginTime, meet.endTime, date)
+    const eventRes = await createEvent(meet.title, meet.desc, 1, meet.beginTime, meet.endTime, date,　invitees)
     console.log('eventRes: ', eventRes)
-    // const eventId = eventRes.id
-    // const inviteRes = await eventInvites.createInvite(10, eventId, email, 0)
-    // console.log("schedule result?: ", inviteRes)
+    setMeet({
+      title: '',
+      desc: '',
+      beginTime: null,
+      endTime: null,
+      date: null,
+    });
+    setInvitees({
+      groups: [],
+      contacts: [],
+      emails: []
+    })
+
     closeModal()
 
   }
@@ -246,16 +256,24 @@ function CreateModal({ label, ...rest }) {
         <VStack my='15px' mx="50px" alignItems="left">
           <Heading size="md" mb="15px">Event Details</Heading>
           <Flex justifyContent="flex-start" alignItems="center" w="100%">
-            <Heading size="sm" w="250px">Title: </Heading>
+            <Heading size="sm" minW="150px">Title: </Heading>
             <Text w='100%' align='left'>{meet.title}</Text>
           </Flex>
           <Flex justifyContent="flex-start" alignItems="center" w="100%">
-            <Heading size="sm" w="250px">Date: </Heading>
+            <Heading size="sm" minW="150px">Date: </Heading>
             <Text w='100%' align='left'>{`${meet.date} ${cTime[0]} - ${cTime[1]}`}</Text>
           </Flex>
           <Flex justifyContent="flex-start" alignItems="center" w="100%">
-            <Heading size="sm" w="250px">Description: </Heading>
+            <Heading size="sm" minW="150px">Description: </Heading>
             <Text w='100%' align='left'>{meet.desc}</Text>
+          </Flex>
+          <Flex justifyContent="flex-start" alignItems="flex-start" w="100%">
+            <Heading size="sm" minW="150px">Invitees: </Heading>
+            <Flex direction="column">
+              {invitees.groups.map( group => <Text align='left'>{group.name}</Text>)}
+              {invitees.contacts.map( contact => <Text align='left'>{contact.name}</Text>)}
+              {invitees.emails.map( email => <Text align='left'>{email}</Text>)}
+            </Flex>
           </Flex>
         </VStack>
       </>

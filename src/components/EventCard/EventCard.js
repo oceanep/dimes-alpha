@@ -23,20 +23,24 @@ import {
   Textarea,
   Select,
   InputLeftAddon,
-  Stack
+  Stack,
+  AvatarGroup,
+  Avatar
 } from "@chakra-ui/react"
-import { MdSettings, MdContentCopy, MdModeEdit, MdDelete, MdExpandMore, MdExpandLess } from 'react-icons/md'
+import { MdSettings, MdPerson, MdContentCopy, MdModeEdit, MdDelete, MdExpandMore, MdExpandLess } from 'react-icons/md'
 
 import styles from './EventCard.module.scss'
 import QRCode from "react-qr-code";
 
 import DatePicker from 'react-date-picker';
-import useToggle from "../../hooks/useToggle"
+import useToggle from '../../hooks/useToggle'
+import { useContactsState } from '../../hooks/useContacts'
+import { useGroupsState } from '../../hooks/useGroups'
 
 //remove after implementing availability context
 import timeUtils from '../../utils/time_utils.js'
 
-function EventCard({ type, title, desc, duration, variant, value, time, day, id, url, onDelete, onEditSave }) {
+function EventCard({ type, title, desc, duration, variant, value, time, day, invitees, id, url, onDelete, onEditSave }) {
 
   //set up initial placeholders for inputs, mostly aesthetic
   let initialTime = null
@@ -56,6 +60,8 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, id,
 
   const username = localStorage.username
   const [editable: state, toggleEdit: toggle ] = useToggle()
+  const { contacts } = useContactsState()
+  const { groups } = useGroupsState()
 
   const [newDuration, setDuration] = useState(duration)
   const [newTime, setTime] = useState(initialTime)
@@ -135,6 +141,33 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, id,
       [t3a, t3b]
     ])
 
+  }
+
+  const displayInvitee = (invitee) => {
+    let item = {
+      name: null,
+      photo: null,
+      email: null
+    }
+    let isGroup = false
+    if (invitee.groupInviteeId) {
+      const group = groups.find( group => group.id === invitee.groupInviteeId )
+      item.name = group.name
+      item.photo = group.photo ? group.photo : ''
+      isGroup = true
+    }
+    if (invitee.userInviteeId) {
+      const contact = contacts.find( contact => contact.contactId === invitee.userInviteeId)
+      const name = `${contact.firstName || ''} ${contact.lastName || ''}`
+      item.name = name
+      item.photo = contact.photo || ''
+      item.email = contact.email || ''
+    }
+    if (!invitee.groupInviteeId && !invitee.userInviteeId) item.email = invitee.email
+
+    return (
+      isGroup ? <Avatar key={invitee.id} name={item.name || item.email} border='3px solid #81e6d9' src={item.photo} icon={<MdPerson/>} /> : <Avatar key={invitee.id} name={item.name || item.email} src={item.photo} icon={<MdPerson/>} />
+    )
   }
 
   return (
@@ -261,7 +294,18 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, id,
               </Stack>
             </Box>
         }
-
+        {
+          !editable && type === 'Event' && invitees.length > 0 ?
+            <Box mb="-60px" pt="10px">
+              <AvatarGroup max={6}>
+                {
+                  invitees.map( invitee => displayInvitee(invitee))
+                }
+              </AvatarGroup>
+            </Box>
+          :
+            null
+        }
       </Box>
         { !editable ? <Box><QRCode size={50} value={value} /></Box> : null }
       </Flex>

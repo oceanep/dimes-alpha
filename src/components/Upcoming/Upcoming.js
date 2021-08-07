@@ -63,12 +63,13 @@ function Upcoming({ vertical }) {
                     type="Event"
                     title={event.title}
                     desc={event.desc}
-                    variant={event.variant}
+                    variant={event.active ? '' : 'inactive'}
                     value={event.value}
                     time={event.timeRange}
                     duration={event.duration}
                     id={event.id}
                     day={event.date}
+                    invitees={event.invitees}
                     onDelete={deleteEvent}
                     onEditSave={editEvent}
                   />

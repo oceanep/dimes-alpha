@@ -65,18 +65,18 @@ function UseEventsProvider({children}) {
           let diff = Math.abs(parseInt(event.begin_time_unit) - parseInt(event.end_time_unit))
           let date = new Date(event.date)
 
-          // const inviteRes = await eventInvites.getInvites(event.id)
-          // const invitees = inviteRes ? inviteRes.data.data.map( invite => (
-          //   {
-          //     id: invite.id,
-          //     eventId: invite.event_id,
-          //     inviteeEmail: invite.invitee_email || '',
-          //     userInviteeId: invite.user_invite_id || null,
-          //     groupInviteeId: invite.user_group_id || null,
-          //     status: invite.status,
-          //     userId: invite.user_id
-          //   }
-          // )) : []
+          const inviteRes = await eventInvites.getInvites(event.id)
+          const invitees = inviteRes ? inviteRes.data.data.map( invite => (
+            {
+              id: invite.id,
+              eventId: invite.user_events_id,
+              inviteeEmail: invite.invitee_email || '',
+              userInviteeId: invite.user_invite_id || null,
+              groupInviteeId: invite.user_group_id || null,
+              status: invite.status,
+              userId: invite.user_id
+            }
+          )) : []
 
           return {
             //write catch for UI based failing later
@@ -91,7 +91,7 @@ function UseEventsProvider({children}) {
             ownerId: event.owner_id,
             active: event.active,
             userId: event.user_id,
-            invitees: []
+            invitees: invitees
           }
         }
       ))
@@ -110,12 +110,13 @@ function UseEventsProvider({children}) {
     try {
       const res = await userEvents.createEvent(userId, userId, title, desc, status, beginTime, endTime, date, active)
       const eventId = res.data.data.id
+      console.log(res.data.data)
 
       const inviteEmailsRes = invitees.emails.length > 0 ? await Promise.all( invitees.emails.map( async (email) => {
         const res = await eventInvites.createInvite(userId, eventId, email)
         return {
           id: res.data.data.id,
-          eventId: res.data.data.event_id,
+          eventId: res.data.data.user_events_id,
           inviteeEmail: res.data.data.invitee_email || '',
           userInviteeId: res.data.data.user_invite_id || null,
           groupInviteeId: res.data.data.user_group_id || null,
@@ -127,7 +128,7 @@ function UseEventsProvider({children}) {
         const res = await eventInvites.createInvite(userId, eventId, contact.email, contact.contactId)
         return {
           id: res.data.data.id,
-          eventId: res.data.data.event_id,
+          eventId: res.data.data.user_events_id,
           inviteeEmail: res.data.data.invitee_email || '',
           userInviteeId: res.data.data.user_invite_id || null,
           groupInviteeId: res.data.data.user_group_id || null,
@@ -139,7 +140,7 @@ function UseEventsProvider({children}) {
         const res = await eventInvites.createInvite(userId, eventId, '', null, group.groupId)
         return {
           id: res.data.data.id,
-          eventId: res.data.data.event_id,
+          eventId: res.data.data.user_events_id,
           inviteeEmail: res.data.data.invitee_email || '',
           userInviteeId: res.data.data.user_invite_id || null,
           groupInviteeId: res.data.data.user_group_id || null,
@@ -147,7 +148,7 @@ function UseEventsProvider({children}) {
           userId: res.data.data.user_id
         }
       })) : []
-
+      console.log(inviteEmailsRes.concat(inviteContactsRes, inviteGroupsRes))
       const timeRange = timeUtils.convertToTime(res.data.data.begin_time_unit, res.data.data.end_time_unit)
       const duration = Math.abs(res.data.data.end_time_unit - res.data.data.begin_time_unit)
       const diff = Math.abs(parseInt(res.data.data.begin_time_unit) - parseInt(res.data.data.end_time_unit))
