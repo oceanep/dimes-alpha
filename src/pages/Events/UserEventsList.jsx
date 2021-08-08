@@ -38,7 +38,7 @@ function UserEventsList({ match }) {
     const { convertToTime, convertFromTime } = timeUtils
     const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage, fourthPage, goFourthPage] = usePages()
     const [ user ] = useUsers({id: match.params.user_id})
-    const template_name = match.params.event_template_url
+    const template_url = match.params.event_template_url
     const [availability, fetchAvailability] = useAvailability(match.params.user_id)
 
     const [templates, setTemplates] = useState([])

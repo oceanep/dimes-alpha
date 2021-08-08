@@ -41,6 +41,7 @@ import PrivacyPage from './pages/Static/PrivacyPage.jsx'
 import TermsPage from './pages/Static/TermsPage.jsx'
 import Settings from './pages/User/Settings.jsx'
 import Notifications from './pages/User/Notifications.jsx'
+import UserProfile from './pages/User/UserProfile.jsx'
 import './App.scss'
 
 function App() {
@@ -66,8 +67,8 @@ function App() {
               <Route path="/signup" component={localStorage.getItem("token") ? Home : Signup}></Route>
               <Route path="/settings" component={localStorage.getItem("token") ? Settings : Login}></Route>
               <Route path="/notifications" component={localStorage.getItem("token") ? Notifications : Login}></Route>
+              <Route path="/profile/:username" component={UserProfile}></Route>
               <Route path="/:user_id/:event_template_url?" component={UserEventsList}></Route>
-
           </Switch>
         </Grid>
       </Box>

@@ -6,13 +6,15 @@ function useUsers( val = this || {} ) {
   const [user, setUser] = useState({})
   const [loading, setLoading] = useState(true)
 
-  const username = val.hasOwnProperty('username') ? val.username : null
-  const id = val.hasOwnProperty('id') ? val.id : localStorage.userId
+  console.log(val?.username)
+  const username = val?.username || null
+  const id = val?.id || localStorage.userId
 
   const getUser = async () => {
     try {
-      const res = username ? await userApi.getUserByUsername(this.username) : await userApi.getUserById(id)
+      const res = username ? await userApi.getUserByUsername(username) : await userApi.getUserById(id)
       const currentUser = {
+        id: res.data.id,
         blurb: res.data.blurb,
         firstName: res.data.first_name,
         lastName: res.data.last_name,
@@ -33,6 +35,7 @@ function useUsers( val = this || {} ) {
     try {
       const res = await userApi.updateUser(id, firstName, lastName, username, email, blurb, photo)
       const currentUser = {
+        id: res.data.id,
         blurb: res.data.blurb,
         firstName: res.data.first_name,
         lastName: res.data.last_name,
