@@ -60,6 +60,7 @@ function EventTemplates({ vertical }) {
                                         url={template.url}
                                         duration={template.duration}
                                         variant={template.active ? '' : 'inactive'}
+                                        active={template.active}
                                         value={template.value}
                                         onDelete={deleteTemplate}
                                         onEditSave={editTemplate}

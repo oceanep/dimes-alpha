@@ -37,6 +37,17 @@ const eventInvites = {
       alert('Failed to create invite')
       throw err
     }
+  },
+
+  async deleteInvite(id) {
+    let url = `${api_endpoint}/event_invites/${id}`;
+    try {
+      const res = axios.delete(url, headers)
+      return 'success'
+    } catch(err) {
+      alert('Failed to delete invite')
+      throw err
+    }
   }
 }
 

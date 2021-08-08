@@ -195,10 +195,58 @@ function UseEventsProvider({children}) {
     }
   }
 
-  const editEvent = async (eventId, title, desc, status = 1, beginTime, endTime, date, active = true) => {
+  const editEvent = async (eventId, title, desc, status = 1, beginTime, endTime, date, newInvitees, deletedInvitees, active = true) => {
     dispatch({type: ACTIONS.LOADING})
+    console.log(eventId, title, desc, status, beginTime, endTime, date, newInvitees, deletedInvitees)
     try {
       const res = await userEvents.updateEvent(eventId, userId, title, desc, status, beginTime, endTime, date, active)
+
+      console.log('invitees: ', newInvitees, deletedInvitees)
+      const inviteEmailsRes = newInvitees.emails.length > 0 ? await Promise.all( newInvitees.emails.map( async (email) => {
+        const res = await eventInvites.createInvite(userId, eventId, email)
+        return {
+          id: res.data.data.id,
+          eventId: res.data.data.user_events_id,
+          inviteeEmail: res.data.data.invitee_email || '',
+          userInviteeId: res.data.data.user_invite_id || null,
+          groupInviteeId: res.data.data.user_group_id || null,
+          status: res.data.data.status,
+          userId: res.data.data.user_id
+        }
+      })) : []
+      const inviteContactsRes = newInvitees.contacts.length > 0 ? await Promise.all( newInvitees.contacts.map( async (contact) => {
+        const res = await eventInvites.createInvite(userId, eventId, contact.email, contact.contactId)
+        return {
+          id: res.data.data.id,
+          eventId: res.data.data.user_events_id,
+          inviteeEmail: res.data.data.invitee_email || '',
+          userInviteeId: res.data.data.user_invite_id || null,
+          groupInviteeId: res.data.data.user_group_id || null,
+          status: res.data.data.status,
+          userId: res.data.data.user_id
+        }
+      })) : []
+      const inviteGroupsRes = newInvitees.groups.length > 0 ? await Promise.all( newInvitees.groups.map( async (group) => {
+        const res = await eventInvites.createInvite(userId, eventId, '', null, group.groupId)
+        return {
+          id: res.data.data.id,
+          eventId: res.data.data.user_events_id,
+          inviteeEmail: res.data.data.invitee_email || '',
+          userInviteeId: res.data.data.user_invite_id || null,
+          groupInviteeId: res.data.data.user_group_id || null,
+          status: res.data.data.status,
+          userId: res.data.data.user_id
+        }
+      })) : []
+
+      const deletedInviteRes = deletedInvitees.length > 0 ? await Promise.all(deletedInvitees.map( async (invitee) => {
+        let res = await eventInvites.deleteInvite(invitee)
+        return res?.data || res
+      })) : []
+
+      const oldInvitees = state.events.find( event => event.id == eventId )?.invitees
+      const filteredInvitees = oldInvitees.filter( invitee => !deletedInvitees.includes(invitee.id))
+      const totalNewInvitees = filteredInvitees.concat(inviteEmailsRes, inviteContactsRes, inviteGroupsRes)
 
       const timeRange = timeUtils.convertToTime(res.data.data.begin_time_unit, res.data.data.end_time_unit)
       const duration = Math.abs(res.data.data.end_time_unit - res.data.data.begin_time_unit)
@@ -218,7 +266,8 @@ function UseEventsProvider({children}) {
           id: res.data.data.id,
           ownerId: res.data.data.owner_id,
           active: res.data.data.active,
-          userId: res.data.data.user_id
+          userId: res.data.data.user_id,
+          invitees: totalNewInvitees
         }
         : event )
       console.log('updated events: ', updatedEvents)
@@ -226,7 +275,7 @@ function UseEventsProvider({children}) {
 
     } catch (err) {
       dispatch({ payload: err, type: ACTIONS.ERROR })
-      console.log(err)
+      throw(err)
       alert(err)
     }
   }

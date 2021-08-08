@@ -24,6 +24,7 @@ import {
   Select,
   InputLeftAddon,
   Stack,
+  Switch,
   AvatarGroup,
   Avatar
 } from "@chakra-ui/react"
@@ -37,10 +38,12 @@ import useToggle from '../../hooks/useToggle'
 import { useContactsState } from '../../hooks/useContacts'
 import { useGroupsState } from '../../hooks/useGroups'
 
+import EditInviteesModal from '../EditInviteesModal/EditInviteesModal'
+
 //remove after implementing availability context
 import timeUtils from '../../utils/time_utils.js'
 
-function EventCard({ type, title, desc, duration, variant, value, time, day, invitees, id, url, onDelete, onEditSave }) {
+function EventCard({ type, title, desc, duration, variant, value, time, day, active, invitees, id, url, onDelete, onEditSave }) {
 
   //set up initial placeholders for inputs, mostly aesthetic
   let initialTime = null
@@ -69,6 +72,9 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, inv
   const [newTitle, setTitle] = useState(title)
   const [newUrl, setUrl] = useState(url)
   const [newDate, setDate] = useState(day)
+  const [newActive, setActive] = useState(active)
+  const [newInvitees, setNewInvitees] = useState([])
+  const [deleteInvitees, setDeleteInvitees] = useState([])
 
   //delete after implementing availability context
   const [matches, setMatches] = useState([])
@@ -101,7 +107,7 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, inv
         newTitle,
         parseInt(newDuration),
         newDesc,
-        true,
+        newActive,
         newUrl
       )
       toggleEdit()
@@ -115,7 +121,8 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, inv
         newTime[0],
         newTime[1],
         newDate.toISOString(),
-        true
+        newInvitees,
+        deleteInvitees
       )
       toggleEdit()
     }
@@ -163,18 +170,28 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, inv
       item.photo = contact.photo || ''
       item.email = contact.email || ''
     }
-    if (!invitee.groupInviteeId && !invitee.userInviteeId) item.email = invitee.email
+    if (!invitee.groupInviteeId && !invitee.userInviteeId) item.email = invitee.inviteeEmail
 
     return (
       isGroup ? <Avatar key={invitee.id} name={item.name || item.email} border='3px solid #81e6d9' src={item.photo} icon={<MdPerson/>} /> : <Avatar key={invitee.id} name={item.name || item.email} src={item.photo} icon={<MdPerson/>} />
     )
   }
 
+  const setInviteeTypes = (newI, deleteI) => {
+    setNewInvitees(newI)
+    setDeleteInvitees(deleteI)
+  }
+
   return (
     <Box __css={c_styles.container}>
       <Box __css={c_styles.topbar}></Box>
       <Box __css={c_styles.checkbox}>
-        <Checkbox size="md"/>
+        {
+          !editable ?
+            <Checkbox size="md"/>
+          :
+            <Switch size="sm" defaultIsChecked={active} value={active} onChange={ e => setActive(e.target.checked)}/>
+        }
       </Box>
       <Box __css={c_styles.settings}>
         <Menu>
@@ -269,25 +286,31 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, inv
                 }
                 {
                   type === "Event" ?
-                    <InputGroup size='sm'>
-                      <InputLeftAddon children="Time" maxW="54px"/>
-                      <Select
-                          placeholder={intialTimePlaceholder}
-                          size='sm'
-                          onChange={e => setTime([parseInt(e.target.value.split(",")[0]), parseInt(e.target.value.split(",")[1])])}
-                          value={newTime}
-                          isRequired
-                      >
-                          {
-                            matches.map((match, index) => {
-                              let cTime = timeUtils.convertToTime(match[0], match[1])
-                              return (
-                                <option key={index} value={match}>{`${cTime[0]} - ${cTime[1]}`}</option>
-                              )
-                            })
-                          }
-                      </Select>
-                    </InputGroup>
+                    <>
+                      <InputGroup size='sm'>
+                        <InputLeftAddon children="Time" maxW="54px"/>
+                        <Select
+                            placeholder={intialTimePlaceholder}
+                            size='sm'
+                            onChange={e => setTime([parseInt(e.target.value.split(",")[0]), parseInt(e.target.value.split(",")[1])])}
+                            value={newTime}
+                            isRequired
+                        >
+                            {
+                              matches.map((match, index) => {
+                                let cTime = timeUtils.convertToTime(match[0], match[1])
+                                return (
+                                  <option key={index} value={match}>{`${cTime[0]} - ${cTime[1]}`}</option>
+                                )
+                              })
+                            }
+                        </Select>
+                      </InputGroup>
+                      <EditInviteesModal
+                        invitees={invitees}
+                        onFinish={setInviteeTypes}
+                      />
+                    </>
                   :
                     null
                 }

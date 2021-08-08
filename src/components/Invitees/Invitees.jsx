@@ -93,7 +93,7 @@ function Invitees({contacts, groups, invitees, setInvitee, cancelInvite}) {
                       <Avatar name={group.name} src={group.photo} icon={<MdGroup/>} size="sm"/>
                       <Text fontSize="sm" minW="100px">{group.name}</Text>
                       <Spacer/>
-                      <IconButton icon={<MdCancel/>} variant="outline" colorScheme="red" size="sm" onClick={ () => cancelInvite('groups', group.groupId) } />
+                      <IconButton icon={<MdCancel/>} variant="outline" colorScheme="red" size="sm" onClick={ () => cancelInvite('groups', group) } />
                     </HStack>
                   )
                   :
@@ -119,7 +119,7 @@ function Invitees({contacts, groups, invitees, setInvitee, cancelInvite}) {
                     <Text fontSize="sm"  minW="100px">{contact.name}</Text>
                     <Text fontSize="sm"  minW="100px">{contact.email}</Text>
                     <Spacer/>
-                    <IconButton icon={<MdCancel/>} variant="outline" colorScheme="red" size="sm" onClick={ () => cancelInvite('contacts', contact.contactId) } />
+                    <IconButton icon={<MdCancel/>} variant="outline" colorScheme="red" size="sm" onClick={ () => cancelInvite('contacts', contact) } />
                   </HStack>
                 )}
               </Flex>
@@ -137,10 +137,10 @@ function Invitees({contacts, groups, invitees, setInvitee, cancelInvite}) {
               </HStack>
               <Flex direction="column">
                 {invitees.emails.map( (em, index) =>
-                  <HStack key={`${index}em`} spacing="15px" mb="10px">
+                  <HStack key={`${index}${em?.email || em}`} spacing="15px" mb="10px">
                     <Avatar icon={<MdPerson/>} size="sm"/>
                     <Text fontSize="sm"  minW="100px"></Text>
-                    <Text fontSize="sm"  minW="100px">{em}</Text>
+                    <Text fontSize="sm"  minW="100px">{em?.email || em}</Text>
                     <Spacer/>
                     <IconButton icon={<MdCancel/>} variant="outline" colorScheme="red" size="sm" onClick={ () => cancelInvite('emails', em) } />
                   </HStack>

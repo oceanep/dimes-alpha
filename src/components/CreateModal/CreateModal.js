@@ -82,8 +82,8 @@ function CreateModal({ label, ...rest }) {
 
   const cancelInvite = (type, info) => {
     // console.log('cancelInvitee',type,info)
-    if (type === 'contacts') setInvitees({...invitees, contacts : invitees.contacts.filter( contact => +contact.contactId != +info )})
-    if (type === 'groups') setInvitees({...invitees, groups: invitees.groups.filter( group => +group.groupId != +info )})
+    if (type === 'contacts') setInvitees({...invitees, contacts : invitees.contacts.filter( contact => +contact.contactId != +info.contactId )})
+    if (type === 'groups') setInvitees({...invitees, groups: invitees.groups.filter( group => +group.groupId != +info.groupId )})
     if (type === 'emails') setInvitees({...invitees, emails: invitees.emails.filter( email => email != info )})
   }
 
@@ -188,48 +188,44 @@ function CreateModal({ label, ...rest }) {
 
   //modal page rendering functions
   const page1 = () => (
-    <>
 
-      <ModalBody>
-        <Flex direction='column' minH="120px">
-          <Input
-            placeholder='Title'
-            size='md'
-            fontSize="sm"
-            value={meet.title}
-            onChange={e => setEventTitle(e.target.value) }
-            isRequired
-            mb="20px"
-            />
-          <DatePicker
-            onChange={onChange}
-            value={value}
-          />
-          <InputGroup my="20px">
-            <Select
-              placeholder={label.placeholder}
-              fontSize="sm"
-              size='md'
-              onChange={ e => setDuration(e.target.value) }
-              isRequired
-            >
-              {
-                templates.map( template => <option value={template.duration} key={template.id}>{template.title}</option>)
-              }
+    <Flex direction='column' minH="120px">
+      <Input
+        placeholder='Title'
+        size='md'
+        fontSize="sm"
+        value={meet.title}
+        onChange={e => setEventTitle(e.target.value) }
+        isRequired
+        mb="20px"
+        />
+      <DatePicker
+        onChange={onChange}
+        value={value}
+      />
+      <InputGroup my="20px">
+        <Select
+          placeholder={label.placeholder}
+          fontSize="sm"
+          size='md'
+          onChange={ e => setDuration(e.target.value) }
+          isRequired
+        >
+          {
+            templates.map( template => <option value={template.duration} key={template.id}>{template.title}</option>)
+          }
 
-            </Select>
-            <InputRightAddon children='Meeting' fontSize="sm"/>
-          </InputGroup>
-          <Invitees
-            contacts={contacts}
-            groups={groups}
-            invitees={invitees}
-            setInvitee={setInvitee}
-            cancelInvite={cancelInvite}
-          />
-        </Flex>
-      </ModalBody>
-    </>
+        </Select>
+        <InputRightAddon children='Meeting' fontSize="sm"/>
+      </InputGroup>
+      <Invitees
+        contacts={contacts}
+        groups={groups}
+        invitees={invitees}
+        setInvitee={setInvitee}
+        cancelInvite={cancelInvite}
+      />
+    </Flex>
   )
 
   const page2 = () => (
@@ -289,10 +285,11 @@ function CreateModal({ label, ...rest }) {
         <ModalContent>
           <ModalHeader>{label.title}</ModalHeader>
           <ModalCloseButton />
+          <ModalBody>
             { firstPage ? page1() : null }
             { secondPage ? page2() : null}
             { thirdPage ? page3() : null}
-
+          </ModalBody>
           <ModalFooter>
             { firstPage ? <Button colorScheme="blue" onClick={ displayTimes }>{label.secondary}</Button> : null }
             { secondPage ? <Button colorScheme="blue" onClick={ goFirstPage }>Return</Button> : null }

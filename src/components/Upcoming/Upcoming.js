@@ -64,6 +64,7 @@ function Upcoming({ vertical }) {
                     title={event.title}
                     desc={event.desc}
                     variant={event.active ? '' : 'inactive'}
+                    active={event.active}
                     value={event.value}
                     time={event.timeRange}
                     duration={event.duration}

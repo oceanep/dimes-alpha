@@ -47,7 +47,6 @@ const userEvents = {
   },
   async updateEvent(eventId, ownerId, title, desc, status = 1, beginTime, endTime, date, active) {
     let url = `${api_endpoint}/user_events/${eventId}`;
-    console.log('edit event: ', eventId, ownerId, title, desc, status, beginTime, endTime, date, active)
     try {
       let res = await axios.patch(url, {
         "event_id": eventId,
