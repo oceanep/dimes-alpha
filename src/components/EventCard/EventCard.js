@@ -164,11 +164,13 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
       isGroup = true
     }
     if (invitee.userInviteeId) {
+      //add check below for if find in contacts fails
+      //on fail, query users for user info
       const contact = contacts.find( contact => contact.contactId === invitee.userInviteeId)
-      const name = `${contact.firstName || ''} ${contact.lastName || ''}`
+      const name = `${contact?.firstName || ''} ${contact?.lastName || ''}`
       item.name = name
-      item.photo = contact.photo || ''
-      item.email = contact.email || ''
+      item.photo = contact?.photo || ''
+      item.email = contact?.email || ''
     }
     if (!invitee.groupInviteeId && !invitee.userInviteeId) item.email = invitee.inviteeEmail
 
