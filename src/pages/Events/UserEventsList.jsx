@@ -81,7 +81,7 @@ function UserEventsList({ match }) {
         const increment = template.duration / 15
         // console.log('increment: ', increment)
         // console.log('begin and end codec: ', time.begin_time_unit, time.end_time_unit)
-        const diff = time.end_time_unit - time.begin_time_unit
+        const diff = Math.abs(time.end_time_unit - time.begin_time_unit)
         const iterations = diff % increment > 0 ? (diff / increment) - (diff % increment) : diff / increment
         // console.log('iterations: ', iterations)
         let currentTime = time.begin_time_unit
@@ -104,10 +104,12 @@ function UserEventsList({ match }) {
 
     const scheduleEvent = async () => {
         const { beginCodec, endCodec } = convertFromTime(selectedTime)
+
         try {
+            //do not use reducer or context for api calls as these will be relying on different data sources
             const eventRes = await userEvents.createEvent(10, 10, title, desc, 1, beginCodec, endCodec, selectedDate.toISOString(), true)
             const eventId = eventRes.data.data.id
-            const inviteRes = await eventInvites.createInvite(10, eventId, email, 0)
+            const inviteRes = await eventInvites.createInvite(10, eventId, user.email, user.id, undefined, 0)
             console.log("schedule result?: ", inviteRes)
             goFourthPage()
         } catch (err) {
@@ -119,7 +121,7 @@ function UserEventsList({ match }) {
         e.preventDefault()
         goSecondPage()
         setTemplate(template)
-        fetchAvailability()
+        // fetchAvailability()
         // console.log('secondpage?: ', secondPage)
     }
 
@@ -187,7 +189,7 @@ function UserEventsList({ match }) {
             <Flex px="15px" w="35%">
                 <Box>
                     <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                        <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src={user.photo || "./sample_avi.png"} />
+                        <Avatar mr="10px" name={user.username} src={user.photo || "./sample_avi.png"} />
                         <Heading size="md">{user.username}</Heading>
                     </Flex>
                     <Text fontSize="sm" color="gray.500">{user.email}</Text>
@@ -284,13 +286,15 @@ function UserEventsList({ match }) {
 
     const times = () => {
         const day = selectedDate.getDay()
-        let pairs = [];
-        availability[day].forEach(time => {
-            // console.log('calc times: ', calcDisplayTimes(time))
-            pairs = pairs.concat(calcDisplayTimes(time))
-            // console.log('pairs: ', pairs)
+        console.log('selected day: ', selectedDate.getDay())
+        console.log('availability day: ', availability[day])
+        const pairs = availability[day].reduce(( acc, time) => {
+            console.log('calc times: ', calcDisplayTimes(time))
+            acc = acc.concat(calcDisplayTimes(time))
+            console.log('pairs: ', acc)
+            return acc
 
-        })
+        }, [])
         return (
             <Flex direction="column" justifyContent="flex-start" align="center" minW={showTimes ? '250px' : ''} maxH="435px" overflowY="scroll">
                 {

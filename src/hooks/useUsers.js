@@ -6,7 +6,6 @@ function useUsers( val = this || {} ) {
   const [user, setUser] = useState({})
   const [loading, setLoading] = useState(true)
 
-  console.log(val?.username)
   const username = val?.username || null
   const id = val?.id || localStorage.userId
 

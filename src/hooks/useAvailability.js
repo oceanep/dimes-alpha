@@ -36,6 +36,10 @@ function useAvailability(userId = localStorage.userId) {
   //
   // }
 
+  useEffect( () => {
+    fetchAvailability()
+  }, [])
+
   const fetchAvailability = async () => {
     let dayAvails = [[], [], [], [], [], [], []]
     setLoading(true)

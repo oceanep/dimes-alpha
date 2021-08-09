@@ -1,9 +1,13 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
-let api_endpoint = BASE_URL
-let headers = {
+
+const api_endpoint = BASE_URL
+const headers = {
     "Content-type": "application/json"
 }
+const token = localStorage.getItem('token');
+const bearer_token = {"Authorization" : `Bearer ${token}`};
+const authHeaders = Object.assign(headers, bearer_token);
 
 const eventTemplates = {
   async getTemplates(id) {
@@ -13,7 +17,7 @@ const eventTemplates = {
         params: {
           id: id
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err){
         alert('No Templates Available')
@@ -21,9 +25,6 @@ const eventTemplates = {
     }
   },
     async createTemplate(userId, title, duration, desc, active, event_url) {
-        const token = localStorage.getItem('token');
-        let bearer_token = {"Authorization" : `Bearer ${token}`};
-        let authHeaders = Object.assign(headers, bearer_token);
     let url = `${api_endpoint}/event_templates`;
       console.log('createTemplate', userId, title, desc, duration, active, event_url)
       const event_template = {
@@ -34,10 +35,10 @@ const eventTemplates = {
     	"active": active,
       "url": event_url
   	}
-        try {
-          let res = await axios.post(url, {
-         "event_templates": event_template
-      }, {headers: authHeaders})
+    try {
+      let res = await axios.post(url, {
+       "event_templates": event_template
+    }, {headers: authHeaders})
       return res
     } catch {
       throw new Error('Failed to create event')
@@ -55,7 +56,7 @@ const eventTemplates = {
       		"active": active,
           "url": event_url
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch {
       throw new Error('Failed to update event')
@@ -64,7 +65,7 @@ const eventTemplates = {
   async deleteTemplate(templateId) {
     let url = `${api_endpoint}/event_templates/${templateId}`;
     try {
-      let res = await axios.delete(url, headers)
+      let res = await axios.delete(url, {headers: authHeaders})
       return res
     } catch {
       throw new Error('Failed to delete event')

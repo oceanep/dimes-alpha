@@ -1,9 +1,13 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
-let api_endpoint = BASE_URL
-let headers = {
+
+const api_endpoint = BASE_URL
+const headers = {
     "Content-type": "application/json"
 }
+const token = localStorage.getItem('token');
+const bearer_token = {"Authorization" : `Bearer ${token}`};
+const authHeaders = Object.assign(headers, bearer_token);
 
 const userEvents = {
   async getEvents(id) {
@@ -13,13 +17,10 @@ const userEvents = {
         params: {
           id: id
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (error) {
-        if (error) {
-          throw error
-        }
-        return {statusText: 'No Events Registered'}
+      return error
     }
   },
   async createEvent(userId, ownerId, title, desc, status = 1, beginTime, endTime, date, active = true) {
@@ -39,10 +40,10 @@ const userEvents = {
     try {
       let res = await axios.post(url, {
         "user_event": user_event
-      }, headers)
+      }, {headers: authHeaders})
       return res
-    } catch {
-      throw new Error('Failed to create event')
+    } catch (err){
+      return err
     }
   },
   async updateEvent(eventId, ownerId, title, desc, status = 1, beginTime, endTime, date, active) {
@@ -62,17 +63,17 @@ const userEvents = {
         }
       }, headers)
       return res
-    } catch {
-      throw new Error('Failed to update event')
+    } catch (err){
+      return err
     }
   },
   async deleteEvent(eventId) {
     let url = `${api_endpoint}/user_events/${eventId}`;
     try {
-      let res = await axios.delete(url, headers)
+      let res = await axios.delete(url, {headers: authHeaders})
       return res
-    } catch {
-      throw new Error('Failed to delete event')
+    } catch (err){
+      return err
     }
   }
 }

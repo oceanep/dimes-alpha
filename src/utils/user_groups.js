@@ -1,9 +1,13 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
-let api_endpoint = BASE_URL
-let headers = {
+
+const api_endpoint = BASE_URL
+const headers = {
     "Content-type": "application/json"
 }
+const token = localStorage.getItem('token');
+const bearer_token = {"Authorization" : `Bearer ${token}`};
+const authHeaders = Object.assign(headers, bearer_token);
 
 const userGroups = {
   async getGroups(userId) {
@@ -13,7 +17,7 @@ const userGroups = {
         params: {
           user_id: userId
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err){
         alert('No Groups Available')
@@ -29,7 +33,7 @@ const userGroups = {
           "name": name,
           "photo": photo
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err){
       alert('Group Edit Failed')
@@ -45,7 +49,7 @@ const userGroups = {
           "name": name,
           "user_id": userId
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err){
       alert('Group Creation Failed')
@@ -56,7 +60,7 @@ const userGroups = {
   async deleteGroup(groupId) {
     let url = `${api_endpoint}/user_groups/${groupId}`
     try {
-      let res = await axios.delete(url, headers)
+      let res = await axios.delete(url, {headers: authHeaders})
       return res
     } catch (err){
       alert('Group Delete Failed')
@@ -72,7 +76,7 @@ const userGroups = {
         params: {
           user_group_id: groupId
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err){
       alert('No Group Members')
@@ -83,7 +87,7 @@ const userGroups = {
   async deleteGroupMember(id) {
     let url = `${api_endpoint}/user_group_members/${id}`;
     try {
-      let res = await axios.delete(url, headers)
+      let res = await axios.delete(url, {headers: authHeaders})
       return res
     } catch (err){
       alert('Group Member Delete Failed')
@@ -99,7 +103,7 @@ const userGroups = {
           "user_group_id": groupId,
           "user_id": contactId
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err) {
       alert('Create Group Member Failed')

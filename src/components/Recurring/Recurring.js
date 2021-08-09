@@ -106,7 +106,6 @@ function Recurring() {
           time: convertToTime(avail.begin_time_unit, avail.end_time_unit)
         }))
       }
-
       return acc
     }, [])
 
@@ -129,22 +128,22 @@ function Recurring() {
 
   const changeTime = (time, index) => {
     let newArr = [...timeRange]
-    console.log('time index', index)
-    console.log('time', time)
+    // console.log('time index', index)
+    // console.log('time', time)
 
     newArr[index] = roundTime(time)
-    console.log('new time array', newArr)
+    // console.log('new time array', newArr)
     onTimeChange(newArr)
   }
 
   const changeNewTime = async (time, index, i) => {
-    let newArr = [...availability]
-    console.log('index', index)
-    console.log('preparing to add...', time)
+    // let newArr = [...availability]
+    // console.log('index', index)
+    // console.log('preparing to add...', time)
 
     const newTime = roundTime(time)
     const { beginCodec, endCodec } = convertFromTime(newTime)
-    const id = newArr[index].times[i].id
+    const id = displayAvailability[index].times[i].id
 
     await updateAvailability(id, beginCodec, endCodec)
 
@@ -163,9 +162,9 @@ function Recurring() {
 
   const addTime = async (day, index) => {
 
-    let newArr = [...availability]
-    console.log('index', index)
-    console.log('preparing to add...', timeRange[index])
+    // let newArr = [...availability]
+    // console.log('index', index)
+    // console.log('preparing to add...', timeRange[index])
     const { beginCodec, endCodec } = convertFromTime(timeRange[index])
 
     await createAvailability(beginCodec, endCodec, index)
@@ -193,12 +192,12 @@ function Recurring() {
 
   const removeTime = async (tabIndex, index) => {
 
-    let newArr = [...availability]
+    // let newArr = [...availability]
 
-    const id = newArr[tabIndex].times[index].id
+    const id = displayAvailability[tabIndex].times[index].id
     console.log('id to delete', id)
 
-    await deleteAvailability(id)
+    await deleteAvailability(tabIndex, id)
 
     // deleteAvailability(id)
     //   .then( res => {
@@ -216,7 +215,7 @@ function Recurring() {
   }
 
   const toggleDayActivation = (checked, index) => {
-    let newArr = [...availability]
+    let newArr = [...displayAvailability]
     console.log('index', index)
     console.log('checked?', checked)
     newArr[index] = {
@@ -233,17 +232,16 @@ function Recurring() {
             { days.map( (day,index) => {
               return (
                 <Flex key={index} justifyContent='space-around' pl='10px' borderBottom='1px' borderTop={ index < 1 ? "1px" : 'none'} borderColor='gray.100'>
-                  <Box minW='2em' w='30%' py='10px' borderRight='1px' borderColor='gray.100'>
-                    <Checkbox isChecked={
-                      displayAvailability[index]?.active ?
-                        displayAvailability[index].active :
-                        true
-                    } mt='.9em' defaultIsChecked onChange={(e) => toggleDayActivation(e.target.checked, index)}>
+                  <Flex minW='2em' w='30%' justify="center" py='10px' borderRight='1px' borderColor='gray.100'>
+                    <Checkbox
+                      isChecked={displayAvailability[index]?.active}
+                      onChange={ e => toggleDayActivation(e.target.checked, index)}
+                      >
                       <Heading size="sm">{day}</Heading>
                     </Checkbox>
-                  </Box>
+                  </Flex>
                   {
-                    !displayAvailability[index]?.active || displayAvailability[index].active ?
+                    displayAvailability[index]?.active ?
                       <Flex w="70%" py='10px' direction='column'>
                         <Skeleton isLoaded={!loading}>
                           <Flex className='time-container' pr="10px" justifyContent="space-between" align="center">
@@ -260,15 +258,19 @@ function Recurring() {
                         {
                           displayAvailability[index]?.times ?
                             displayAvailability[index]['times'].map( (time, i) =>
-                              <Flex key={i}  pl='15px' pt='10px' pr="10px" justifyContent='space-between' align='center' borderTop="1px solid" borderColor="gray.100">
-                                <TimeRangePicker
-                                  onChange={(e) => changeNewTime(e, index, i)}
-                                  value={time.time}
-                                  className='recCustom'
-                                  disableClock={true}
-                                  clearIcon={<MdUndo/>}
-                                />
-                                <IconButton onClick={ () => removeTime(index, i)} icon={<MdDeleteForever/>} size='lg' bg='white'/>
+                              <Flex pl='15px' pt='10px' pr="10px" >
+                                <Skeleton w="100%" isLoaded={!loading}>
+                                  <Flex key={i} w="100%" justifyContent='space-between' align='center' borderTop="1px solid" borderColor="gray.100">
+                                    <TimeRangePicker
+                                      onChange={(e) => changeNewTime(e, index, i)}
+                                      value={time.time}
+                                      className='recCustom'
+                                      disableClock={true}
+                                      clearIcon={<MdUndo/>}
+                                    />
+                                    <IconButton onClick={ () => removeTime(index, i)} icon={<MdDeleteForever/>} size='lg' bg='white'/>
+                                  </Flex>
+                                </Skeleton>
                               </Flex>
                             )
                           :''

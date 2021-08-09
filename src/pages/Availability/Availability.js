@@ -17,7 +17,7 @@ function Availability() {
 
   return (
     <Flex className={styles.availabilityContainer} minH="100%" w="100%" alignItems='start' justifyContent='center'>
-      <Flex minW='800px' w="1200px" flexDirection="row" alignItems="start" justifyContent="center" mt="30px" mb="60px" background="white" boxShadow="md">
+      <Flex minW='800px' flexDirection="row" alignItems="start" justifyContent="center" mt="30px" mb="60px" background="white" boxShadow="md">
         <Box fontSize="md">
           <Recurring />
         </Box>
