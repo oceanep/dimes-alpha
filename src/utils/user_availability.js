@@ -35,8 +35,9 @@ const userAvailability = {
         "user_calendar": user_calendar
       }, headers)
       return res
-    } catch {
-      throw new Error('Failed to create availability')
+    } catch (err){
+      alert('Failed to create availability')
+      throw err
     }
   },
   async updateAvailability(calId, beginTime, endTime, type = 1) {
@@ -50,17 +51,19 @@ const userAvailability = {
         }
       }, headers)
       return res
-    } catch {
-      throw new Error('Failed to update availability')
+    } catch (err){
+      alert('Failed to update availability')
+      throw err
     }
   },
   async deleteAvailability(calId) {
     let url = `${api_endpoint}/user_calendars/${calId}`;
     try {
       let res = await axios.delete(url, headers)
-      return res
-    } catch {
-      throw new Error('Failed to delete availability')
+      return "success"
+    } catch (err){
+      alert('Failed to delete availability')
+      throw err
     }
   }
 }

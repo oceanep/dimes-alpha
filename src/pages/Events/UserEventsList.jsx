@@ -158,14 +158,14 @@ function UserEventsList({ match }) {
             <Flex mt="60px" direction="column">
                 {
                     !loading ?
-                        templates.map(template => (
+                        templates.map(template => template.active ? (
                             <a href='' onClick={e => templateClick(e, template)} key={template.id}>
                                 <Flex mb="30px" pl="15px" pr="10px" py="20px" direction="row" align="center" border="1px" borderColor="gray.100" rounded="md" _hover={{ backgroundColor: 'gray.100' }}>
                                     <Heading size="md">{template.title}</Heading>
                                     <Icon as={MdNavigateNext} boxSize="2em" />
                                 </Flex>
                             </a>
-                        ))
+                        ) : null)
 
                         :
                         <Spinner />

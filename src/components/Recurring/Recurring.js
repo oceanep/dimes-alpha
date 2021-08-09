@@ -18,7 +18,7 @@ import {
 import { MdAddCircle, MdDeleteForever, MdUndo } from 'react-icons/md'
 
 import List from '../../components/List/List'
-import userAvailability from '../../utils/user_availability.js'
+import useAvailability from '../../hooks/useAvailability'
 import timeUtils from '../../utils/time_utils.js'
 
 import TimeRangePicker from '@wojtekmaj/react-timerange-picker';
@@ -26,10 +26,11 @@ import './Recurring.scss'
 
 function Recurring() {
 
+  const [ availability, loading, fetchAvailability, createAvailability, deleteAvailability, updateAvailability ] = useAvailability()
+
   const { convertToTime, convertFromTime, roundTime } = timeUtils
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-  const [loading, setLoading] = useState(true);
   const [timeRange, onTimeChange] = useState(
     [
       ['10:00', '11:00'],
@@ -42,64 +43,89 @@ function Recurring() {
     ]
   );
   const [tabIndex, setTabIndex] = useState(0);
-  const [availability, setAvailability] = useState([
+  const [displayAvailability, setDisplayAvailability] = useState([
     '','','','','','',''
   ]);
 
-  const createAvailability = async (index) => {
-    const { beginCodec, endCodec } = convertFromTime(timeRange[index])
-    const userId = localStorage.userId
+  // const createAvailability = async (index) => {
+  //   const { beginCodec, endCodec } = convertFromTime(timeRange[index])
+  //   const userId = localStorage.userId
+  //
+  //   let res = await userAvailability.createAvailability(userId, beginCodec, endCodec, index)
+  //   return res.data.data
+  // }
+  //
+  // const updateAvailability = async (id, beginCodec, endCodec) => {
+  //
+  //   let res = await userAvailability.updateAvailability(id, beginCodec, endCodec)
+  //   return res.data.data
+  // }
+  //
+  // const deleteAvailability = async (id) => {
+  //   let res = await userAvailability.deleteAvailability(id)
+  //   return res
+  // }
 
-    let res = await userAvailability.createAvailability(userId, beginCodec, endCodec, index)
-    return res.data.data
-  }
-
-  const updateAvailability = async (id, beginCodec, endCodec) => {
-
-    let res = await userAvailability.updateAvailability(id, beginCodec, endCodec)
-    return res.data.data
-  }
-
-  const deleteAvailability = async (id) => {
-    let res = await userAvailability.deleteAvailability(id)
-    return res
-  }
-
-  const fetchAvailability = useCallback( async () => {
-    const userId = localStorage.userId
-
-    let newArr = [...availability]
-    const res = await userAvailability.getAvailability(userId)
-    console.log('availability response: ', res)
-    console.log('test', !(res === undefined))
-    if(!(res === undefined)){
-      res.data.data.forEach((time, i) => {
-        const timeObj = {
-          id: time.id,
-          time: convertToTime(time.begin_time_unit, time.end_time_unit)
-        }
-        const index = time.day_of_week
-        newArr[index] = {
-          index: index,
-          day: days[index],
-          active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
-          times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
-        }
-        console.log('initial state ', newArr)
-      });
-    }
-    setAvailability(newArr)
-
-  }, [])
+  // const fetchAvailability = useCallback( async () => {
+  //   const userId = localStorage.userId
+  //
+  //   let newArr = [...availability]
+  //   const res = await userAvailability.getAvailability(userId)
+  //   console.log('availability response: ', res)
+  //   console.log('test', !(res === undefined))
+  //   if(!(res === undefined)){
+  //     res.data.data.forEach((time, i) => {
+  //       const timeObj = {
+  //         id: time.id,
+  //         time: convertToTime(time.begin_time_unit, time.end_time_unit)
+  //       }
+  //       const index = time.day_of_week
+  //       newArr[index] = {
+  //         index: index,
+  //         day: days[index],
+  //         active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
+  //         times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
+  //       }
+  //       console.log('initial state ', newArr)
+  //     });
+  //   }
+  //   setAvailability(newArr)
+  //
+  // }, [])
 
   useEffect( ()=> {
-    fetchAvailability()
-      .then( () => {
-        setLoading(false)
-      }, (err) => {
-        alert(err)
-      })
-  }, [fetchAvailability])
+    // let newArr = [...displayAvailability]
+
+    let newArr = availability.reduce( (acc, avails, index) => {
+      acc[index] = {
+        index: index,
+        day: days[index],
+        active: true,
+        times: avails.map( avail => ({
+          id: avail.id,
+          time: convertToTime(avail.begin_time_unit, avail.end_time_unit)
+        }))
+      }
+
+      return acc
+    }, [])
+
+    // availability.forEach((time, i) => {
+    //   const timeObj = {
+    //     id: time.id,
+    //     time: convertToTime(time.begin_time_unit, time.end_time_unit)
+    //   }
+    //   const index = time.day_of_week
+    //   newArr[index] = {
+    //     index: index,
+    //     day: days[index],
+    //     active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
+    //     times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
+    //   }
+    //   console.log('initial state ', newArr)
+    // });
+    setDisplayAvailability(newArr)
+  }, [availability])
 
   const changeTime = (time, index) => {
     let newArr = [...timeRange]
@@ -111,7 +137,7 @@ function Recurring() {
     onTimeChange(newArr)
   }
 
-  const changeNewTime = (time, index, i) => {
+  const changeNewTime = async (time, index, i) => {
     let newArr = [...availability]
     console.log('index', index)
     console.log('preparing to add...', time)
@@ -120,66 +146,73 @@ function Recurring() {
     const { beginCodec, endCodec } = convertFromTime(newTime)
     const id = newArr[index].times[i].id
 
-    updateAvailability( id, beginCodec, endCodec)
-      .then( res => {
-        newArr[index][i] = {
-          ...newArr[index][i],
-          time: convertToTime(res.begin_time_unit, res.end_time_unit)
-        }
-        console.log('adding...',newArr)
-        setAvailability(newArr)
-      }, err => {
-        alert(err)
-      })
+    await updateAvailability(id, beginCodec, endCodec)
+
+    // updateAvailability( id, beginCodec, endCodec)
+    //   .then( res => {
+    //     newArr[index][i] = {
+    //       ...newArr[index][i],
+    //       time: convertToTime(res.begin_time_unit, res.end_time_unit)
+    //     }
+    //     console.log('adding...',newArr)
+    //     setAvailability(newArr)
+    //   }, err => {
+    //     alert(err)
+    //   })
   }
 
-  const addTime = (day, index) => {
+  const addTime = async (day, index) => {
 
     let newArr = [...availability]
     console.log('index', index)
     console.log('preparing to add...', timeRange[index])
+    const { beginCodec, endCodec } = convertFromTime(timeRange[index])
 
-    createAvailability(index)
-      .then( (res) => {
-
-        const timeObj = {
-          id: res.id,
-          time: convertToTime(res.begin_time_unit, res.end_time_unit)
-        }
-
-        newArr[index] = {
-          index: index,
-          day: days[res.day_of_week],
-          active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
-          times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
-        }
-        console.log('adding...',newArr)
-        setAvailability(newArr)
-      }, err => {
-        alert(err)
-      })
+    await createAvailability(beginCodec, endCodec, index)
+    // createAvailability(index)
+    //   .then( (res) => {
+    //
+    //     const timeObj = {
+    //       id: res.id,
+    //       time: convertToTime(res.begin_time_unit, res.end_time_unit)
+    //     }
+    //
+    //     newArr[index] = {
+    //       index: index,
+    //       day: days[res.day_of_week],
+    //       active: newArr[index].hasOwnProperty('active') ? newArr[index]['active'] : true,
+    //       times: newArr[index].hasOwnProperty('times') ? [...newArr[index]['times'], timeObj] : [timeObj]
+    //     }
+    //     console.log('adding...',newArr)
+    //     setAvailability(newArr)
+    //   }, err => {
+    //     alert(err)
+    //   })
 
   }
 
-  const removeTime = (tabIndex, index) => {
+  const removeTime = async (tabIndex, index) => {
 
     let newArr = [...availability]
 
     const id = newArr[tabIndex].times[index].id
     console.log('id to delete', id)
-    deleteAvailability(id)
-      .then( res => {
-        const newTimes = availability[tabIndex].times.filter((time, i) => index !== i )
-        console.log(`remaining times ${newTimes}`)
-        newArr[tabIndex] = {
-          ...availability[tabIndex], times: newTimes
-        }
 
-        console.log(newArr)
-        setAvailability(newArr)
-      }, err => {
-        alert(err)
-      })
+    await deleteAvailability(id)
+
+    // deleteAvailability(id)
+    //   .then( res => {
+    //     const newTimes = availability[tabIndex].times.filter((time, i) => index !== i )
+    //     console.log(`remaining times ${newTimes}`)
+    //     newArr[tabIndex] = {
+    //       ...availability[tabIndex], times: newTimes
+    //     }
+    //
+    //     console.log(newArr)
+    //     setAvailability(newArr)
+    //   }, err => {
+    //     alert(err)
+    //   })
   }
 
   const toggleDayActivation = (checked, index) => {
@@ -191,7 +224,7 @@ function Recurring() {
       active: checked
     }
     console.log('checked? ',newArr)
-    setAvailability(newArr)
+    setDisplayAvailability(newArr)
   }
 
   return (
@@ -202,15 +235,15 @@ function Recurring() {
                 <Flex key={index} justifyContent='space-around' pl='10px' borderBottom='1px' borderTop={ index < 1 ? "1px" : 'none'} borderColor='gray.100'>
                   <Box minW='2em' w='30%' py='10px' borderRight='1px' borderColor='gray.100'>
                     <Checkbox isChecked={
-                      availability[index].hasOwnProperty('active') ?
-                        availability[index].active :
+                      displayAvailability[index]?.active ?
+                        displayAvailability[index].active :
                         true
                     } mt='.9em' defaultIsChecked onChange={(e) => toggleDayActivation(e.target.checked, index)}>
                       <Heading size="sm">{day}</Heading>
                     </Checkbox>
                   </Box>
                   {
-                    !availability[index].hasOwnProperty('active') || availability[index].active ?
+                    !displayAvailability[index]?.active || displayAvailability[index].active ?
                       <Flex w="70%" py='10px' direction='column'>
                         <Skeleton isLoaded={!loading}>
                           <Flex className='time-container' pr="10px" justifyContent="space-between" align="center">
@@ -225,8 +258,8 @@ function Recurring() {
                           </Flex>
                         </Skeleton>
                         {
-                          availability[index].hasOwnProperty('times') ?
-                            availability[index]['times'].map( (time, i) =>
+                          displayAvailability[index]?.times ?
+                            displayAvailability[index]['times'].map( (time, i) =>
                               <Flex key={i}  pl='15px' pt='10px' pr="10px" justifyContent='space-between' align='center' borderTop="1px solid" borderColor="gray.100">
                                 <TimeRangePicker
                                   onChange={(e) => changeNewTime(e, index, i)}
