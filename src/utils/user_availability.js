@@ -1,5 +1,6 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
+
 let api_endpoint = BASE_URL
 let headers = {
     "Content-type": "application/json"
@@ -21,7 +22,7 @@ const userAvailability = {
     }
   },
   async createAvailability(userId, beginTime, endTime, dayOfWeek, type = 1) {
-    let url = `${api_endpoint}/user_calendars`;
+      let url = `${api_endpoint}/user_calendars`;
     const user_calendar = {
       "user_id": userId,
       "begin_time_unit": beginTime,

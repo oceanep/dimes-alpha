@@ -21,6 +21,9 @@ const eventTemplates = {
     }
   },
     async createTemplate(userId, title, duration, desc, active, event_url) {
+        const token = localStorage.getItem('token');
+        let bearer_token = {"Authorization" : `Bearer ${token}`};
+        let authHeaders = Object.assign(headers, bearer_token);
     let url = `${api_endpoint}/event_templates`;
       console.log('createTemplate', userId, title, desc, duration, active, event_url)
       const event_template = {
@@ -31,10 +34,10 @@ const eventTemplates = {
     	"active": active,
       "url": event_url
   	}
-    try {
-      let res = await axios.post(url, {
-        "event_templates": event_template
-      }, headers)
+        try {
+          let res = await axios.post(url, {
+         "event_templates": event_template
+      }, {headers: authHeaders})
       return res
     } catch {
       throw new Error('Failed to create event')

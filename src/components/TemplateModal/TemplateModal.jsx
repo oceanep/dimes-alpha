@@ -9,9 +9,6 @@ import {
     ModalCloseButton,
     useDisclosure,
     Flex,
-    HStack,
-    VStack,
-    Spacer,
     Text,
     Textarea,
     InputGroup,
@@ -19,9 +16,7 @@ import {
     InputRightAddon,
     InputLeftAddon,
     Select,
-    textArea,
     Button,
-    Box
 } from "@chakra-ui/react"
 
 import { useTemplatesDispatch } from '../../hooks/useTemplates'
@@ -29,7 +24,7 @@ import { useTemplatesDispatch } from '../../hooks/useTemplates'
 import './TemplateModal.scss'
 
 function TemplateModal({ label }) {
-
+    const username = localStorage.getItem('username')
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [duration, setDuration] = useState('')
     const [desc, setDesc] = useState('')
@@ -98,7 +93,7 @@ function TemplateModal({ label }) {
                 }
             </InputGroup>
             <InputGroup>
-                <InputLeftAddon children="dimes-app.com/michi/" />
+                <InputLeftAddon children={`dimes-app.com/${username}/`} />
                 <Input
                     placeholder="Public Url"
                     size='md'
