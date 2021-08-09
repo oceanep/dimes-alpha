@@ -21,6 +21,8 @@ import { FaGoogle } from "react-icons/fa"
 import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
 import GoogleSignin from '../Google/GoogleSignin.jsx'
+import Cookies from 'js-cookie'
+
 
 function Signup() {
 
@@ -30,6 +32,8 @@ function Signup() {
     
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setConfirmShowPassword] = useState(false)
+    const [authToken, setAuthToken] = useState('')
+    const [username, setUsername] = useState('')
     const handlePasswordClick = () => setShowPassword(!showPassword)
     const handleConfirmPasswordClick = () => setConfirmShowPassword(!showConfirmPassword)
     let history = useHistory()
@@ -61,9 +65,14 @@ function Signup() {
                 initialValues={{ userName: "", email: "", firstName: "", lastName: "", password: "", confirmPassword: "" }}
                 onSubmit={async (values) => {
                     try {
-                        const response = await userApi.signupUser(values.email, values.userName, values.firstName, values.lastName, values.password)
-                        const { token, username } = response.data
-                        localStorage.setItem('token', token)
+                        const response = await userApi.signupUser(values.email, values.userName, values.firstName, values.lastName, values.password).then((res) => {
+                            const { token, username } = res.data
+                            setUsername(username)
+                            setAuthToken(token)                            
+                            Cookies.set('token', token, { secure: true, expires: 7 })
+                        })
+                        //const { token, username } = response.data
+                        localStorage.setItem('token', authToken)
                         localStorage.setItem('username', username)
                         history.push('/home')
                     } catch {
