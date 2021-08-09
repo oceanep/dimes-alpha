@@ -1,6 +1,5 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
-import Cookies from 'js-cookie'
 let api_endpoint = BASE_URL
 let headers = {
     "Content-type": "application/json"
@@ -22,7 +21,6 @@ const eventTemplates = {
     }
   },
     async createTemplate(userId, title, duration, desc, active, event_url) {
-        //const token = Cookies.get('token');
         const token = localStorage.getItem('token');
         let bearer_token = {"Authorization" : `Bearer ${token}`};
         let authHeaders = Object.assign(headers, bearer_token);

@@ -1,6 +1,5 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
-import Cookies from 'js-cookie'
 
 let api_endpoint = BASE_URL
 let headers = {

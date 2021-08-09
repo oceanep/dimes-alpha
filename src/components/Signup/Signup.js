@@ -17,11 +17,9 @@ import userApi from '../../utils/user_api.js'
 import { Formik, Form, Field } from 'formik'
 import { useTranslation, Trans } from 'react-i18next'
 import { FaGoogle } from "react-icons/fa"
-
 import LandingNav from '../LandingNav/LandingNav.jsx'
 import LandingFooter from '../LandingFooter/LandingFooter'
 import GoogleSignin from '../Google/GoogleSignin.jsx'
-import Cookies from 'js-cookie'
 
 
 function Signup() {
@@ -68,8 +66,7 @@ function Signup() {
                         const response = await userApi.signupUser(values.email, values.userName, values.firstName, values.lastName, values.password).then((res) => {
                             const { token, username } = res.data
                             setUsername(username)
-                            setAuthToken(token)                            
-                            Cookies.set('token', token, { secure: true, expires: 7 })
+                            setAuthToken(token)
                         })
                         //const { token, username } = response.data
                         localStorage.setItem('token', authToken)
