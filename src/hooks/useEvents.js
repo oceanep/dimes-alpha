@@ -105,14 +105,14 @@ function UseEventsProvider({children}) {
 
   //Memoize these functions later to prevent unnecessary rerenders
 
-  const createEvent = async (title, desc, status = 1, beginTime, endTime, date, invitees, active = true) => {
+  const createEvent = async (title, desc, status = 1, beginTime, endTime, date, invitees = {}, active = true) => {
     dispatch({type: ACTIONS.LOADING})
     try {
       const res = await userEvents.createEvent(userId, userId, title, desc, status, beginTime, endTime, date, active)
       const eventId = res.data.data.id
       console.log(res.data.data)
 
-      const inviteEmailsRes = invitees.emails.length > 0 ? await Promise.all( invitees.emails.map( async (email) => {
+      const inviteEmailsRes = invitees?.emails.length > 0 ? await Promise.all( invitees.emails.map( async (email) => {
         const res = await eventInvites.createInvite(userId, eventId, email)
         return {
           id: res.data.data.id,
@@ -124,7 +124,7 @@ function UseEventsProvider({children}) {
           userId: res.data.data.user_id
         }
       })) : []
-      const inviteContactsRes = invitees.contacts.length > 0 ? await Promise.all( invitees.contacts.map( async (contact) => {
+      const inviteContactsRes = invitees?.contacts.length > 0 ? await Promise.all( invitees.contacts.map( async (contact) => {
         const res = await eventInvites.createInvite(userId, eventId, contact.email, contact.contactId)
         return {
           id: res.data.data.id,
@@ -136,7 +136,7 @@ function UseEventsProvider({children}) {
           userId: res.data.data.user_id
         }
       })) : []
-      const inviteGroupsRes = invitees.groups.length > 0 ? await Promise.all( invitees.groups.map( async (group) => {
+      const inviteGroupsRes = invitees?.groups.length > 0 ? await Promise.all( invitees.groups.map( async (group) => {
         const res = await eventInvites.createInvite(userId, eventId, '', null, group.groupId)
         return {
           id: res.data.data.id,

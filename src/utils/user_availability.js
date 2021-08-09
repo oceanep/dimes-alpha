@@ -1,10 +1,13 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
 
-let api_endpoint = BASE_URL
-let headers = {
+const api_endpoint = BASE_URL
+const headers = {
     "Content-type": "application/json"
 }
+const token = localStorage.getItem('token');
+const bearer_token = {"Authorization" : `Bearer ${token}`};
+const authHeaders = Object.assign(headers, bearer_token);
 
 const userAvailability = {
   async getAvailability(id) {
@@ -14,10 +17,9 @@ const userAvailability = {
         params: {
           id: id
         }
-      }, headers)
-      console.log('user availability: ', res)
+      }, {headers: authHeaders})
       return res
-    } catch {
+    } catch (err){
       return {statusText: 'No Availabilities Registered'}
     }
   },
@@ -34,10 +36,11 @@ const userAvailability = {
     try {
       let res = await axios.post(url, {
         "user_calendar": user_calendar
-      }, headers)
+      }, {headers: authHeaders})
       return res
-    } catch {
-      throw new Error('Failed to create availability')
+    } catch (err){
+      alert('Failed to create availability')
+      return err
     }
   },
   async updateAvailability(calId, beginTime, endTime, type = 1) {
@@ -49,19 +52,21 @@ const userAvailability = {
           "begin_time_unit": beginTime,
           "end_time_unit": endTime
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
-    } catch {
-      throw new Error('Failed to update availability')
+    } catch (err){
+      alert('Failed to update availability')
+      return err
     }
   },
   async deleteAvailability(calId) {
     let url = `${api_endpoint}/user_calendars/${calId}`;
     try {
-      let res = await axios.delete(url, headers)
-      return res
-    } catch {
-      throw new Error('Failed to delete availability')
+      let res = await axios.delete(url, {headers: authHeaders})
+      return "success"
+    } catch (err){
+      alert('Failed to delete availability')
+      return err
     }
   }
 }

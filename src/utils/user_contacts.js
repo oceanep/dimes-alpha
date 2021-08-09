@@ -1,9 +1,13 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
-let api_endpoint = BASE_URL
-let headers = {
+
+const api_endpoint = BASE_URL
+const headers = {
     "Content-type": "application/json"
 }
+const token = localStorage.getItem('token');
+const bearer_token = {"Authorization" : `Bearer ${token}`};
+const authHeaders = Object.assign(headers, bearer_token);
 
 const userContacts = {
   async getContacts(id) {
@@ -13,7 +17,7 @@ const userContacts = {
         params: {
           id: id
         }
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err){
         alert('No Contacts Available')
@@ -37,7 +41,7 @@ const userContacts = {
     try {
       let res = await axios.patch(url, {
         "user_contact" : user_contact
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err) {
       alert('Contact Update Failed')
@@ -62,7 +66,7 @@ const userContacts = {
     try {
       let res = await axios.post(url, {
         "user_contact" : user_contact
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch (err) {
       alert('Contact Creation Failed')
@@ -73,7 +77,7 @@ const userContacts = {
   async deleteContact(id) {
     let url = `${api_endpoint}/user_contacts/${id}`
     try {
-      let res = await axios.delete(url, headers)
+      let res = await axios.delete(url, {headers: authHeaders})
       return res
     } catch (err){
       alert('Contact Deletion Failed')

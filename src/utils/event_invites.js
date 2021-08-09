@@ -1,15 +1,19 @@
 import axios from 'axios'
 import BASE_URL from './env.js'
-let api_endpoint = BASE_URL
-let headers = {
+
+const api_endpoint = BASE_URL
+const headers = {
     "Content-type": "application/json"
 }
+const token = localStorage.getItem('token');
+const bearer_token = {"Authorization" : `Bearer ${token}`};
+const authHeaders = Object.assign(headers, bearer_token);
 
 const eventInvites = {
   async getInvites(eventId) {
     let url = `${api_endpoint}/user_events/invites/${eventId}`;
     try {
-      const res = await axios.get(url, headers)
+      const res = await axios.get(url, {headers: authHeaders})
       return res
     } catch(err) {
       alert('Failed to fetch invites')
@@ -31,7 +35,7 @@ const eventInvites = {
     try {
       let res = await axios.post(url, {
         "event_invites": event_invite
-      }, headers)
+      }, {headers: authHeaders})
       return res
     } catch(err) {
       alert('Failed to create invite')
@@ -42,7 +46,7 @@ const eventInvites = {
   async deleteInvite(id) {
     let url = `${api_endpoint}/event_invites/${id}`;
     try {
-      const res = axios.delete(url, headers)
+      const res = axios.delete(url, {headers: authHeaders})
       return 'success'
     } catch(err) {
       alert('Failed to delete invite')
