@@ -21,6 +21,17 @@ const eventInvites = {
     }
   },
 
+  async getUserInvited(userId) {
+    let url = `${api_endpoint}/event_invites/user/${userId}`;
+    try {
+      const res = await axios.get(url, {headers: authHeaders})
+      return res
+    } catch(err) {
+      alert('Failed to fetch invites')
+      return err
+    }
+  },
+
   async createInvite(userId, eventId, email = '', inviteeId = null, groupId = null, status = 0) {
     let url = `${api_endpoint}/event_invites`;
     console.log('event id: ', eventId)
@@ -39,7 +50,22 @@ const eventInvites = {
       return res
     } catch(err) {
       alert('Failed to create invite')
-      throw err
+      return err
+    }
+  },
+
+  async editInvite(id, status){
+    let url = `${api_endpoint}/event_invites/${id}`;
+    try {
+      const res = axios.patch(url, {
+        "event_invites": {
+          "status": status
+        }
+      }, {headers: authHeaders})
+      return res
+    } catch(err) {
+      alert('Failed to update invite')
+      return err
     }
   },
 
@@ -50,7 +76,7 @@ const eventInvites = {
       return 'success'
     } catch(err) {
       alert('Failed to delete invite')
-      throw err
+      return err
     }
   }
 }

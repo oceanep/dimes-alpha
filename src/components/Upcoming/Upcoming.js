@@ -19,7 +19,6 @@ import styles from './Upcoming.module.scss'
 import QRCode from "react-qr-code";
 
 function Upcoming({ vertical }) {
-  const userId = localStorage.user_id
   const { events, loading, error } = useEventsState()
   const { deleteEvent, editEvent } = useEventsDispatch()
 

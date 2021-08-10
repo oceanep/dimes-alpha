@@ -40,10 +40,10 @@ function EditInviteesModal({invitees, onFinish}) {
     } else if (invitee.userInviteeId) {
       const contact = contacts.find( contact => contact.contactId === invitee.userInviteeId)
       const contactMatch = {
-        email: contact.email,
-        contactId: contact.contactId || null,
-        name: `${contact.firstName || ''} ${contact.lastName || ''}`,
-        photo: contact.photo || '',
+        email: contact?.email || null,
+        contactId: contact?.contactId || null,
+        name: `${contact?.firstName || ''} ${contact?.lastName || ''}`,
+        photo: contact?.photo || '',
         id: invitee.id
       }
       obj["contacts"].push(contactMatch)

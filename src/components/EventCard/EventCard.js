@@ -322,7 +322,7 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
         {
           !editable && type === 'Event' && invitees.length > 0 ?
             <Box mb="-60px" pt="10px">
-              <AvatarGroup max={6}>
+              <AvatarGroup max={4}>
                 {
                   invitees.map( invitee => displayInvitee(invitee))
                 }

@@ -181,12 +181,85 @@ const EventCard = {
   }
 }
 
+const InviteCard = {
+  baseStyle: {
+    container: {
+      position: "relative",
+      display: "flex",
+      flexDirection: "column",
+      background: "#ffffff",
+      alignItems: "center",
+      borderRadius: "4px",
+      border: "1px solid #DADAD9",
+      boxShadow: "md",
+      width: "100%",
+      minWidth: "250px"
+    },
+    topbar: {
+      backgroundColor: "teal.500",
+      height: "6px",
+      width: "100%",
+      marginTop: "-1px",
+      marginRight: "-1px",
+      marginLeft: "-1px",
+      borderTopLeftRadius: "4px",
+      borderTopRightRadius: "4px"
+    },
+    header: {
+      display: "flex",
+      alignItems: "center",
+      direction: "row",
+      justifyContent: "space-between",
+      px: "15px",
+      py: "10px",
+      // borderTop: "1px solid #DADAD9",
+      width: "100%"
+    },
+    body: {
+      display: "flex",
+      flex: "1 0 auto",
+      flexDirection: "row",
+      justifyContent: "space-around",
+      // padding: "48px 16px 20px 16px",
+      textAlign: "left",
+      width: "100%",
+      // minHeight: "220px"
+    },
+  },
+  variants: {
+    pending:{
+      topbar: {
+        // backgroundColor: "yellow.300",
+        backgroundColor: "yellow.300"
+      }
+    },
+    declined:{
+      topbar: {
+        // backgroundColor: "red.400",
+        backgroundColor: "red.400"
+      }
+    },
+    accepted:{
+      topbar: {
+        // backgroundColor: "purple.400",
+        backgroundColor: "green.300"
+      }
+    },
+    inactive: {
+      topbar: {
+        backgroundColor: "gray.500"
+      }
+    }
+  }
+}
+
 const theme = extendTheme({
   components: {
     Card,
     List,
     Contacts,
-    EventCard
+    EventCard,
+    InviteCard
   },
 })
 

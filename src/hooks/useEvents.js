@@ -66,7 +66,7 @@ function UseEventsProvider({children}) {
           let date = new Date(event.date)
 
           const inviteRes = await eventInvites.getInvites(event.id)
-          const invitees = inviteRes ? inviteRes.data.data.map( invite => (
+          const invitees = inviteRes?.data?.data?.length > 0 ? inviteRes.data.data.map( invite => (
             {
               id: invite.id,
               eventId: invite.user_events_id,
