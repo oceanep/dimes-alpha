@@ -235,6 +235,7 @@ function Recurring() {
                   <Flex minW='2em' w='30%' justify="center" py='10px' borderRight='1px' borderColor='gray.100'>
                     <Checkbox
                       isChecked={displayAvailability[index]?.active}
+                      defaultIsChecked
                       onChange={ e => toggleDayActivation(e.target.checked, index)}
                       >
                       <Heading size="sm">{day}</Heading>

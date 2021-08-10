@@ -10,17 +10,22 @@ const bearer_token = {"Authorization" : `Bearer ${token}`};
 const authHeaders = Object.assign(headers, bearer_token);
 
 const userEvents = {
-  async getEvents(id) {
-    let url = `${api_endpoint}/user_events`;
+  async getEvents(userId) {
+    let url = `${api_endpoint}/user_events/user/${userId}`;
     try {
-      let res = await axios.get(url, {
-        params: {
-          id: id
-        }
-      }, {headers: authHeaders})
+      let res = await axios.get(url, {headers: authHeaders})
       return res
     } catch (error) {
-      return error
+      throw error
+    }
+  },
+  async getEvent(id) {
+    let url = `${api_endpoint}/user_events/${id}`;
+    try {
+      const res = await axios.get(url, {headers: authHeaders})
+      return res
+    } catch (err) {
+      throw err
     }
   },
   async createEvent(userId, ownerId, title, desc, status = 1, beginTime, endTime, date, active = true) {
@@ -43,7 +48,7 @@ const userEvents = {
       }, {headers: authHeaders})
       return res
     } catch (err){
-      return err
+      throw err
     }
   },
   async updateEvent(eventId, ownerId, title, desc, status = 1, beginTime, endTime, date, active) {
@@ -64,7 +69,7 @@ const userEvents = {
       }, headers)
       return res
     } catch (err){
-      return err
+      throw err
     }
   },
   async deleteEvent(eventId) {
@@ -73,7 +78,7 @@ const userEvents = {
       let res = await axios.delete(url, {headers: authHeaders})
       return res
     } catch (err){
-      return err
+      throw err
     }
   }
 }

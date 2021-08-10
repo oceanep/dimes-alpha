@@ -1,46 +1,36 @@
 import {useState} from 'react';
 import {
-  Center,
-  Box,
   Flex,
-  Text
+  Text,
+  Heading,
+  Spinner
 } from "@chakra-ui/react"
 
 import { MdAddCircle } from 'react-icons/md'
 
 import withMenu from '../withMenu/withMenu'
-import Cal from '../../components/Cal/Cal'
-import Upcoming from '../../components/Upcoming/Upcoming'
-import List from '../../components/List/List'
-import CreateModal from '../../components/CreateModal/CreateModal'
+import InitiatedEvents from '../../components/InitiatedEvents/InitiatedEvents'
+
+import { useEventsState } from '../../hooks/useEvents'
 
 import styles from './Initiated.module.scss'
 
 function Initiated() {
 
+  const { events, loading, error } = useEventsState()
+
   return (
-    <Flex className="initiated-container" px="30px" py="60px" h="100%" w="100%" alignItems='center' justifyContent='space-between'>
-      <Flex w="50%" maxW="640px" minW='460px' h="80%" flexDirection="column" alignItems="center" justifyContent="space-between">
-        <Cal />
-      </Flex>
-      <Flex w="30%" maxW="640px" minW='460px' h="80%" flexDirection="column" alignItems="center" justifyContent="space-between">
-        <List variant='rounded' title='Sent'>
-          <Center borderBottom='1px' borderColor='gray.50' h='2em' >Potential Heist 6/21/2021/ 12:00pm</Center>
-          <Center borderBottom='1px' borderColor='gray.50' h='2em' >Bounty Search 7/08/2021 Link 6:00pm</Center>
-          <Center borderBottom='1px' borderColor='gray.50' h='2em' >Ship Maintenance 6/29/2021/ 17:00pm</Center>
-          <Center borderBottom='1px' borderColor='gray.50' h='2em' >Brunch 8/19/2021/ 9:00am</Center>
-        </List>
-        <CreateModal
-          label={
-            {
-              title: 'Find the right timing',
-              icon: <MdAddCircle />,
-              button: 'Create Plan',
-              placeholder: 'Duration',
-              secondary: 'Find Timing'
-            }
-          }
-        />
+    <Flex className="initiated-container" minH="100%" w="100%" alignItems='start' justifyContent='center'>
+      <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" background="white" boxShadow="md">
+        <Heading size="md" mb="1em">Initiated Event Invites</Heading>
+        {
+          !loading ?
+            <InitiatedEvents events={events.filter( event => event.invitees.length > 0 )} />
+          :
+            <Flex w="100%" justifyContent="center" align="center">
+              <Spinner size="xl" color="teal.500" />
+            </Flex>
+        }
       </Flex>
     </Flex>
   );
