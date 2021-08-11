@@ -39,7 +39,7 @@ function Relationships() {
             window.listConnectionNames()
         }
         else {
-            window.gapi.auth2.getAuthInstance().isSignedIn.get()
+            window.gapi.auth2.getAuthInstance().signIn()
         }
     }
 
@@ -48,7 +48,7 @@ function Relationships() {
             <Flex position="relative" minW='650px' w="1200px" flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" background="white" boxShadow="md">
 
                 <Box position="absolute" right="2%" top="2%">
-                  <ContactModal type="create"/>
+                    <ContactModal type="create" />
                 </Box>
 
                 <Contacts type="Relationships" contactItems={currentContacts} />

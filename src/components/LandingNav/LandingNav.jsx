@@ -50,12 +50,12 @@ function LandingNav() {
                             </Avatar>
                             <MenuList>
                                 <MenuGroup title="Profile">
+                                    <MenuItem ><Link to='/home'>Home</Link></MenuItem>
                                     <MenuItem ><Link to='/settings'>Settings</Link></MenuItem>
                                     <MenuItem ><Link to='/notifications'>Notifications</Link></MenuItem>
                                 </MenuGroup>
                                 <MenuDivider />
                                 <MenuGroup title="Help">
-                                    <MenuItem>Docs</MenuItem>
                                     <MenuItem>FAQ</MenuItem>
                                 </MenuGroup>
                             </MenuList>
@@ -63,20 +63,20 @@ function LandingNav() {
                     </Menu> : null}
 
                 {
-                  localStorage.getItem("token") != null ?
-                    <div>
-                      <Button onClick={logout} colorScheme="teal" size="md" fontSize="md" ml="15px">{`${t('header.logout')}`}</Button>
-                    </div>
-                  :
-                    <div>
-                      <Link to='/signup'>
-                        <Button colorScheme="teal" size="md" ml="15px">{`${t('header.register')}`}</Button>
-                      </Link>
-                      <Link to='/login'>
-                        <Button colorScheme="teal" size="md" ml="15px">{`${t('header.signin')}`}</Button>
-                      </Link>
-                    </div>
-                  }
+                    localStorage.getItem("token") != null ?
+                        <div>
+                            <Button onClick={logout} colorScheme="teal" size="md" fontSize="md" ml="15px">{`${t('header.logout')}`}</Button>
+                        </div>
+                        :
+                        <div>
+                            <Link to='/signup'>
+                                <Button colorScheme="teal" size="md" ml="15px">{`${t('header.register')}`}</Button>
+                            </Link>
+                            <Link to='/login'>
+                                <Button colorScheme="teal" size="md" ml="15px">{`${t('header.signin')}`}</Button>
+                            </Link>
+                        </div>
+                }
             </Flex>
         </nav >
     );
