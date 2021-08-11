@@ -11,13 +11,9 @@ const authHeaders = Object.assign(headers, bearer_token);
 
 const userContacts = {
   async getContacts(id) {
-    let url = `${api_endpoint}/user_contacts`;
+    let url = `${api_endpoint}/user_contacts/user/${id}`;
     try {
-      let res = await axios.get(url, {
-        params: {
-          id: id
-        }
-      }, {headers: authHeaders})
+      let res = await axios.get(url, {headers: authHeaders})
       return res
     } catch (err){
         alert('No Contacts Available')

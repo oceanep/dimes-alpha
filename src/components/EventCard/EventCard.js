@@ -168,8 +168,8 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
       let isGroup = false
       if (invitee.groupInviteeId) {
         const group = groups.find( group => group.id === invitee.groupInviteeId )
-        item.name = group.name
-        item.photo = group.photo ? group.photo : ''
+        item.name = group?.name
+        item.photo = group?.photo ? group.photo : ''
         isGroup = true
       }
       if (invitee.userInviteeId) {

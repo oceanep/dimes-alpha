@@ -11,13 +11,9 @@ const authHeaders = Object.assign(headers, bearer_token);
 
 const userAvailability = {
   async getAvailability(id) {
-    let url = `${api_endpoint}/user_calendars`;
+    let url = `${api_endpoint}/user_availability/user/${id}`;
     try {
-      let res = await axios.get(url, {
-        params: {
-          id: id
-        }
-      }, {headers: authHeaders})
+      let res = await axios.get(url, {headers: authHeaders})
       return res
     } catch (err){
       return {statusText: 'No Availabilities Registered'}

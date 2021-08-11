@@ -43,7 +43,7 @@ const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage, min
           <Icon as={MdArrowBack}/>
         </Circle>
       </a>
-      <HStack>
+      <HStack flexWrap="wrap" maxW="100%">
       {
         mini ? ''
         :
