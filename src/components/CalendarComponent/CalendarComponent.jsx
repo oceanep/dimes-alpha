@@ -111,7 +111,7 @@ const CalendarComponent = ({ props }) => {
             window.location.reload()
         }
         else {
-            window.gapi.auth2.getAuthInstance().isSignedIn.get()
+            window.gapi.auth2.getAuthInstance().signIn()
         }
     }
 
