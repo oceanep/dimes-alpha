@@ -80,7 +80,6 @@ function useInvitedEvents() {
 
   const updateStatus = async (inviteId, status) => {
     // dispatch({type: ACTIONS.LOADING})
-    console.log(inviteId, status)
     try {
       const res = await eventInvites.editInvite(inviteId, status)
 

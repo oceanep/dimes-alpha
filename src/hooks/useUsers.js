@@ -5,10 +5,10 @@ import userApi from '../utils/user_api.js'
 function useUsers( val = this || {} ) {
   const [user, setUser] = useState({})
   const [loading, setLoading] = useState(true)
-
+  console.log('val', val)
   const username = val?.username || null
   const id = val?.id || localStorage.userId
-
+  console.log('username, id', username, id)
   const getUser = async () => {
     try {
       const res = username ? await userApi.getUserByUsername(username) : await userApi.getUserById(id)

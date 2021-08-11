@@ -27,6 +27,7 @@ function LandingNav() {
         history.push("/");
     };
     const photo = localStorage.getItem('profilePhoto') || ''
+    const name = `${localStorage?.getItem('firstName')} ${localStorage?.getItem('lastName')}`
     return (
         <nav>
             <Flex mx={"60px"} py="10px" alignItems="center" zindex="999" position="relative" >
@@ -42,7 +43,7 @@ function LandingNav() {
                             transition="all 0.2s"
                             zindex="999"
                         >
-                            <Avatar size="md" src={photo} id="menuavi">
+                            <Avatar name={name} size="md" src={photo} id="menuavi">
                                 {/* <AvatarBadge boxSize="1.25em" bg="green.500">
                                     5
                                     </AvatarBadge> */}
@@ -61,8 +62,21 @@ function LandingNav() {
                         </MenuButton>
                     </Menu> : null}
 
-                {localStorage.getItem("token") != null ? <div><Button onClick={logout} colorScheme="teal" size="md" fontSize="md" ml="15px">{`${t('header.logout')}`}</Button></div> : <div><Link to='/signup'><Button colorScheme="teal" size="md" ml="15px">{`${t('header.register')}`}</Button></Link><Link to='/login'><Button colorScheme="teal" size="md" ml="15px">{`${t('header.signin')}`}</Button></Link></div>}
-
+                {
+                  localStorage.getItem("token") != null ?
+                    <div>
+                      <Button onClick={logout} colorScheme="teal" size="md" fontSize="md" ml="15px">{`${t('header.logout')}`}</Button>
+                    </div>
+                  :
+                    <div>
+                      <Link to='/signup'>
+                        <Button colorScheme="teal" size="md" ml="15px">{`${t('header.register')}`}</Button>
+                      </Link>
+                      <Link to='/login'>
+                        <Button colorScheme="teal" size="md" ml="15px">{`${t('header.signin')}`}</Button>
+                      </Link>
+                    </div>
+                  }
             </Flex>
         </nav >
     );

@@ -11,6 +11,8 @@ import {
     Input,
     InputRightAddon,
     Textarea,
+    FormControl,
+    FormHelperText,
     Avatar,
     Spinner
 } from "@chakra-ui/react"
@@ -35,6 +37,7 @@ import AvailabilityButton from '../../components/AvailabilityButton/Availability
 import Cal from '../../components/Cal/Cal'
 
 function UserEventsList({ match }) {
+    console.log('in user events')
     const { convertToTime, convertFromTime } = timeUtils
     const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage, fourthPage, goFourthPage] = usePages()
     const [ user ] = useUsers({id: match.params.user_id})
@@ -104,14 +107,25 @@ function UserEventsList({ match }) {
 
     const scheduleEvent = async () => {
         const { beginCodec, endCodec } = convertFromTime(selectedTime)
-
+        const currentUser = {
+          id: localStorage?.getItem('userId'),
+          firstName: localStorage?.getItem('firstName'),
+          lastName: localStorage?.getItem('lastName'),
+          email: localStorage?.getItem('email')
+        }
         try {
             //do not use reducer or context for api calls as these will be relying on different data sources
-            const eventRes = await userEvents.createEvent(10, 10, title, desc, 1, beginCodec, endCodec, selectedDate.toISOString(), true)
+            const eventRes = currentUser?.id ?
+                await userEvents.createEvent(currentUser.id, currentUser.id, title, desc, 1, beginCodec, endCodec, selectedDate.toISOString(), true)
+              :
+                await userEvents.createEvent(user.id, user.id, title, desc, 1, beginCodec, endCodec, selectedDate.toISOString(), true)
             const eventId = eventRes.data.data.id
-            const inviteRes = await eventInvites.createInvite(10, eventId, user.email, user.id, undefined, 0)
+            const inviteRes = currentUser?.id ?
+                await eventInvites.createInvite(currentUser.id, eventId, user.email, user.id, undefined, 0)
+              :
+                await eventInvites.createInvite(user.id, eventId, email, undefined, undefined, 0)
             console.log("schedule result?: ", inviteRes)
-            goFourthPage()
+            if (inviteRes.data.data) goFourthPage()
         } catch (err) {
             alert(err)
         }
@@ -151,10 +165,10 @@ function UserEventsList({ match }) {
         <>
             <Box>
                 <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                    <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src={user.photo || "./sample_avi.png"} />
-                    <Heading size="md">{user.username}</Heading>
+                    <Avatar mr="10px" name={`${user?.firstName} ${user?.lastName}`} src={user?.photo} />
+                    <Heading size="md">{user?.username}</Heading>
                 </Flex>
-                <Text fontSize="sm" color="gray.500">{user.email}</Text>
+                <Text fontSize="sm" color="gray.500">{user?.email}</Text>
                 <Text mt="30px" fontSize="md">Follow the instructions to schedule an event with me!</Text>
             </Box>
             <Flex mt="60px" direction="column">
@@ -189,10 +203,10 @@ function UserEventsList({ match }) {
             <Flex px="15px" w="35%">
                 <Box>
                     <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                        <Avatar mr="10px" name={user.username} src={user.photo || "./sample_avi.png"} />
-                        <Heading size="md">{user.username}</Heading>
+                        <Avatar mr="10px" name={`${user?.firstName} ${user?.lastName}`} src={user?.photo} />
+                        <Heading size="md">{user?.username}</Heading>
                     </Flex>
-                    <Text fontSize="sm" color="gray.500">{user.email}</Text>
+                    <Text fontSize="sm" color="gray.500">{user?.email}</Text>
                     <Heading size="md" mt="15px">{`Event: ${template.title}`}</Heading>
                     <Box>
                         <Icon as={MdAccessTime} display="inline-block" mr="10px" />
@@ -230,10 +244,10 @@ function UserEventsList({ match }) {
             <Flex px="15px" w="45%">
                 <Box>
                     <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                        <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src={user.photo || "./sample_avi.png"} />
-                        <Heading size="sm">{user.username}</Heading>
+                        <Avatar mr="10px" name={`${user?.firstName} ${user?.lastName}`} src={user?.photo} />
+                        <Heading size="sm">{user?.username}</Heading>
                     </Flex>
-                    <Text fontSize="sm" color="gray.500">{user.email}</Text>
+                    <Text fontSize="sm" color="gray.500">{user?.email}</Text>
                     <Heading size="md" my="15px">{`Event: ${template.title}`}</Heading>
                     <Box mb="15px">
                         <Icon as={MdAccessTime} display="inline-block" mr="10px" />
@@ -253,13 +267,16 @@ function UserEventsList({ match }) {
                     />
                     <InputRightAddon children="Title" />
                 </InputGroup>
-                <InputGroup>
-                    <Input
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                    />
-                    <InputRightAddon children="Email" />
-                </InputGroup>
+                <FormControl id="email">
+                  <InputGroup type="email">
+                      <Input
+                          value={email}
+                          onChange={e => setEmail(e.target.value)}
+                      />
+                      <InputRightAddon children="Email" />
+                  </InputGroup>
+                  <FormHelperText>If you don't have an account, no worries!<br/>Enter your email here and we'll set up the event.</FormHelperText>
+                </FormControl>
                 <Textarea
                     value={desc}
                     onChange={e => setDesc(e.target.value)}
@@ -273,10 +290,10 @@ function UserEventsList({ match }) {
         <>
             <Box>
                 <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
-                    <Avatar mr="10px" name={localStorage.getItem("username") != null ? localStorage.getItem('username') : null} src="./sample_avi.png" />
-                    <Heading size="md">{user.username}</Heading>
+                    <Avatar mr="10px" name={`${user?.firstName} ${user?.lastName}`} src={user?.photo} />
+                    <Heading size="md">{user?.username}</Heading>
                 </Flex>
-                <Text fontSize="sm" color="gray.500">{user.email}</Text>
+                <Text fontSize="sm" color="gray.500">{user?.email}</Text>
             </Box>
             <Flex mt="60px" direction="column">
                 <Heading size="lg" >Invite Sent!</Heading>

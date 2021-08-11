@@ -16,6 +16,7 @@ import useUsers from '../../hooks/useUsers'
 
 function UserProfile({ match }) {
 
+  console.log('in profiles')
   const [ user ] = useUsers({username: match.params.username})
   console.log(user)
 
