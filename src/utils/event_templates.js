@@ -11,13 +11,9 @@ const authHeaders = Object.assign(headers, bearer_token);
 
 const eventTemplates = {
   async getTemplates(id) {
-    let url = `${api_endpoint}/event_templates`;
+    let url = `${api_endpoint}/event_templates/user/${id}`;
     try {
-      let res = await axios.get(url, {
-        params: {
-          id: id
-        }
-      }, {headers: authHeaders})
+      let res = await axios.get(url, {headers: authHeaders})
       return res
     } catch (err){
         alert('No Templates Available')

@@ -33,6 +33,8 @@ import { MdSettings, MdPerson, MdContentCopy, MdModeEdit, MdDelete, MdExpandMore
 import styles from './EventCard.module.scss'
 import QRCode from "react-qr-code";
 
+import userApi from '../../utils/user_api.js'
+
 import DatePicker from 'react-date-picker';
 import useToggle from '../../hooks/useToggle'
 import { useContactsState } from '../../hooks/useContacts'
@@ -73,6 +75,8 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
   const [newUrl, setUrl] = useState(url)
   const [newDate, setDate] = useState(day)
   const [newActive, setActive] = useState(active)
+
+  const [mappedInvitees, setMappedInvitees] = useState([])
   const [newInvitees, setNewInvitees] = useState([])
   const [deleteInvitees, setDeleteInvitees] = useState([])
 
@@ -88,6 +92,10 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
   useEffect(() => {
     if (type === "Event") calculateTimes()
   }, [newDuration])
+
+  useEffect(() => {
+      if ( invitees && invitees.length) mapInvitees()
+  }, [])
 
   const deleteE = () => {
     onDelete(id)
@@ -150,33 +158,35 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
 
   }
 
-  const displayInvitee = (invitee) => {
-    let item = {
-      name: null,
-      photo: null,
-      email: null
-    }
-    let isGroup = false
-    if (invitee.groupInviteeId) {
-      const group = groups.find( group => group.id === invitee.groupInviteeId )
-      item.name = group.name
-      item.photo = group.photo ? group.photo : ''
-      isGroup = true
-    }
-    if (invitee.userInviteeId) {
-      //add check below for if find in contacts fails
-      //on fail, query users for user info
-      const contact = contacts.find( contact => contact.contactId === invitee.userInviteeId)
-      const name = `${contact?.firstName || ''} ${contact?.lastName || ''}`
-      item.name = name
-      item.photo = contact?.photo || ''
-      item.email = contact?.email || ''
-    }
-    if (!invitee.groupInviteeId && !invitee.userInviteeId) item.email = invitee.inviteeEmail
+  const mapInvitees = async () => {
+    const mapped = await Promise.all( invitees.map( async (invitee) => {
+      let item = {
+        name: null,
+        photo: null,
+        email: null
+      }
+      let isGroup = false
+      if (invitee.groupInviteeId) {
+        const group = groups.find( group => group.id === invitee.groupInviteeId )
+        item.name = group.name
+        item.photo = group.photo ? group.photo : ''
+        isGroup = true
+      }
+      if (invitee.userInviteeId) {
+        //add check below for if find in contacts fails
+        //on fail, query users for user info
+        const contact = contacts?.find( contact => contact.contactId === invitee.userInviteeId) ? contacts?.find( contact => contact.contactId === invitee.userInviteeId) :
+          await userApi.getUserById(invitee.userInviteeId)
+        const name = `${contact?.firstName || contact?.data?.first_name || ''} ${contact?.lastName || contact?.data?.last_name || ''}`
+        item.name = name
+        item.photo = contact?.photo || contact?.data?.photo || ''
+        item.email = contact?.email || contact?.data?.email ||''
+      }
+      if (!invitee.groupInviteeId && !invitee.userInviteeId) item.email = invitee.inviteeEmail
 
-    return (
-      isGroup ? <Avatar key={invitee.id} name={item.name || item.email} border='3px solid #81e6d9' src={item.photo} icon={<MdPerson/>} /> : <Avatar key={invitee.id} name={item.name || item.email} src={item.photo} icon={<MdPerson/>} />
-    )
+      return {isGroup: isGroup, item: item, id: invitee.id}
+    }))
+    setMappedInvitees(mapped)
   }
 
   const setInviteeTypes = (newI, deleteI) => {
@@ -324,7 +334,12 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
             <Box mb="-60px" pt="10px">
               <AvatarGroup max={4}>
                 {
-                  invitees.map( invitee => displayInvitee(invitee))
+                  mappedInvitees.map( invitee => (
+                    invitee.isGroup ?
+                      <Avatar key={invitee.id} name={invitee.item.name || invitee.item.email} border='3px solid #81e6d9' src={invitee.item.photo} icon={<MdPerson/>} />
+                    :
+                      <Avatar key={invitee.id} name={invitee.item.name || invitee.item.email} src={invitee.item.photo} icon={<MdPerson/>} />
+                  ))
                 }
               </AvatarGroup>
             </Box>

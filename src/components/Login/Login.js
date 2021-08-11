@@ -28,9 +28,9 @@ import GoogleSignin from '../Google/GoogleSignin.jsx'
 function Login() {
 
     useEffect(() => {
-        window.addEventListener('dataLoaded', () => {window.location.href="/home"})        
+        window.addEventListener('dataLoaded', () => {window.location.href="/home"})
     },[])
-    
+
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)
     let history = useHistory()
@@ -64,9 +64,14 @@ function Login() {
                         notify();
                     } else {
                         console.log("Response: ", response);
-                        const { token, username, id } = response.data
+                        const { token, username, id, email, first_name, last_name, blurb } = response.data
+                        console.log(email)
                         localStorage.setItem('token', token)
                         localStorage.setItem('username', username)
+                        localStorage.setItem('firstName', first_name)
+                        localStorage.setItem('lastName', last_name)
+                        localStorage.setItem('blurb', blurb)
+                        localStorage.setItem('email', email)
                         localStorage.setItem('userId', id)
                         history.push('/home')
                     }
@@ -128,7 +133,7 @@ function Login() {
                         </Button>
                         </Form>
                 )}
-            </Formik>             
+            </Formik>
               <GoogleSignin display_text = "Login with Google"/>
             </VStack>
       </Center>
