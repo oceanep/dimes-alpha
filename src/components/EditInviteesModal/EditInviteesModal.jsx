@@ -16,6 +16,8 @@ import {
 
 import Invitees from '../Invitees/Invitees'
 
+import userApi from '../../utils/user_api.js'
+
 import { useContactsState } from '../../hooks/useContacts'
 import { useGroupsState } from '../../hooks/useGroups'
 
@@ -26,9 +28,35 @@ function EditInviteesModal({invitees, onFinish}) {
   const { groups } = useGroupsState()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  //Invitee Update State
+  const [currentInvitees, setCurrentInvitees] = useState([])
+  const [newInvitees, setNewInvitees] = useState({
+    groups: [],
+    contacts: [],
+    emails: []
+  })
+  const [deleteInvitees, setDeleteInvitees] = useState([])
+
+  useEffect(() => {
+      if ( invitees && invitees.length) mapInitialInvitees()
+  }, [])
+
   //Initialize Invites in format for Invitee component
-  const initialInvitees = invitees.reduce( (obj, invitee) => {
-    if (invitee.groupInviteeId) {
+  const mapInitialInvitees = async () => {
+    const initialContacts = await Promise.all(invitees.filter( invitee => Boolean(invitee.userInviteeId) ).map( async (invitee) => {
+      const contact = contacts?.find( contact => contact.contactId === invitee.userInviteeId) ? contacts.find( contact => contact.contactId === invitee.userInviteeId) :
+        await userApi.getUserById(invitee.userInviteeId)
+      const contactMatch = {
+        email: contact?.email || contact?.data?.email || '',
+        contactId: contact?.contactId || contact?.data?.id || '',
+        name: `${contact?.firstName || contact?.data?.first_name || ''} ${contact?.lastName || contact?.data?.last_name || ''}`,
+        photo: contact?.photo || '',
+        id: invitee.id
+      }
+      return contactMatch
+    }))
+
+    const initialGroups = invitees.filter( invitee => Boolean(invitee.groupInviteeId) ).map( (invitee) => {
       const group = groups.find( group => group.id === invitee.groupInviteeId )
       const groupMatch = {
         name: group?.name || '',
@@ -36,35 +64,55 @@ function EditInviteesModal({invitees, onFinish}) {
         photo: group?.photo || '',
         id: invitee.id
       }
-      obj["groups"].push(groupMatch)
-    } else if (invitee.userInviteeId) {
-      const contact = contacts.find( contact => contact.contactId === invitee.userInviteeId)
-      const contactMatch = {
-        email: contact?.email || null,
-        contactId: contact?.contactId || null,
-        name: `${contact?.firstName || ''} ${contact?.lastName || ''}`,
-        photo: contact?.photo || '',
-        id: invitee.id
-      }
-      obj["contacts"].push(contactMatch)
-    } else if (!invitee.groupInviteeId && !invitee.userInviteeId) {
+      return groupMatch
+    })
+
+    const initialEmails = invitees.filter( invitee => (!invitee.groupInviteeId && !invitee.userInviteeId) ).map( (invitee) => {
       const emailMatch = {
         email: invitee?.inviteeEmail,
         id: invitee.id
       }
-      obj["emails"].push(emailMatch)
-    }
-    return obj
-  }, { groups: [], contacts: [], emails: []})
+      return emailMatch
+    })
 
-  //Invitee Update State
-  const [currentInvitees, setCurrentInvitees] = useState(initialInvitees)
-  const [newInvitees, setNewInvitees] = useState({
-    groups: [],
-    contacts: [],
-    emails: []
-  })
-  const [deleteInvitees, setDeleteInvitees] = useState([])
+    const initialInvitees = {
+      groups: initialGroups,
+      contacts: initialContacts,
+      emails: initialEmails
+    }
+    // const initialInvitees = await Promise.all(invitees.reduce( async (obj, invitee) => {
+    //   if (invitee.groupInviteeId) {
+    //     const group = groups.find( group => group.id === invitee.groupInviteeId )
+    //     const groupMatch = {
+    //       name: group?.name || '',
+    //       groupId: group?.id,
+    //       photo: group?.photo || '',
+    //       id: invitee.id
+    //     }
+    //     obj["groups"].push(groupMatch)
+    //   } else if (invitee.userInviteeId) {
+    //     const contact = contacts?.find( contact => contact.contactId === invitee.userInviteeId) ? contacts.find( contact => contact.contactId === invitee.userInviteeId) :
+    //       await userApi.getUserById(invitee.userInviteeId)
+    //     const contactMatch = {
+    //       email: contact?.email || contact?.data?.email || '',
+    //       contactId: contact?.contactId || contact?.data?.id || '',
+    //       name: `${contact?.firstName || contact?.data?.first_name || ''} ${contact?.lastName || contact?.data?.last_name || ''}`,
+    //       photo: contact?.photo || '',
+    //       id: invitee.id
+    //     }
+    //     // obj["contacts"].push(contactMatch)
+    //     obj = {...obj, contacts: [...obj.contacts, contactMatch]}
+    //   } else if (!invitee.groupInviteeId && !invitee.userInviteeId) {
+    //     const emailMatch = {
+    //       email: invitee?.inviteeEmail,
+    //       id: invitee.id
+    //     }
+    //     obj["emails"].push(emailMatch)
+    //   }
+    //   return obj
+    // }, { groups: [], contacts: [], emails: []}))
+    setCurrentInvitees(initialInvitees)
+  }
 
   const setInvitee = (type, info) => {
     // console.log('setInvitee',type,info)
@@ -105,9 +153,9 @@ function EditInviteesModal({invitees, onFinish}) {
   }
 
   const completeInviteesRender = () => ({
-    groups: currentInvitees.groups.concat(newInvitees.groups),
-    contacts: currentInvitees.contacts.concat(newInvitees.contacts),
-    emails: currentInvitees.emails.concat(newInvitees.emails)
+    groups: currentInvitees?.groups?.concat(newInvitees.groups) || newInvitees.groups,
+    contacts: currentInvitees?.contacts?.concat(newInvitees.contacts) || newInvitees.contacts,
+    emails: currentInvitees?.emails?.concat(newInvitees.emails) || newInvitees.emails
   })
 
   return (
