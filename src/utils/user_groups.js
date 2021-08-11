@@ -11,13 +11,9 @@ const authHeaders = Object.assign(headers, bearer_token);
 
 const userGroups = {
   async getGroups(userId) {
-    let url = `${api_endpoint}/user_groups`;
+    let url = `${api_endpoint}/user_groups/user/${userId}`;
     try {
-      let res = await axios.get(url, {
-        params: {
-          user_id: userId
-        }
-      }, {headers: authHeaders})
+      let res = await axios.get(url, {headers: authHeaders})
       return res
     } catch (err){
         alert('No Groups Available')

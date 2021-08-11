@@ -31,9 +31,9 @@ function EditInviteesModal({invitees, onFinish}) {
     if (invitee.groupInviteeId) {
       const group = groups.find( group => group.id === invitee.groupInviteeId )
       const groupMatch = {
-        name: group.name,
-        groupId: group.id,
-        photo: group.photo || '',
+        name: group?.name || '',
+        groupId: group?.id,
+        photo: group?.photo || '',
         id: invitee.id
       }
       obj["groups"].push(groupMatch)
@@ -49,7 +49,7 @@ function EditInviteesModal({invitees, onFinish}) {
       obj["contacts"].push(contactMatch)
     } else if (!invitee.groupInviteeId && !invitee.userInviteeId) {
       const emailMatch = {
-        email: invitee.inviteeEmail,
+        email: invitee?.inviteeEmail,
         id: invitee.id
       }
       obj["emails"].push(emailMatch)
