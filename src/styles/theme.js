@@ -253,13 +253,69 @@ const InviteCard = {
   }
 }
 
+const MiniEventCard = {
+  baseStyle: {
+    container: {
+      position: "relative",
+      display: "flex",
+      flexDirection: "column",
+      background: "#ffffff",
+      alignItems: "center",
+      borderRadius: "4px",
+      border: "1px solid #DADAD9",
+      boxShadow: "md",
+      width: "100%",
+      minWidth: "250px"
+    },
+    topbar: {
+      // backgroundColor: "gray.300",
+      backgroundColor: "teal.500",
+      height: "6px",
+      width: "100%",
+      marginTop: "-1px",
+      marginRight: "-1px",
+      marginLeft: "-1px",
+      borderTopLeftRadius: "4px",
+      borderTopRightRadius: "4px"
+    },
+    body: {
+      display: "flex",
+      flex: "1 0 auto",
+      flexDirection: "column",
+      justifyContent: "center",
+      // padding: "48px 16px 20px 16px",
+      textAlign: "left",
+      width: "100%",
+      minHeight: "220px"
+    },
+    cardBody: {
+      textAlign: 'left'
+    },
+    foot: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderTop: "1px solid #DADAD9",
+      width: "100%"
+    }
+  },
+  variants: {
+    inactive: {
+      topbar: {
+        backgroundColor: "gray.500"
+      }
+    }
+  }
+}
+
 const theme = extendTheme({
   components: {
     Card,
     List,
     Contacts,
     EventCard,
-    InviteCard
+    InviteCard,
+    MiniEventCard
   },
 })
 

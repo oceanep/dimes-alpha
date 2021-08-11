@@ -28,6 +28,20 @@ const userEvents = {
       throw err
     }
   },
+  async getUserEventsForUsers(userIds) {
+    let url = `${api_endpoint}/get_user_events_for_users`;
+    const idsString = userIds.toString()
+    try {
+      const res = await axios.get(url, {
+        params: {
+          user_ids: idsString
+        }
+      }, {headers: authHeaders})
+      return res
+    } catch (err) {
+      throw err
+    }
+  },
   async createEvent(userId, ownerId, title, desc, status = 1, beginTime, endTime, date, active = true) {
     let url = `${api_endpoint}/user_events`;
     console.log('create event: ', userId, ownerId, title, desc, status, beginTime, endTime, date, active)
