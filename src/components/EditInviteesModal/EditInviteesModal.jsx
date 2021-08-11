@@ -80,37 +80,6 @@ function EditInviteesModal({invitees, onFinish}) {
       contacts: initialContacts,
       emails: initialEmails
     }
-    // const initialInvitees = await Promise.all(invitees.reduce( async (obj, invitee) => {
-    //   if (invitee.groupInviteeId) {
-    //     const group = groups.find( group => group.id === invitee.groupInviteeId )
-    //     const groupMatch = {
-    //       name: group?.name || '',
-    //       groupId: group?.id,
-    //       photo: group?.photo || '',
-    //       id: invitee.id
-    //     }
-    //     obj["groups"].push(groupMatch)
-    //   } else if (invitee.userInviteeId) {
-    //     const contact = contacts?.find( contact => contact.contactId === invitee.userInviteeId) ? contacts.find( contact => contact.contactId === invitee.userInviteeId) :
-    //       await userApi.getUserById(invitee.userInviteeId)
-    //     const contactMatch = {
-    //       email: contact?.email || contact?.data?.email || '',
-    //       contactId: contact?.contactId || contact?.data?.id || '',
-    //       name: `${contact?.firstName || contact?.data?.first_name || ''} ${contact?.lastName || contact?.data?.last_name || ''}`,
-    //       photo: contact?.photo || '',
-    //       id: invitee.id
-    //     }
-    //     // obj["contacts"].push(contactMatch)
-    //     obj = {...obj, contacts: [...obj.contacts, contactMatch]}
-    //   } else if (!invitee.groupInviteeId && !invitee.userInviteeId) {
-    //     const emailMatch = {
-    //       email: invitee?.inviteeEmail,
-    //       id: invitee.id
-    //     }
-    //     obj["emails"].push(emailMatch)
-    //   }
-    //   return obj
-    // }, { groups: [], contacts: [], emails: []}))
     setCurrentInvitees(initialInvitees)
   }
 
