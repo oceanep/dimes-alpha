@@ -36,10 +36,84 @@ const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage, min
     }
   }
 
+  const renderPageDots = () => {
+    if (pageNumbers.length > 15) {
+      const total = pageNumbers.length - 1
+      let lowLimit = 20
+      // let upLimit = 8
+      const firstNumbers = pageNumbers.slice(0,lowLimit)
+      const lastNumbers = pageNumbers.slice(total - lowLimit, total)
+      const currentIndex = currentPage - 1
+      // console.log(currentPage, upLimit)
+      // if (currentPage > upLimit) {
+      //   upLimit += (5 * )
+      //   lowLimit = upLimit - 5
+      //   console.log('low, up', lowLimit, upLimit)
+      // } else if (currentPage < lowLimit && currentPage > 3 ){
+      //   upLimit -= 5
+      //   lowLimit = upLimit - 5
+      //   console.log('low, up', lowLimit, upLimit)
+      // }
+      // const middleNumbers = pageNumbers.slice( lowLimit, upLimit)
+      // console.log(middleNumbers)
+      // {middleNumbers.map( (number) => (
+      //   currentPage == number ?
+      //     <a onClick={() => pagination(number)} key={number} >
+      //       <Circle h='.5em' w='.5em' bgColor='blue.600' />
+      //     </a>
+      //   :
+      //     <a onClick={() => pagination(number)} key={number} >
+      //       <Circle h='.5em' w='.5em' border='1px' borderColor='blue.400'/>
+      //     </a>
+      // ))}
+
+      return (
+        <>
+          {firstNumbers.map( (number) => (
+            currentPage == number ?
+              <a onClick={() => pagination(number)} key={number} >
+                <Circle h='.5em' w='.5em' bgColor='blue.600' />
+              </a>
+            :
+              <a onClick={() => pagination(number)} key={number} >
+                <Circle h='.5em' w='.5em' border='1px' borderColor='blue.400'/>
+              </a>
+          ))}
+          <p>...</p>
+          {lastNumbers.map( (number) => (
+            currentPage == number ?
+              <a onClick={() => pagination(number)} key={number} >
+                <Circle h='.5em' w='.5em' bgColor='blue.600' />
+              </a>
+            :
+              <a onClick={() => pagination(number)} key={number} >
+                <Circle h='.5em' w='.5em' border='1px' borderColor='blue.400'/>
+              </a>
+          ))}
+        </>
+      )
+    } else {
+
+      return (
+        pageNumbers.map( number  => (
+          currentPage == number ?
+            <a onClick={() => pagination(number)} key={number} >
+              <Circle h='.5em' w='.5em' bgColor='blue.600' />
+            </a>
+          :
+            <a onClick={() => pagination(number)} key={number} >
+              <Circle h='.5em' w='.5em' border='1px' borderColor='blue.400'/>
+            </a>
+        ))
+      )
+
+    }
+  }
+
   return (
     <Flex h="4em" direction="row" justifyContent="space-around" align="center">
       <a onClick={prevPage} href='!#'>
-        <Circle size='40px' shadow='md'  mx="15px">
+        <Circle size='30px' shadow='md'  mx="15px">
           <Icon as={MdArrowBack}/>
         </Circle>
       </a>
@@ -47,20 +121,11 @@ const Pagination = ({ contactsPerPage, totalContacts, paginate, currentPage, min
       {
         mini ? ''
         :
-        pageNumbers.map((number,index) => (
-          currentPage == (index+1) ?
-            <a onClick={() => pagination(number)} key={index} >
-              <Circle h='1em' w='1em' bgColor='blue.600' />
-            </a>
-          :
-            <a onClick={() => pagination(number)} key={index} >
-              <Circle h='1em' w='1em' border='1px' borderColor='blue.400'/>
-            </a>
-        ))
+        renderPageDots()
       }
       </HStack>
       <a onClick={nextPage} href='!#'>
-        <Circle size='40px' shadow='md'  mx="15px">
+        <Circle size='30px' shadow='md'  mx="15px">
           <Icon as={MdArrowForward} />
         </Circle>
       </a>
