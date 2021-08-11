@@ -1,6 +1,7 @@
 import { useState, useEffect, useReducer, createContext, useContext } from 'react';
 
 import userContacts from '../utils/user_contacts.js';
+import userApi from '../utils/user_api.js'
 
 const ACTIONS = {
   LOADING: 'loading',
@@ -107,7 +108,9 @@ function UseContactsProvider({children}) {
   const createContact = async (contactId, firstName, lastName, relationType, phone, email) => {
     dispatch({ type: ACTIONS.LOADING })
     try {
-      const res = await userContacts.createContact(contactId, userId, firstName, lastName, relationType, phone, email)
+      const isUserRes = await userApi.getUserByEmail(email)
+      const isUserId = isUserRes?.data?.id || contactId
+      const res = await userContacts.createContact(isUserId, userId, firstName, lastName, relationType, phone, email)
 
       const newContact = {
         contactId: res.data.data.contact_id,
@@ -134,6 +137,8 @@ function UseContactsProvider({children}) {
   const editContact = async (id, contactId, firstName, lastName, relationType, phone, email) => {
     dispatch({ type: ACTIONS.LOADING })
     try {
+      const isUserRes = await userApi.getUserByEmail(email)
+      const isUserId = isUserRes?.data?.id || contactId
       const res = await userContacts.updateContact(id, userId, contactId, firstName, lastName, relationType, phone, email)
       const updatedContacts = state.contacts.map( contact => res.data.data.id === contact.id ?
         {

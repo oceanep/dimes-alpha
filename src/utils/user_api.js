@@ -57,6 +57,19 @@ const userApi = {
       throw err
     }
   },
+  async getUserByEmail(email) {
+    const url = `${api_endpoint}/users/info`
+    try {
+      const res = axios.get(url, {
+        params: {
+          email : email
+        }
+      }, {headers: authHeaders})
+      return res
+    } catch(err) {
+      throw err
+    }
+  },
   async updateUser(id, firstName, lastName, username, email, blurb, photo) {
     const url = `${api_endpoint}/users/${id}`
     try {

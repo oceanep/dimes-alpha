@@ -2,6 +2,7 @@ import { useState, useEffect, useReducer, createContext, useContext } from 'reac
 
 import timeUtils from '../utils/time_utils.js'
 import userEvents from '../utils/user_events.js'
+import userApi from '../utils/user_api.js'
 import eventInvites from '../utils/event_invites'
 
 
@@ -110,10 +111,11 @@ function UseEventsProvider({children}) {
     try {
       const res = await userEvents.createEvent(userId, userId, title, desc, status, beginTime, endTime, date, active)
       const eventId = res.data.data.id
-      console.log(res.data.data)
 
       const inviteEmailsRes = invitees?.emails.length > 0 ? await Promise.all( invitees.emails.map( async (email) => {
-        const res = await eventInvites.createInvite(userId, eventId, email)
+        const isUserRes = await userApi.getUserByEmail(email)
+        const isUserId = isUserRes?.data?.id || null
+        const res = await eventInvites.createInvite(userId, eventId, email, isUserId)
         return {
           id: res.data.data.id,
           eventId: res.data.data.user_events_id,
@@ -148,7 +150,7 @@ function UseEventsProvider({children}) {
           userId: res.data.data.user_id
         }
       })) : []
-      console.log(inviteEmailsRes.concat(inviteContactsRes, inviteGroupsRes))
+      // console.log(inviteEmailsRes.concat(inviteContactsRes, inviteGroupsRes))
       const timeRange = timeUtils.convertToTime(res.data.data.begin_time_unit, res.data.data.end_time_unit)
       const duration = Math.abs(res.data.data.end_time_unit - res.data.data.begin_time_unit)
       const diff = Math.abs(parseInt(res.data.data.begin_time_unit) - parseInt(res.data.data.end_time_unit))
@@ -201,9 +203,11 @@ function UseEventsProvider({children}) {
     try {
       const res = await userEvents.updateEvent(eventId, userId, title, desc, status, beginTime, endTime, date, active)
 
-      console.log('invitees: ', newInvitees, deletedInvitees)
+      // console.log('invitees: ', newInvitees, deletedInvitees)
       const inviteEmailsRes = newInvitees.emails.length > 0 ? await Promise.all( newInvitees.emails.map( async (email) => {
-        const res = await eventInvites.createInvite(userId, eventId, email)
+        const isUserRes = await userApi.getUserByEmail(email)
+        const isUserId = isUserRes?.data?.id || null
+        const res = await eventInvites.createInvite(userId, eventId, email, isUserId)
         return {
           id: res.data.data.id,
           eventId: res.data.data.user_events_id,
@@ -270,7 +274,7 @@ function UseEventsProvider({children}) {
           invitees: totalNewInvitees
         }
         : event )
-      console.log('updated events: ', updatedEvents)
+      // console.log('updated events: ', updatedEvents)
       dispatch({ payload: updatedEvents, type: ACTIONS.FETCHED })
 
     } catch (err) {

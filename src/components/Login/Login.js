@@ -60,12 +60,9 @@ function Login() {
                 onSubmit={async (values) => {
                     const response = await userApi.loginUser(values.email, values.password)
                     if (response.statusText === "Login Failed") {
-                        console.log("FResponse: ", response);
                         notify();
                     } else {
-                        console.log("Response: ", response);
                         const { token, username, id, email, first_name, last_name, blurb } = response.data
-                        console.log(email)
                         localStorage.setItem('token', token)
                         localStorage.setItem('username', username)
                         localStorage.setItem('firstName', first_name)
