@@ -7,7 +7,6 @@ import {
   Icon,
   IconButton,
   Text,
-  Heading,
   InputGroup,
   Input,
   HStack
@@ -22,8 +21,6 @@ function Contacts({ variant, children, type, contactItems, mini, ...rest }) {
   const c_styles = useStyleConfig("Contacts", { variant })
 
   return (
-    <>
-    {mini ? '' : <Heading size="md" mb="1em">{ type }</Heading>}
     <Box __css={c_styles.container} {...rest}>
       <Flex flexDirection="column" justifyContent="space-around" alignItems={ mini ? "center" : "start"} className={styles.contactsInner}>
         {
@@ -81,7 +78,6 @@ function Contacts({ variant, children, type, contactItems, mini, ...rest }) {
         }
       </Flex>
     </Box>
-    </>
   )
 }
 
