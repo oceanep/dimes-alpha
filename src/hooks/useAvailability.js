@@ -13,11 +13,12 @@ function useAvailability(userId = localStorage.userId) {
     fetchAvailability()
   }, [])
 
-  const fetchAvailability = async () => {
+  const fetchAvailability = async (id = userId) => {
     let dayAvails = [[], [], [], [], [], [], []]
+    console.log('avail id ', id)
     setLoading(true)
     try {
-      const res = await userAvailability.getAvailability(userId)
+      const res = await userAvailability.getAvailability(id)
       const sorted = res.data.data.sort( (a, b) => {
         return a.day_of_week - b.day_of_week || a.begin_time_unit - b.begin_time_unit
       })
@@ -27,6 +28,7 @@ function useAvailability(userId = localStorage.userId) {
       // console.log('availability response: ', dayAvails)
       setAvailability(dayAvails)
       setLoading(false)
+      return dayAvails
     } catch (err) {
       alert(err)
       throw err
