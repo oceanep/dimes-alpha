@@ -68,7 +68,7 @@ function App() {
               <Route path="/settings" component={localStorage.getItem("token") ? Settings : Login}></Route>
               <Route path="/notifications" component={localStorage.getItem("token") ? Notifications : Login}></Route>
               <Route path="/profile/:username" component={UserProfile}></Route>
-              <Route path="/:user_id/:event_template_url?" component={UserEventsList}></Route>
+              <Route path="/:username/:event_template_url?" component={UserEventsList}></Route>
           </Switch>
         </Grid>
       </Box>

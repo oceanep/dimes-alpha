@@ -37,15 +37,16 @@ import AvailabilityButton from '../../components/AvailabilityButton/Availability
 import Cal from '../../components/Cal/Cal'
 
 function UserEventsList({ match }) {
-    console.log('in user events')
+
     const { convertToTime, convertFromTime } = timeUtils
     const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage, fourthPage, goFourthPage] = usePages()
-    const [ user ] = useUsers({id: match.params.user_id})
+    const [ user, userLoading = loading ] = useUsers({username: match.params.username})
     const template_url = match.params.event_template_url
-    const [availability, fetchAvailability] = useAvailability(match.params.user_id)
+    const [availability, fetchAvailability] = useAvailability(user.id)
 
     const [templates, setTemplates] = useState([])
     const [loading, setLoading] = useState(true)
+    const [inactiveT, setInactiveT] = useState(false)
     const [template, setTemplate] = useState(null)
     const [showTimes, setShowTimes] = useState(false)
     const [selectedDate, setSelectedDate] = useState(new Date())
@@ -56,13 +57,27 @@ function UserEventsList({ match }) {
     const [desc, setDesc] = useState('')
 
     useEffect(() => {
-        loadTemplates()
-    }, [])
+        if (user?.id) loadTemplates()
+    }, [user])
 
+    useEffect(() => {
+      console.log('template url', template_url)
+      console.log('templates: ', templates)
+      if (template_url && templates.length ) {
+        const selectedTemplate = templates?.find( template => template.url === template_url )
+        console.log('found template: ', selectedTemplate)
+        if ( selectedTemplate?.url && selectedTemplate?.active ) {
+          setTemplate(selectedTemplate)
+          goSecondPage()
+        } else {
+          setInactiveT(true)
+        }
+      }
+    }, [templates])
 
     const loadTemplates = async () => {
         try {
-            const res = await eventTemplates.getTemplates(match.params.user_id)
+            const res = await eventTemplates.getTemplates(user.id)
             // console.log("Templates: ", res.data.data)
             setTemplates(res.data.data)
             setLoading(!loading)
@@ -141,8 +156,10 @@ function UserEventsList({ match }) {
 
     const backClick = (e) => {
         e.preventDefault()
-        if (secondPage) {
+        if (secondPage || inactiveT) {
+            setInactiveT(false)
             goFirstPage()
+            window.history.replaceState(null,'',`/${match.params.username}` )
         }
         if (thirdPage) {
             goSecondPage()
@@ -163,31 +180,42 @@ function UserEventsList({ match }) {
 
     const first = () => (
         <>
-            <Box>
-                <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
+          <Box>
+            {
+              user?.id && !userLoading ?
+                <>
+                  <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
                     <Avatar mr="10px" name={`${user?.firstName} ${user?.lastName}`} src={user?.photo} />
                     <Heading size="md">{user?.username}</Heading>
+                  </Flex>
+                  <Text fontSize="sm" color="gray.500">{user?.email}</Text>
+                  <Text mt="30px" fontSize="md">Follow the instructions to schedule an event with me!</Text>
+                </>
+              : !userLoading ?
+                <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
+                  <Heading size="md">User Does Not Exist</Heading>
                 </Flex>
-                <Text fontSize="sm" color="gray.500">{user?.email}</Text>
-                <Text mt="30px" fontSize="md">Follow the instructions to schedule an event with me!</Text>
-            </Box>
-            <Flex mt="60px" direction="column">
-                {
-                    !loading ?
-                        templates.map(template => template.active ? (
-                            <a href='' onClick={e => templateClick(e, template)} key={template.id}>
-                                <Flex mb="30px" pl="15px" pr="10px" py="20px" direction="row" align="center" border="1px" borderColor="gray.100" rounded="md" _hover={{ backgroundColor: 'gray.100' }}>
-                                    <Heading size="md">{template.title}</Heading>
-                                    <Icon as={MdNavigateNext} boxSize="2em" />
-                                </Flex>
-                            </a>
-                        ) : null)
-
-                        :
-                        <Spinner />
-                }
-
-            </Flex>
+              :
+                null
+            }
+          </Box>
+          <Flex mt="60px" direction="column">
+              {
+                !loading && user.id && templates?.length ?
+                  templates.map(template => template.active ? (
+                      <a href='' onClick={e => templateClick(e, template)} key={template.id}>
+                          <Flex mb="30px" pl="15px" pr="10px" py="20px" direction="row" align="center" border="1px" borderColor="gray.100" rounded="md" _hover={{ backgroundColor: 'gray.100' }}>
+                              <Heading size="md">{template.title}</Heading>
+                              <Icon as={MdNavigateNext} boxSize="2em" />
+                          </Flex>
+                      </a>
+                  ) : null)
+                : user.id && loading ?
+                  <Spinner />
+                :
+                  null
+              }
+          </Flex>
         </>
     )
 
@@ -301,6 +329,33 @@ function UserEventsList({ match }) {
         </>
     )
 
+    const lockedTemplate = () => (
+      <Flex w="100%">
+          <Flex justifyContent="center" align="center">
+              <a onClick={backClick} href='!#'>
+                  <Circle size='40px' shadow='md' mx="15px">
+                      <Icon as={MdArrowBack} />
+                  </Circle>
+              </a>
+          </Flex>
+          <Flex px="15px" w="35%">
+              <Box>
+                  <Flex w='100%' justifyContent='center' alignItems="center" display="inline-flex">
+                      <Avatar mr="10px" name={`${user?.firstName} ${user?.lastName}`} src={user?.photo} />
+                      <Heading size="md">{user?.username}</Heading>
+                  </Flex>
+                  <Text fontSize="sm" color="gray.500">{user?.email}</Text>
+                  <Box>
+                      <Icon as={MdAccessTime} display="inline-block" mr="10px" />
+                  </Box>
+                  <Box>
+                    <Text>This Template is not available</Text>
+                  </Box>
+              </Box>
+          </Flex>
+      </Flex>
+    )
+
     const times = () => {
         const day = selectedDate.getDay()
         console.log('selected day: ', selectedDate.getDay())
@@ -340,10 +395,12 @@ function UserEventsList({ match }) {
     return (
         <Flex minH="100%" w="100%" py="30px" alignItems='start' justifyContent='center' background="gray.50">
             <Flex minW='900px' flexDirection="column" alignItems="center" justifyContent="space-between" mt="30px" mb="60px" py="30px" px="30px" background="white" boxShadow="md">
-                {firstPage ? first() : null}
-                {secondPage ? second() : null}
-                {thirdPage ? third() : null}
-                {fourthPage ? fourth() : null}
+                {!inactiveT && firstPage ? first() : null}
+                {!inactiveT && secondPage ? second() : null}
+                {!inactiveT && thirdPage ? third() : null}
+                {!inactiveT && fourthPage ? fourth() : null}
+
+                {inactiveT ? lockedTemplate() : null}
             </Flex>
         </Flex>
     )
