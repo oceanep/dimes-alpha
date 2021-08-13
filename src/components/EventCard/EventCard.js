@@ -39,6 +39,7 @@ import DatePicker from 'react-date-picker';
 import useToggle from '../../hooks/useToggle'
 import { useContactsState } from '../../hooks/useContacts'
 import { useGroupsState } from '../../hooks/useGroups'
+import { useTemplatesState } from '../../hooks/useTemplates'
 
 import EditInviteesModal from '../EditInviteesModal/EditInviteesModal'
 
@@ -67,6 +68,7 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
   const [editable: state, toggleEdit: toggle ] = useToggle()
   const { contacts } = useContactsState()
   const { groups } = useGroupsState()
+  const { templates } = useTemplatesState()
 
   const [newDuration, setDuration] = useState(duration)
   const [newTime, setTime] = useState(initialTime)
@@ -133,6 +135,21 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
         deleteInvitees
       )
       toggleEdit()
+    }
+  }
+
+  //validate unique url
+  const urlValidate = () => {
+    const uniqueness = templates.find( template => template.url === newUrl && template.id != id ) ? true : false
+    return uniqueness
+  }
+
+  //enable or disable save Button
+  const savable = () => {
+    if (type === 'Template') {
+      return urlValidate() && newUrl && newTitle
+    } else {
+      return false
     }
   }
 
@@ -245,6 +262,7 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
                       placeholder={`${type} Name`}
                       onChange={e => setTitle(e.target.value)}
                       value={newTitle}
+                      isInvalid={!newTitle}
                       isRequired
                   />
                 </InputGroup>
@@ -269,6 +287,7 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
                       placeholder={`${type} Description`}
                       onChange={e => setDesc(e.target.value)}
                       value={newDesc}
+                      isInvalid={!newDesc}
                       isRequired
                   />
                 </InputGroup>
@@ -290,6 +309,7 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
                         placeholder={`dimes-app.com/${username}/`}
                         onChange={e => setUrl(e.target.value)}
                         value={newUrl}
+                        isInvalid={urlValidate()}
                         isRequired
                       />
                     </InputGroup>
@@ -360,7 +380,7 @@ function EventCard({ type, title, desc, duration, variant, value, time, day, act
             :
               <>
                 <Button variant="outline" fontSize="sm" onClick={toggleEdit}>Cancel</Button>
-                <Button fontSize="sm" ml="10px" onClick={ saveE }>Save</Button>
+                <Button fontSize="sm" ml="10px" isDisabled={savable()} onClick={ saveE }>Save</Button>
               </>
           }
         </Box>
