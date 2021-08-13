@@ -26,7 +26,8 @@ import { MdNavigateNext, MdArrowBack, MdAccessTime, MdDateRange } from 'react-ic
 
 import usePages from '../../hooks/usePages'
 import useUsers from '../../hooks/useUsers'
-import useAvailability from '../../hooks/useAvailability'
+
+import userAvailability from '../../utils/user_availability'
 import eventTemplates from '../../utils/event_templates'
 import userEvents from '../../utils/user_events'
 import eventInvites from '../../utils/event_invites'
@@ -42,8 +43,8 @@ function UserEventsList({ match }) {
     const [firstPage, goFirstPage, secondPage, goSecondPage, thirdPage, goThirdPage, fourthPage, goFourthPage] = usePages()
     const [ user, userLoading = loading ] = useUsers({username: match.params.username})
     const template_url = match.params.event_template_url
-    const [availability, fetchAvailability] = useAvailability(user.id)
 
+    const [availability, setAvailability] = useState([])
     const [templates, setTemplates] = useState([])
     const [loading, setLoading] = useState(true)
     const [inactiveT, setInactiveT] = useState(false)
@@ -57,15 +58,26 @@ function UserEventsList({ match }) {
     const [desc, setDesc] = useState('')
 
     useEffect(() => {
-        if (user?.id) loadTemplates()
+        if (user?.id) {
+          loadTemplates()
+          userAvailability.getAvailability(user.id).then( res => {
+            let dayAvails = [[], [], [], [], [], [], []]
+            const sorted = res.data.data.sort( (a, b) => {
+              return a.day_of_week - b.day_of_week || a.begin_time_unit - b.begin_time_unit
+            })
+            const byDay = sorted.map( time => (
+              dayAvails[time.day_of_week] = [...dayAvails[time.day_of_week], time]
+            ))
+            console.log('fetched: ', dayAvails)
+            setAvailability(dayAvails)
+          })
+        }
     }, [user])
 
     useEffect(() => {
-      console.log('template url', template_url)
-      console.log('templates: ', templates)
+
       if (template_url && templates.length ) {
         const selectedTemplate = templates?.find( template => template.url === template_url )
-        console.log('found template: ', selectedTemplate)
         if ( selectedTemplate?.url && selectedTemplate?.active ) {
           setTemplate(selectedTemplate)
           goSecondPage()
